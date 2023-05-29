@@ -24,11 +24,13 @@ spring:
         show_sql: true
         format_sql: true
 
+
 jwt:
-  secretKey: ${secret}
+  secretKey: ${secretKey}
   refreshKey: ${refresh}
 
-logging:
-  slack:
-    webhook-uri: ${webhook}
-  config: classpath:log4j2.xml
+
+#logging:
+#  slack:
+#    webhook-uri: ${webhook}
+#  config: classpath:log4j2.xml
