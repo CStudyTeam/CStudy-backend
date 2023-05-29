@@ -1,8 +1,8 @@
 # 📖 취업 CS 걱정하지마, CS;tudy
-- 
+
 
 <p align="center">
-사진
+  <img src="https://github.com/CStudyTeam/CStudy-backend/assets/103854287/1eb27757-0b60-4268-9be1-6478190c0c25" style="width: 50%; height: 40%;" />
 </p>
 
 <br>
