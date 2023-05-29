@@ -2,7 +2,7 @@
 
 
 <p align="center">
-  <img src="https://github.com/CStudyTeam/CStudy-backend/assets/103854287/1eb27757-0b60-4268-9be1-6478190c0c25" style="width: 50%; height: 40%;" />
+  <img src="https://github.com/CStudyTeam/CStudy-backend/assets/103854287/8681bd61-0459-4d6c-8f92-74bf6168ced7" style="width: 50%; height: 40%;" />
 </p>
 
 <br>
