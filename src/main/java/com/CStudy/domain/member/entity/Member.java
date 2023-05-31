@@ -39,9 +39,10 @@ public class Member {
     }
 
     @Builder
-    public Member(String email, String password, String name) {
+    public Member(String email, String password, String name, Set<Role> roles) {
         this.email = email;
         this.password = password;
         this.name = name;
+        this.roles = roles;
     }
 }
