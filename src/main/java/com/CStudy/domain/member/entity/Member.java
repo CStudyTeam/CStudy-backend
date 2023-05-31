@@ -1,5 +1,6 @@
 package com.CStudy.domain.member.entity;
 
+import com.CStudy.domain.question.entity.MemberQuestion;
 import com.CStudy.domain.role.entity.Role;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -27,12 +28,20 @@ public class Member {
     @Column(name = "member_name")
     private String name;
 
+    @OneToMany(
+            mappedBy = "member",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
+    )
+    Set<MemberQuestion> questions = new HashSet<>();
+
     @ManyToMany
     @JoinTable(name = "member_role",
             joinColumns = @JoinColumn(name = "member_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
 
     public void changeRole(Role role) {
         roles.add(role);
