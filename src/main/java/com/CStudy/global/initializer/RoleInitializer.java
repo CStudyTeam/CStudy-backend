@@ -2,6 +2,8 @@ package com.CStudy.global.initializer;
 
 import com.CStudy.domain.member.entity.Member;
 import com.CStudy.domain.member.repository.MemberRepository;
+import com.CStudy.domain.question.entity.Category;
+import com.CStudy.domain.question.repository.CategoryRepository;
 import com.CStudy.domain.role.entity.Role;
 import com.CStudy.domain.role.enums.RoleEnum;
 import com.CStudy.domain.role.repositry.RoleRepository;
@@ -20,7 +22,8 @@ public class RoleInitializer {
     public CommandLineRunner initRoles(
             RoleRepository roleRepository,
             MemberRepository memberRepository,
-            PasswordEncoder passwordEncoder
+            PasswordEncoder passwordEncoder,
+            CategoryRepository categoryRepository
     ) {
         return args -> {
             if (roleRepository.count() == 0) {
@@ -56,6 +59,30 @@ public class RoleInitializer {
 
                     memberRepository.save(member);
                 }
+            }
+
+            if (categoryRepository.count() == 0) {
+
+                Category Java = Category.builder()
+                        .categoryTitle("자바")
+                        .build();
+
+                Category Network = Category.builder()
+                        .categoryTitle("네트워크")
+                        .build();
+
+                Category OS = Category.builder()
+                        .categoryTitle("운영체제")
+                        .build();
+
+                Category DB = Category.builder()
+                        .categoryTitle("데이터베이스")
+                        .build();
+
+                categoryRepository.save(Java);
+                categoryRepository.save(Network);
+                categoryRepository.save(OS);
+                categoryRepository.save(DB);
             }
         };
     }
