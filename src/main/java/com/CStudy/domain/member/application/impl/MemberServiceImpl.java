@@ -50,6 +50,8 @@ public class MemberServiceImpl implements MemberService {
     /**
      * Returns the MemberSignupResponse With request
      *
+     * @param MemberSignupRequest request
+     * @throws EmailDuplication
      * @return 회원가입 성공을 하면 이메일, 이름을 리턴을 합니다.
      */
     @Override
@@ -73,7 +75,7 @@ public class MemberServiceImpl implements MemberService {
     /**
      * Returns login member with LoginRequest
      *
-     * @param request
+     * @param MemberLoginRequest request
      * @return 로그인 성공하면 회원 아이디, JWT(Access, Refresh Token)을 리턴을 합니다.
      */
     @Override
