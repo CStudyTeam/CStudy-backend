@@ -1,5 +1,6 @@
 package com.CStudy.global.exception;
 
+import com.CStudy.global.exception.category.NotFoundCategoryTile;
 import com.CStudy.global.exception.enums.ErrorCode;
 import com.CStudy.global.exception.member.EmailDuplication;
 import com.CStudy.global.exception.member.NotFoundMemberEmail;
@@ -27,7 +28,7 @@ public class ExceptionControllerAdvice {
             ) throws IOException {
         log.error("user not found member");
         viewSlackLog(request);
-        return new ErrorResponse(ErrorCode.MethodArgumentNotValidException.getErrorCode(), e.getMessage());
+        return new ErrorResponse("400", e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -38,6 +39,16 @@ public class ExceptionControllerAdvice {
     ) throws IOException {
         viewSlackLog(request);
         return new ErrorResponse(ErrorCode.NotFoundMemberId.getErrorCode(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NotFoundCategoryTile.class)
+    public ErrorResponse NotFoundCategoryTile(
+            NotFoundCategoryTile e,
+            HttpServletRequest request
+    ) throws IOException {
+        viewSlackLog(request);
+        return new ErrorResponse(ErrorCode.NotFoundCategoryTile.getErrorCode(), e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
