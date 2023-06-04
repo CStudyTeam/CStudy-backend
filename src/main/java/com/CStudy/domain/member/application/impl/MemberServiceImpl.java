@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,9 +51,9 @@ public class MemberServiceImpl implements MemberService {
     /**
      * Returns the MemberSignupResponse With request
      *
-     * @param MemberSignupRequest request
-     * @throws EmailDuplication
+     * @param request 회원가입 Signup
      * @return 회원가입 성공을 하면 이메일, 이름을 리턴을 합니다.
+     * @throws EmailDuplication 중복된 이메일 회원가입 요청
      */
     @Override
     @Transactional
@@ -65,6 +66,7 @@ public class MemberServiceImpl implements MemberService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .name(request.getName())
+                .roles(new HashSet<>())
                 .build();
 
         signupWithRole(member);
@@ -75,7 +77,7 @@ public class MemberServiceImpl implements MemberService {
     /**
      * Returns login member with LoginRequest
      *
-     * @param MemberLoginRequest request
+     * @param request 회원 로그인 Request Dto
      * @return 로그인 성공하면 회원 아이디, JWT(Access, Refresh Token)을 리턴을 합니다.
      */
     @Override
