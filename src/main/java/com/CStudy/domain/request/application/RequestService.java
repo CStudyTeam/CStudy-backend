@@ -15,5 +15,6 @@ public interface RequestService {
 
     Page<RequestResponseDto> getRequestList(Long memberId, Pageable pageable);
 
+    void updateFlag(Long id);
 
 }

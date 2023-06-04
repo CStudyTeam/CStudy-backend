@@ -54,4 +54,7 @@ public class Request {
         this.member = member;
     }
 
+    public void updateFlag(){
+        this.flag = true;
+    }
 }

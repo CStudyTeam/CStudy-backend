@@ -109,6 +109,20 @@ public class RequestServiceImpl implements RequestService {
         return new PageImpl<>(responseDtos.subList(start, end), pageable, responseDtos.size());
     }
 
+    /**
+     * Update flag for request problem. Only ADMIN can change flag
+     *
+     * @param id id of request entity
+     */
+    @Override
+    @Transactional
+    public void updateFlag(Long id) {
+
+        Request request = requestRepository.findById(id)
+                .orElseThrow(() -> new NotFoundRequest(id));
+
+        request.updateFlag();
+    }
 
 
 }

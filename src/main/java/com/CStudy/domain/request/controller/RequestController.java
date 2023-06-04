@@ -38,6 +38,17 @@ public class RequestController {
         requestService.createRequest(requestDto, loginUser.getMemberId());
     }
 
+    @PostMapping("/request/approve")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void updateFlag(
+        @RequestBody FlagRequestDto flagDto,
+        @IfLogin LoginUserDto loginUser
+    ) {
+        if(loginUser.getRoles().contains("ROLE_ADMIN")) {
+            requestService.updateFlag(flagDto.getId());
+        }
+    }
+
     @GetMapping("/request/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public RequestResponseDto getRequest(
