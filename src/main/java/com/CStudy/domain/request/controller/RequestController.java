@@ -41,8 +41,8 @@ public class RequestController {
     @PostMapping("/request/approve")
     @ResponseStatus(HttpStatus.CREATED)
     public void updateFlag(
-        @RequestBody FlagRequestDto flagDto,
-        @IfLogin LoginUserDto loginUser
+            @RequestBody FlagRequestDto flagDto,
+            @IfLogin LoginUserDto loginUser
     ) {
         if(loginUser.getRoles().contains("ROLE_ADMIN")) {
             requestService.updateFlag(flagDto.getId());
@@ -57,13 +57,13 @@ public class RequestController {
         return requestService.getRequest(id);
     }
 
-    @GetMapping("/request/list/{memberId}")
+    @GetMapping("/request/mylist")
     @ResponseStatus(HttpStatus.CREATED)
-    public  Page<RequestResponseDto> getMemberRequestList(
+    public Page<RequestResponseDto> getMemberRequestList(
             @PageableDefault(sort = {"createdAt"}, direction = Direction.DESC) Pageable pageable,
-            @PathVariable Long memberId
+            @IfLogin LoginUserDto loginUser
     ) {
-        return requestService.getRequestList(memberId, pageable);
+        return requestService.getRequestList(loginUser.getMemberId(), pageable);
     }
 
     @GetMapping("/request/list")

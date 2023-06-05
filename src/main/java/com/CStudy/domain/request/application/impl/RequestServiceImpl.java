@@ -97,16 +97,9 @@ public class RequestServiceImpl implements RequestService {
     @Transactional(readOnly = true)
     public Page<RequestResponseDto> getRequestList(Long memberId, Pageable pageable) {
 
-        Member member = memberRepository.findMemberFetchRequest(memberId);
+        Page<Request> request = requestRepository.findRequestByMemberId(memberId, pageable);
 
-        List<RequestResponseDto> responseDtos = member.getRequests().stream()
-                .map(RequestResponseDto::of).collect(Collectors.toList());
-        Collections.reverse(responseDtos);
-
-        int start = (int) pageable.getOffset();
-        int end = (int) pageable.getOffset() + pageable.getPageSize();
-
-        return new PageImpl<>(responseDtos.subList(start, end), pageable, responseDtos.size());
+        return request.map(RequestResponseDto::of);
     }
 
     /**
