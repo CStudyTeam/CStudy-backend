@@ -60,4 +60,13 @@ public class MemberController {
         log.info(String.format("Refresh Token:>>{%s}", refreshToken));
         refreshTokenService.deleteRefreshToken(refreshToken);
     }
+
+    @PostMapping("refreshToken")
+    @ResponseStatus(HttpStatus.OK)
+    public MemberLoginResponse refreshTokenWithAccessToken(
+            @RequestBody RefreshTokenDto refreshTokenDto
+    ) {
+        log.info(String.format("Refresh Token:>>{%s}", refreshTokenDto));
+        return refreshTokenService.AccessTokenWithRefreshToken(refreshTokenDto);
+    }
 }

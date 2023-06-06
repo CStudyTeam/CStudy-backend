@@ -45,7 +45,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundMemberId(userId));
 
-        List roles = claims.get("roles", List.class);
+        List roles = (List) claims.get("roles");
         String email = claims.getSubject();
         String accessToken = jwtTokenizer.createAccessToken(userId, email, roles);
 
