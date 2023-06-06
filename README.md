@@ -177,3 +177,5 @@ src
 <br>
 
 # 🧊 ERD Diagram
+![gArfmbiSNNafRu3we (1)](https://github.com/CStudyTeam/CStudy-backend/assets/48233343/a063a784-dcc8-4548-ba69-3c7acdaa1597)
+
