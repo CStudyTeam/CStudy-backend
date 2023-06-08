@@ -3,6 +3,7 @@ package com.CStudy.global.exception;
 import com.CStudy.global.exception.category.NotFoundCategoryTile;
 import com.CStudy.global.exception.enums.ErrorCode;
 import com.CStudy.global.exception.member.EmailDuplication;
+import com.CStudy.global.exception.member.InvalidMatchPasswordException;
 import com.CStudy.global.exception.member.NotFoundMemberEmail;
 import com.CStudy.global.exception.member.NotFoundMemberId;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,17 @@ public class ExceptionControllerAdvice {
         viewSlackLog(request);
         return new ErrorResponse(ErrorCode.NotFoundMemberId.getErrorCode(), e.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidMatchPasswordException.class)
+    public ErrorResponse InvalidMatchPasswordException(
+            InvalidMatchPasswordException e,
+            HttpServletRequest request
+    ) throws IOException {
+        viewSlackLog(request);
+        return new ErrorResponse(ErrorCode.InvalidMatchPasswordException.getErrorCode(), e.getMessage());
+    }
+
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NotFoundCategoryTile.class)

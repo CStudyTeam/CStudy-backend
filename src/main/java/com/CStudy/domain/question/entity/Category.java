@@ -19,6 +19,7 @@ public class Category {
     @Column(name = "category_id")
     private Long id;
 
+    @Column(name = "category_title")
     private String categoryTitle;
 
     @OneToMany(mappedBy = "category")

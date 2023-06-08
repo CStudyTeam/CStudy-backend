@@ -17,10 +17,10 @@ public class MemberQuestion {
     private Long id;
 
     @Column(name = "question_success")
-    private String success;
+    private int success;
 
     @Column(name = "question_fail")
-    private String fail;
+    private int fail;
 
     @ManyToOne(
             fetch = FetchType.LAZY,
@@ -38,8 +38,8 @@ public class MemberQuestion {
 
     @Builder
     public MemberQuestion(
-            String success,
-            String fail,
+            int success,
+            int fail,
             Member member,
             Question question
     ) {
