@@ -1,4 +1,4 @@
-package com.CStudy.domain.question.dto;
+package com.CStudy.domain.question.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateQuestionRequestDto {
+public class QuestionSearchCondition {
     private String questionTitle;
-    private String questionDesc;
-    private String questionExplain;
+    private String categoryTitle;
 }

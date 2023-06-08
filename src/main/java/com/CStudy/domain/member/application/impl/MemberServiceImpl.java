@@ -12,6 +12,7 @@ import com.CStudy.domain.role.entity.Role;
 import com.CStudy.domain.role.enums.RoleEnum;
 import com.CStudy.domain.role.repositry.RoleRepository;
 import com.CStudy.global.exception.member.EmailDuplication;
+import com.CStudy.global.exception.member.InvalidMatchPasswordException;
 import com.CStudy.global.exception.member.NotFoundMemberEmail;
 import com.CStudy.global.jwt.util.JwtTokenizer;
 import lombok.extern.slf4j.Slf4j;
@@ -83,8 +84,13 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberLoginResponse login(MemberLoginRequest request) {
+
         Member member = memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new NotFoundMemberEmail(request.getEmail()));
+
+        if(!passwordEncoder.matches(request.getPassword(), member.getPassword())){
+            throw new InvalidMatchPasswordException(request.getPassword());
+        }
 
         List<String> roles = member.getRoles().stream()
                 .map(Role::getName)
