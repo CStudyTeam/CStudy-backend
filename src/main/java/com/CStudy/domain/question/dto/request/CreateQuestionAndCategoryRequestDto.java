@@ -1,4 +1,4 @@
-package com.CStudy.domain.question.dto;
+package com.CStudy.domain.question.dto.request;
 
 import com.CStudy.domain.choice.dto.CreateChoicesAboutQuestionDto;
 import lombok.AllArgsConstructor;
