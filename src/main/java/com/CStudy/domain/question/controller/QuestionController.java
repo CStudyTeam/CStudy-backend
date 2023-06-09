@@ -24,7 +24,7 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
-    @PostMapping("/question")
+    @PostMapping("question")
     @ResponseStatus(HttpStatus.CREATED)
     public void createQuestionWithCategory(
             @RequestBody CreateQuestionAndCategoryRequestDto requestDto
@@ -32,7 +32,7 @@ public class QuestionController {
         questionService.createQuestionChoice(requestDto);
     }
 
-    @PostMapping("/questions")
+    @PostMapping("questions")
     @ResponseStatus(HttpStatus.CREATED)
     public void buildCreateQuestionWithCategory(
             @RequestBody List<CreateQuestionAndCategoryRequestDto> requestDtos
@@ -40,7 +40,7 @@ public class QuestionController {
         questionService.recursiveCreateQuestionChoice(requestDtos);
     }
 
-    @GetMapping("/question/{questionId}")
+    @GetMapping("question/{questionId}")
     @ResponseStatus(HttpStatus.OK)
     public QuestionResponseDto haha(
             @PathVariable Long questionId
@@ -48,7 +48,7 @@ public class QuestionController {
         return questionService.findQuestionWithChoiceAndCategory(questionId);
     }
 
-    @PostMapping("/question/{questionId}")
+    @PostMapping("question/{questionId}")
     @ResponseStatus(HttpStatus.CREATED)
     public void choiceQuestion(
             @PathVariable Long questionId,
@@ -58,7 +58,7 @@ public class QuestionController {
         questionService.choiceQuestion(loginUserDto, questionId, choiceNumber);
     }
 
-    @GetMapping("/questions")
+    @GetMapping("questions")
     @ResponseStatus(HttpStatus.OK)
     public Page<QuestionPageWithCategoryAndTitle> findQuestionPageWithCategoryAndTitleConditionalSearch(
             QuestionSearchCondition searchCondition,
