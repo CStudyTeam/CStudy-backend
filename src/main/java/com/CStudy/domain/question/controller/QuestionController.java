@@ -1,5 +1,6 @@
 package com.CStudy.domain.question.controller;
 
+import com.CStudy.domain.question.application.MemberQuestionService;
 import com.CStudy.domain.question.application.QuestionService;
 import com.CStudy.domain.question.dto.request.ChoiceAnswerRequestDto;
 import com.CStudy.domain.question.dto.request.CreateQuestionAndCategoryRequestDto;
@@ -19,9 +20,14 @@ import java.util.List;
 public class QuestionController {
 
     private final QuestionService questionService;
+    private final MemberQuestionService memberQuestionService;
 
-    public QuestionController(QuestionService questionService) {
+    public QuestionController(
+            QuestionService questionService,
+            MemberQuestionService memberQuestionService
+    ) {
         this.questionService = questionService;
+        this.memberQuestionService = memberQuestionService;
     }
 
     @PostMapping("question")
@@ -55,6 +61,7 @@ public class QuestionController {
             @RequestBody ChoiceAnswerRequestDto choiceNumber,
             @IfLogin LoginUserDto loginUserDto
     ) {
+        memberQuestionService.findByQuestionAboutMemberIdAndQuestionId(loginUserDto.getMemberId(),questionId);
         questionService.choiceQuestion(loginUserDto, questionId, choiceNumber);
     }
 
