@@ -14,4 +14,9 @@ public interface MemberCompetitionRepository extends JpaRepository<MemberCompeti
             "JOIN FETCH MC.competition C " +
             "WHERE C.id =: competitionId")
     List<MemberCompetition>findAllWithMemberAndCompetition(@Param("competitionId") Long competitionId);
+
+    @Query("SELECT CASE WHEN COUNT(mc) > 0 THEN true ELSE false END " +
+            "FROM MemberCompetition mc " +
+            "WHERE mc.member.id = :memberId AND mc.competition.id = :competitionId")
+    boolean existsByMemberIdAndCompetitionId(@Param("memberId") Long memberId, @Param("competitionId") Long competitionId);
 }

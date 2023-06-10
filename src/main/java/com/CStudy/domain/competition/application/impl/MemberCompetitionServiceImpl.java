@@ -9,15 +9,13 @@ import com.CStudy.domain.member.entity.Member;
 import com.CStudy.domain.member.repository.MemberRepository;
 import com.CStudy.global.exception.competition.DuplicateMemberWithCompetition;
 import com.CStudy.global.exception.competition.NotFoundCompetitionId;
-import com.CStudy.global.exception.competition.participantsWereInvitedParticipateException;
 import com.CStudy.global.exception.member.NotFoundMemberId;
 import com.CStudy.global.util.LoginUserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -50,24 +48,23 @@ public class MemberCompetitionServiceImpl implements MemberCompetitionService {
     }
 
     private void decreaseParticipantsCountIfPossible(Competition competition) {
-        if (competition.getParticipants() != 0) {
-            competition.decreaseParticipantsCount();
-        } else {
-            throw new participantsWereInvitedParticipateException();
-        }
+        Optional.of(competition)
+                .filter(c -> c.getParticipants() != 0)
+                .ifPresent(Competition::decreaseParticipantsCount);
     }
 
     private void preventionDuplicateParticipation(LoginUserDto loginUserDto, Long competitionId) {
-        List<MemberCompetition> memberAboutCompetition =
-                memberCompetitionRepository.findAllWithMemberAndCompetition(competitionId);
+        boolean isMemberParticipating = memberCompetitionRepository.existsByMemberIdAndCompetitionId(
+                loginUserDto.getMemberId(), competitionId);
 
-        List<Long> memberIdList = memberAboutCompetition.stream()
-                .map(MemberCompetition::getId)
-                .collect(Collectors.toList());
+        checkMemberParticipation(loginUserDto, isMemberParticipating);
+    }
 
-        if (memberIdList.contains(loginUserDto.getMemberId())) {
-            throw new DuplicateMemberWithCompetition(loginUserDto.getMemberId());
-        }
-
+    private static void checkMemberParticipation(LoginUserDto loginUserDto, boolean isMemberParticipating) {
+        Optional.of(isMemberParticipating)
+                .filter(participating -> participating)
+                .ifPresent(participating -> {
+                    throw new DuplicateMemberWithCompetition(loginUserDto.getMemberId());
+                });
     }
 }
