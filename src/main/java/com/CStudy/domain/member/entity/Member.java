@@ -1,5 +1,6 @@
 package com.CStudy.domain.member.entity;
 
+import com.CStudy.domain.competition.entity.MemberCompetition;
 import com.CStudy.domain.question.entity.MemberQuestion;
 import com.CStudy.domain.request.entity.Request;
 import com.CStudy.domain.role.entity.Role;
@@ -12,7 +13,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -44,7 +47,16 @@ public class Member {
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL
     )
+    List<MemberCompetition>memberCompetitions = new ArrayList<>();
+
+
+    @OneToMany(
+            mappedBy = "member",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
+    )
     List<Request> requests = new ArrayList<>();
+
 
     @ManyToMany
     @JoinTable(name = "member_role",
@@ -52,6 +64,7 @@ public class Member {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
 
 
     public void changeRole(Role role) {

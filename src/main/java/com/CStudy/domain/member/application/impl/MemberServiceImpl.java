@@ -1,5 +1,6 @@
 package com.CStudy.domain.member.application.impl;
 
+import com.CStudy.domain.aop.TimeAnnotation;
 import com.CStudy.domain.member.application.MemberService;
 import com.CStudy.domain.member.dto.request.MemberLoginRequest;
 import com.CStudy.domain.member.dto.request.MemberSignupRequest;
@@ -58,6 +59,7 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     @Transactional
+    @TimeAnnotation
     public MemberSignupResponse signUp(
             MemberSignupRequest request
     ) {
@@ -92,6 +94,61 @@ public class MemberServiceImpl implements MemberService {
             throw new InvalidMatchPasswordException(request.getPassword());
         }
 
+        return createToken(member);
+    }
+
+    /**
+     * oauthSignUp
+     *
+     * @param email 회원 이름
+     * @param name 회원 이름
+     */
+    @Override
+    @Transactional
+    public Member oauthSignUp(String email, String name) {
+
+        Member member = Member.builder()
+                .email(email)
+                .name(name)
+                .roles(new HashSet<>())
+                .build();
+
+        signupWithRole(member);
+
+        memberRepository.save(member);
+
+        return member;
+    }
+
+    /**
+     * Returns login member with LoginRequest
+     *
+     * @param email 회원 이메일
+     * @return 로그인 성공하면 회원 아이디, JWT(Access, Refresh Token)을 리턴을 합니다.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public MemberLoginResponse oauthLogin(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundMemberEmail(email));
+
+        return createToken(member);
+    }
+
+    private void signupWithRole(Member member) {
+        Optional<Role> userRole = roleRepository.findByName(RoleEnum.CUSTOM.getRoleName());
+        userRole.ifPresent(member::changeRole);
+    }
+
+    private void duplicationWithEmail(MemberSignupRequest request) {
+        if (memberRepository.existsByEmail(request.getEmail())) {
+            throw new EmailDuplication(request.getEmail());
+        }
+    }
+
+    @Transactional(readOnly = true)
+    private MemberLoginResponse createToken(Member member){
+
         List<String> roles = member.getRoles().stream()
                 .map(Role::getName)
                 .collect(Collectors.toList());
@@ -110,16 +167,5 @@ public class MemberServiceImpl implements MemberService {
 
         refreshTokenService.addRefreshToken(refreshToken);
         return MemberLoginResponse.of(member, accessToken, refreshToken);
-    }
-
-    private void signupWithRole(Member member) {
-        Optional<Role> userRole = roleRepository.findByName(RoleEnum.CUSTOM.getRoleName());
-        userRole.ifPresent(member::changeRole);
-    }
-
-    private void duplicationWithEmail(MemberSignupRequest request) {
-        if (memberRepository.existsByEmail(request.getEmail())) {
-            throw new EmailDuplication(request.getEmail());
-        }
     }
 }

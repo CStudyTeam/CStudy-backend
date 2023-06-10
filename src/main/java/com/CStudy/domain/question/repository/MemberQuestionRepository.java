@@ -1,11 +1,11 @@
 package com.CStudy.domain.question.repository;
 
-import com.CStudy.domain.member.entity.Member;
 import com.CStudy.domain.question.entity.MemberQuestion;
-import com.CStudy.domain.question.entity.Question;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.Optional;
 
 public interface MemberQuestionRepository extends JpaRepository<MemberQuestion, Long> {
 
@@ -28,4 +28,19 @@ public interface MemberQuestionRepository extends JpaRepository<MemberQuestion, 
     boolean existsByMemberAndQuestionAndFail(@Param("memberId") Long memberId,
                                                 @Param("questionId") Long questionId,
                                                 @Param("choiceNumber") int choiceNumber);
+
+    @Query("SELECT COUNT(MQ) FROM MemberQuestion MQ " +
+            "WHERE MQ.member.id = :memberId " +
+            "AND MQ.question.id = :questionId " +
+            "AND MQ.success = 0")
+    long countByMemberIdAndQuestionIdAndSuccessZero(@Param("memberId") Long memberId,
+                                                    @Param("questionId") Long questionId);
+
+
+
+    @Query("SELECT MQ FROM MemberQuestion MQ " +
+            "WHERE MQ.member.id = :memberId " +
+            "AND MQ.question.id = :questionId")
+    Optional<MemberQuestion> findByQuestionAboutMemberIdAndQuestionId(@Param("memberId") Long memberId, @Param("questionId") Long questionId);
+
 }
