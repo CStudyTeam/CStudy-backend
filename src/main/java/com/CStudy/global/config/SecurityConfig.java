@@ -2,6 +2,9 @@ package com.CStudy.global.config;
 
 
 import com.CStudy.global.jwt.exception.CustomAuthenticationEntryPoint;
+import com.CStudy.global.oauth.CustomOAuth2UserService;
+import com.CStudy.global.oauth.OAuth2FailureHandler;
+import com.CStudy.global.oauth.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,11 +22,13 @@ public class SecurityConfig {
 
     private final AuthenticationManagerConfig authenticationManagerConfig;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-
+    private final CustomOAuth2UserService oAuth2UserService;
+    private final OAuth2SuccessHandler successHandler;
+    private final OAuth2FailureHandler failureHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
+        http
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and()
                 .formLogin().disable()
@@ -40,7 +45,13 @@ public class SecurityConfig {
                 .exceptionHandling()
                 .authenticationEntryPoint(customAuthenticationEntryPoint)
                 .and()
-                .build();
+                .oauth2Login()
+                .successHandler(successHandler)
+                .failureHandler(failureHandler)
+                .userInfoEndpoint()
+                .userService(oAuth2UserService);
+
+        return http.build();
     }
 }
 

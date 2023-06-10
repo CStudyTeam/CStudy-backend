@@ -2,7 +2,11 @@ package com.CStudy.domain.member.entity;
 
 import com.CStudy.domain.competition.entity.MemberCompetition;
 import com.CStudy.domain.question.entity.MemberQuestion;
+import com.CStudy.domain.request.entity.Request;
 import com.CStudy.domain.role.entity.Role;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,6 +50,14 @@ public class Member {
     List<MemberCompetition>memberCompetitions = new ArrayList<>();
 
 
+    @OneToMany(
+            mappedBy = "member",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
+    )
+    List<Request> requests = new ArrayList<>();
+
+
     @ManyToMany
     @JoinTable(name = "member_role",
             joinColumns = @JoinColumn(name = "member_id"),
@@ -65,5 +77,9 @@ public class Member {
         this.password = password;
         this.name = name;
         this.roles = roles;
+    }
+
+    public void addRequest(Request request){
+        this.requests.add(request);
     }
 }

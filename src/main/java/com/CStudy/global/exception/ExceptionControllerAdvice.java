@@ -6,6 +6,8 @@ import com.CStudy.global.exception.member.EmailDuplication;
 import com.CStudy.global.exception.member.InvalidMatchPasswordException;
 import com.CStudy.global.exception.member.NotFoundMemberEmail;
 import com.CStudy.global.exception.member.NotFoundMemberId;
+import com.CStudy.global.exception.workbook.NotFoundWorkbook;
+import com.CStudy.global.exception.workbook.NotFoundWorkbookQuestion;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -71,6 +73,26 @@ public class ExceptionControllerAdvice {
     ) throws IOException {
         viewSlackLog(request);
         return new ErrorResponse(ErrorCode.NotFoundMemberId.getErrorCode(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NotFoundWorkbook.class)
+    public ErrorResponse NotFoundWorkbook(
+        NotFoundWorkbook e,
+        HttpServletRequest request
+    ) throws IOException {
+        viewSlackLog(request);
+        return new ErrorResponse(ErrorCode.NotFoundWorkbook.getErrorCode(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NotFoundWorkbookQuestion.class)
+    public ErrorResponse NotFoundWorkbookQuestion(
+        NotFoundWorkbookQuestion e,
+        HttpServletRequest request
+    ) throws IOException {
+        viewSlackLog(request);
+        return new ErrorResponse(ErrorCode.NotFoundWorkbookQuestion.getErrorCode(), e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
