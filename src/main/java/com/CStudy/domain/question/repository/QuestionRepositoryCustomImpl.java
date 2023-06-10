@@ -4,7 +4,9 @@ import com.CStudy.domain.question.dto.request.QuestionSearchCondition;
 import com.CStudy.domain.question.dto.response.QQuestionPageWithCategoryAndTitle;
 import com.CStudy.domain.question.dto.response.QuestionPageWithCategoryAndTitle;
 import com.CStudy.domain.question.entity.Question;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
@@ -33,7 +35,11 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
                         new QQuestionPageWithCategoryAndTitle(
                                 question.id.as("questionId"),
                                 question.title.as("questionTitle"),
-                                category.categoryTitle.as("categoryTitle")
+                                category.categoryTitle.as("categoryTitle"),
+                                Expressions.cases()
+                                        .when(memberQuestion.success.ne(0)).then(memberQuestion.success)
+                                        .otherwise(0)
+                                        .as("success")
                         )).from(question)
                 .leftJoin(question.category, category)
                 .leftJoin(question.questions, memberQuestion)
@@ -55,6 +61,7 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
                 );
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
+
 
     private BooleanExpression categoryTitleEq(String categoryTitle) {
         return StringUtils.hasText(categoryTitle) ? category.categoryTitle.eq(categoryTitle) : null;

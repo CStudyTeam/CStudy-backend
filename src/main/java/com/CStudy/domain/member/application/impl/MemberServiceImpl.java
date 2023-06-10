@@ -1,5 +1,6 @@
 package com.CStudy.domain.member.application.impl;
 
+import com.CStudy.domain.aop.TimeAnnotation;
 import com.CStudy.domain.member.application.MemberService;
 import com.CStudy.domain.member.dto.request.MemberLoginRequest;
 import com.CStudy.domain.member.dto.request.MemberSignupRequest;
@@ -58,6 +59,7 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     @Transactional
+    @TimeAnnotation
     public MemberSignupResponse signUp(
             MemberSignupRequest request
     ) {

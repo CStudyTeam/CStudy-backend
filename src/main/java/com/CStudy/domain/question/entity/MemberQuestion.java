@@ -24,14 +24,14 @@ public class MemberQuestion {
 
     @ManyToOne(
             fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
+            cascade = CascadeType.PERSIST
     )
     @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne(
             fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
+            cascade = CascadeType.PERSIST
     )
     @JoinColumn(name = "question_id")
     private Question question;

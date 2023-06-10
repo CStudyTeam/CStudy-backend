@@ -1,5 +1,6 @@
 package com.CStudy.domain.question.controller;
 
+import com.CStudy.domain.question.application.MemberQuestionService;
 import com.CStudy.domain.question.application.QuestionService;
 import com.CStudy.domain.question.dto.request.ChoiceAnswerRequestDto;
 import com.CStudy.domain.question.dto.request.CreateQuestionAndCategoryRequestDto;
@@ -19,12 +20,17 @@ import java.util.List;
 public class QuestionController {
 
     private final QuestionService questionService;
+    private final MemberQuestionService memberQuestionService;
 
-    public QuestionController(QuestionService questionService) {
+    public QuestionController(
+            QuestionService questionService,
+            MemberQuestionService memberQuestionService
+    ) {
         this.questionService = questionService;
+        this.memberQuestionService = memberQuestionService;
     }
 
-    @PostMapping("/question")
+    @PostMapping("question")
     @ResponseStatus(HttpStatus.CREATED)
     public void createQuestionWithCategory(
             @RequestBody CreateQuestionAndCategoryRequestDto requestDto
@@ -32,7 +38,7 @@ public class QuestionController {
         questionService.createQuestionChoice(requestDto);
     }
 
-    @PostMapping("/questions")
+    @PostMapping("questions")
     @ResponseStatus(HttpStatus.CREATED)
     public void buildCreateQuestionWithCategory(
             @RequestBody List<CreateQuestionAndCategoryRequestDto> requestDtos
@@ -40,7 +46,7 @@ public class QuestionController {
         questionService.recursiveCreateQuestionChoice(requestDtos);
     }
 
-    @GetMapping("/question/{questionId}")
+    @GetMapping("question/{questionId}")
     @ResponseStatus(HttpStatus.OK)
     public QuestionResponseDto haha(
             @PathVariable Long questionId
@@ -48,17 +54,18 @@ public class QuestionController {
         return questionService.findQuestionWithChoiceAndCategory(questionId);
     }
 
-    @PostMapping("/question/{questionId}")
+    @PostMapping("question/{questionId}")
     @ResponseStatus(HttpStatus.CREATED)
     public void choiceQuestion(
             @PathVariable Long questionId,
             @RequestBody ChoiceAnswerRequestDto choiceNumber,
             @IfLogin LoginUserDto loginUserDto
     ) {
+        memberQuestionService.findByQuestionAboutMemberIdAndQuestionId(loginUserDto.getMemberId(),questionId);
         questionService.choiceQuestion(loginUserDto, questionId, choiceNumber);
     }
 
-    @GetMapping("/questions")
+    @GetMapping("questions")
     @ResponseStatus(HttpStatus.OK)
     public Page<QuestionPageWithCategoryAndTitle> findQuestionPageWithCategoryAndTitleConditionalSearch(
             QuestionSearchCondition searchCondition,

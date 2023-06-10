@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class QuestionSearchCondition {
     private String questionTitle;
     private String categoryTitle;
+    private int questionSuccess;
 }

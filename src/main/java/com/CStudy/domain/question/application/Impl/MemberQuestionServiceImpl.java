@@ -12,6 +12,9 @@ import com.CStudy.global.exception.member.NotFoundMemberId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
+
 @Service
 public class MemberQuestionServiceImpl implements MemberQuestionService {
 
@@ -67,5 +70,16 @@ public class MemberQuestionServiceImpl implements MemberQuestionService {
                 .question(question)
                 .fail(choiceNumber)
                 .build());
+    }
+
+    @Override
+    @Transactional
+    public void findByQuestionAboutMemberIdAndQuestionId(Long memberId, Long questionId) {
+        long count = memberQuestionRepository.countByMemberIdAndQuestionIdAndSuccessZero(memberId, questionId);
+        if (count != 0) {
+            Optional<MemberQuestion> questionOptional = memberQuestionRepository.findByQuestionAboutMemberIdAndQuestionId(memberId, questionId);
+            questionOptional.ifPresent(question -> memberQuestionRepository.deleteById(question.getId()));
+            questionOptional.orElseThrow(() -> new RuntimeException("MemberQuestion not found"));
+        }
     }
 }
