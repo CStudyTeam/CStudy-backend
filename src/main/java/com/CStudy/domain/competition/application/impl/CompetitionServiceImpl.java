@@ -2,6 +2,7 @@ package com.CStudy.domain.competition.application.impl;
 
 import com.CStudy.domain.competition.application.CompetitionService;
 import com.CStudy.domain.competition.dto.request.createCompetitionRequestDto;
+import com.CStudy.domain.competition.dto.response.CompetitionListResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionQuestionDto;
 import com.CStudy.domain.competition.dto.response.CompetitionResponseDto;
 import com.CStudy.domain.competition.entity.Competition;
@@ -11,6 +12,10 @@ import com.CStudy.domain.workbook.entity.Workbook;
 import com.CStudy.domain.workbook.repository.WorkbookRepository;
 import com.CStudy.global.exception.competition.NotFoundCompetitionId;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,6 +69,19 @@ public class CompetitionServiceImpl implements CompetitionService {
                 .findQuestionWithCompetitionById(id);
 
         return CompetitionResponseDto.of(competition, question);
+    }
+
+    @Override
+    public Page<CompetitionListResponseDto> getCompetitionList(boolean finish, Pageable pageable) {
+
+        Page<Competition> competitions = null;
+        if(finish) {
+            competitions = competitionRepository.findByCompetitionEndBefore(LocalDateTime.now(), pageable);
+        } else {
+            competitions = competitionRepository.findByCompetitionEndAfter(LocalDateTime.now(), pageable);
+        }
+
+        return competitions.map(CompetitionListResponseDto::of);
     }
 
 }
