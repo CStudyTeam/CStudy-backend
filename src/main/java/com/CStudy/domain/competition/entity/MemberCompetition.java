@@ -24,6 +24,9 @@ public class MemberCompetition {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Version
+    private Long version;
+
     @Builder
     public MemberCompetition(Long id, Competition competition, Member member) {
         this.id = id;
