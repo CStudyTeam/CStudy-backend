@@ -31,6 +31,8 @@ public class Member {
     @Column(name = "member_name")
     private String name;
 
+    private Long rankingPoint= 0L;
+
     @OneToMany(
             mappedBy = "member",
             fetch = FetchType.LAZY,
@@ -57,6 +59,14 @@ public class Member {
 
     public void changeRole(Role role) {
         roles.add(role);
+    }
+
+    public void addRankingPoint() {
+        rankingPoint +=3L;
+    }
+
+    public void minusRankingPoint() {
+            rankingPoint -= 2L;
     }
 
     @Builder
