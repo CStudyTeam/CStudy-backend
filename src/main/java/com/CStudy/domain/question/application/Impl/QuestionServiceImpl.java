@@ -17,11 +17,13 @@ import com.CStudy.domain.question.repository.CategoryRepository;
 import com.CStudy.domain.question.repository.QuestionRepository;
 import com.CStudy.global.exception.Question.NotFoundQuestionWithChoicesAndCategoryById;
 import com.CStudy.global.exception.category.NotFoundCategoryTile;
+import com.CStudy.global.redis.RedisPublisher;
 import com.CStudy.global.util.LoginUserDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,17 +37,20 @@ public class QuestionServiceImpl implements QuestionService {
     private final CategoryRepository categoryRepository;
     private final ChoiceRepository choiceRepository;
     private final MemberQuestionService memberQuestionService;
+    private final RedisPublisher redisPublisher;
 
     public QuestionServiceImpl(
             QuestionRepository questionRepository,
             CategoryRepository categoryRepository,
             ChoiceRepository choiceRepository,
-            MemberQuestionService memberQuestionService
+            MemberQuestionService memberQuestionService,
+            RedisPublisher redisPublisher
     ) {
         this.questionRepository = questionRepository;
         this.categoryRepository = categoryRepository;
         this.choiceRepository = choiceRepository;
         this.memberQuestionService = memberQuestionService;
+        this.redisPublisher = redisPublisher;
     }
 
     private static final String COLLECT_ANSWER = "정답";
@@ -125,6 +130,7 @@ public class QuestionServiceImpl implements QuestionService {
                         );
                     }
                 });
+        redisPublisher.publish(ChannelTopic.of("ranking-invalidation"), "ranking");
     }
 
     @Override
