@@ -1,11 +1,13 @@
 package com.CStudy.domain.choice.dto;
 
 import com.CStudy.domain.choice.entity.Choice;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class ChoiceQuestionResponseDto {
 
     private int number;
