@@ -1,4 +1,4 @@
-package com.CStudy.domain.workbook.dto.application;
+package com.CStudy.domain.workbook.application;
 
 import com.CStudy.domain.workbook.dto.request.WorkbookQuestionRequestDto;
 import com.CStudy.domain.workbook.dto.request.CreateWorkbookRequestDto;
