@@ -1,8 +1,8 @@
-package com.CStudy.domain.workbook.dto.application.impl;
+package com.CStudy.domain.workbook.application.impl;
 
 import com.CStudy.domain.question.entity.Question;
 import com.CStudy.domain.question.repository.QuestionRepository;
-import com.CStudy.domain.workbook.dto.application.WorkbookService;
+import com.CStudy.domain.workbook.application.WorkbookService;
 import com.CStudy.domain.workbook.dto.request.CreateWorkbookRequestDto;
 import com.CStudy.domain.workbook.dto.request.QuestionIdRequestDto;
 import com.CStudy.domain.workbook.dto.request.UpdateWorkbookRequestDto;

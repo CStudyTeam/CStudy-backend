@@ -1,5 +1,6 @@
 package com.CStudy.domain.workbook.entity;
 
+import com.CStudy.domain.competition.entity.Competition;
 import com.CStudy.domain.question.entity.MemberQuestion;
 import com.CStudy.domain.workbook.dto.request.UpdateWorkbookRequestDto;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,10 +43,9 @@ public class Workbook {
     @Column(name = "created_at")
     private final LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "")
+    @Column(name = "competition_end_time")
     private LocalDateTime competitionEndTime;
 
-    @BatchSize(size = 7)
     @OneToMany(
             mappedBy = "workbook",
             fetch = FetchType.LAZY,
@@ -52,19 +53,27 @@ public class Workbook {
     )
     List<WorkbookQuestion> questions = new ArrayList<>();
 
+    @OneToOne(
+        mappedBy = "workbook",
+        fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL
+    )
+    private Competition competition;
+
     @Builder
     public Workbook(String title, String description, LocalDateTime endTime){
         this.title = title;
         this.description = description;
-        if(endTime == null) {
-            competitionEndTime = LocalDateTime.now();
-        } else {
-            competitionEndTime = endTime;
-        }
+        this.competitionEndTime = LocalDateTime.now();
     }
 
     public void addQuestion(WorkbookQuestion question){
         this.questions.add(question);
+    }
+
+    public void setCompetition(Competition competition){
+        this.competition = competition;
+        this.competitionEndTime = competition.getCompetitionEnd();
     }
 
     public void changeWorkbook(UpdateWorkbookRequestDto workbookDto) {
