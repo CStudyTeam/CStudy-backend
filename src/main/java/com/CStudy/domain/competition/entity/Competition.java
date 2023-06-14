@@ -1,5 +1,6 @@
 package com.CStudy.domain.competition.entity;
 
+import com.CStudy.domain.workbook.entity.Workbook;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,12 +37,20 @@ public class Competition {
     )
     Set<MemberCompetition> memberCompetitionSet = new HashSet<>();
 
+    @OneToOne(
+        fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL
+    )
+    @JoinColumn(name = "workbook_id")
+    private Workbook workbook;
+
     @Builder
-    public Competition(String competitionTitle, int participants, LocalDateTime competitionStart, LocalDateTime competitionEnd) {
+    public Competition(String competitionTitle, int participants, LocalDateTime competitionStart, LocalDateTime competitionEnd, Workbook workbook) {
         this.competitionTitle = competitionTitle;
         this.participants = participants;
         this.competitionStart = competitionStart;
         this.competitionEnd = competitionEnd;
+        this.workbook = workbook;
     }
 
     public void decreaseParticipantsCount() {

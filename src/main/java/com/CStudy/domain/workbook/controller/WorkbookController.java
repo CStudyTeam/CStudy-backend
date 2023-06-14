@@ -1,6 +1,6 @@
-package com.CStudy.domain.workbook.dto.controller;
+package com.CStudy.domain.workbook.controller;
 
-import com.CStudy.domain.workbook.dto.application.WorkbookService;
+import com.CStudy.domain.workbook.application.WorkbookService;
 import com.CStudy.domain.workbook.dto.request.WorkbookQuestionRequestDto;
 import com.CStudy.domain.workbook.dto.request.CreateWorkbookRequestDto;
 import com.CStudy.domain.workbook.dto.request.UpdateWorkbookRequestDto;
