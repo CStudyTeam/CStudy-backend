@@ -15,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
+import org.springframework.data.web.SortDefault.SortDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -80,7 +82,10 @@ public class CompetitionController {
     @GetMapping("competition/ranking/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public Page<CompetitionRankingResponseDto> getRanking(
-            @PageableDefault Pageable pageable,
+            @PageableDefault @SortDefaults({
+                @SortDefault(sort = "score", direction = Direction.DESC),
+                @SortDefault(sort = "endTime",direction = Direction.ASC)
+            }) Pageable pageable,
             @PathVariable Long id
     ) {
         return competitionService.getCompetitionRanking(id, pageable);

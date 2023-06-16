@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,9 +24,11 @@ public class CompetitionScore {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_competition_id")
     private MemberCompetition memberCompetition;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id")
     private Question question;
 
     private boolean success;

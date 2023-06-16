@@ -48,6 +48,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 
         Workbook workbook = Workbook.builder()
                 .title(createCompetitionRequestDto.getCompetitionTitle())
+                .description(createCompetitionRequestDto.getCompetitionTitle())
                 .build();
 
         workbookRepository.save(workbook);
