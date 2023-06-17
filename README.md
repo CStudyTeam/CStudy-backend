@@ -170,7 +170,7 @@ src
 <br>
 
 # 🏛️ Architecture
-![232328695-004b310c-c6b7-4fa0-849b-842292dcb471_preview_rev_1](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/2df76c46-e8d4-477e-8caa-24986bf43d2b)
+![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/e92ef9c0-9420-48de-b294-a77487777600)
 
   
 <br>
