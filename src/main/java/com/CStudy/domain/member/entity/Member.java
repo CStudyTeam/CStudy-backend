@@ -33,6 +33,9 @@ public class Member {
 
     private Long rankingPoint= 0L;
 
+    @OneToOne(mappedBy = "member")
+    private File file;
+
     @OneToMany(
             mappedBy = "member",
             fetch = FetchType.LAZY,
