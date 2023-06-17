@@ -19,7 +19,7 @@ public class RequestResponseDto {
 
     private String title;
 
-    private String content;
+    private String description;
 
     private Long memberId;
 
@@ -33,7 +33,7 @@ public class RequestResponseDto {
                 .id(request.getId())
                 .flag(request.isFlag())
                 .title(request.getTitle())
-                .content(request.getContent())
+                .description(request.getDescription())
                 .memberId(request.getMember().getId())
                 .memberName(request.getMember().getName())
                 .createAt(request.getCreatedAt())
