@@ -7,9 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.persistence.LockModeType;
 import java.util.List;
 
 public interface MemberCompetitionRepository extends JpaRepository<MemberCompetition, Long> {
@@ -20,6 +22,7 @@ public interface MemberCompetitionRepository extends JpaRepository<MemberCompeti
             "WHERE C.id =: competitionId")
     List<MemberCompetition>findAllWithMemberAndCompetition(@Param("competitionId") Long competitionId);
 
+    @Lock(LockModeType.OPTIMISTIC)
     @Query("SELECT CASE WHEN COUNT(mc) > 0 THEN true ELSE false END " +
             "FROM MemberCompetition mc " +
             "WHERE mc.member.id = :memberId AND mc.competition.id = :competitionId")

@@ -10,6 +10,11 @@ import com.CStudy.domain.competition.dto.response.CompetitionRankingResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionResponseDto;
 import com.CStudy.global.util.IfLogin;
 import com.CStudy.global.util.LoginUserDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +24,7 @@ import org.springframework.data.web.SortDefault;
 import org.springframework.data.web.SortDefault.SortDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
+@Tag(name = "Competition(경기 API)", description = "경기 생성 및 Get")
 @Slf4j
 @RestController
 @RequestMapping("api")
@@ -38,9 +43,14 @@ public class CompetitionController {
         this.competitionScoreService = competitionScoreService;
     }
 
+    @Operation(summary = "대회 생성하기", description = "대회 생성하기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "대회 생성하기 성공")
+    })
     @PostMapping("competition")
     @ResponseStatus(HttpStatus.CREATED)
     public void createCompetition(
+            @Parameter(name = "createCompetitionRequestDto", description = "createCompetitionRequestDto")
             @RequestBody createCompetitionRequestDto createCompetitionRequestDto
     ) {
         competitionService.createCompetition(createCompetitionRequestDto);
@@ -50,7 +60,7 @@ public class CompetitionController {
     @ResponseStatus(HttpStatus.CREATED)
     public void joinCompetitionById(
             @IfLogin LoginUserDto loginUserDto,
-            @PathVariable Long competitionId
+            @PathVariable(name = "competitionId") Long competitionId
     ) {
         memberCompetitionService.joinCompetition(loginUserDto, competitionId);
     }

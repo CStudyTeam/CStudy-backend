@@ -27,6 +27,10 @@ public class MemberCompetition {
     @JoinColumn(name = "member_id")
     private Member member;
 
+
+    @Version
+    private Long version;
+
     private int score;
 
     private LocalDateTime endTime;
@@ -37,6 +41,7 @@ public class MemberCompetition {
         cascade = CascadeType.ALL
     )
     private List<CompetitionScore> competitionScore = new ArrayList<>();
+
 
     @Builder
     public MemberCompetition(Long id, Competition competition, Member member) {
