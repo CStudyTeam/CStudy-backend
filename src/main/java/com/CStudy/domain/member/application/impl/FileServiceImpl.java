@@ -29,7 +29,11 @@ public class FileServiceImpl implements FileService {
     private final FileRepository fileRepository;
     private final MemberRepository memberRepository;
 
-    public FileServiceImpl(AmazonS3Client amazonS3Client, FileRepository fileRepository, MemberRepository memberRepository) {
+    public FileServiceImpl(
+            AmazonS3Client amazonS3Client,
+            FileRepository fileRepository,
+            MemberRepository memberRepository
+    ) {
         this.amazonS3Client = amazonS3Client;
         this.fileRepository = fileRepository;
         this.memberRepository = memberRepository;
@@ -41,6 +45,13 @@ public class FileServiceImpl implements FileService {
     @Value("${cloud.aws.region.static}")
     private String region;
 
+    /**
+     * Upload single, multiple files to aws3 Enter file in key to enter as postman
+     * @param multipartFileList 멀티파트 파일 List
+     * @param loginUserDto 로그인 회원의 정보
+     * @return imagePathList
+     * @throws Exception
+     */
     @Override
     @Transactional
     public List<String> uploadFiles(MultipartFile[] multipartFileList, LoginUserDto loginUserDto) throws Exception {
@@ -58,6 +69,12 @@ public class FileServiceImpl implements FileService {
         return imagePathList;
     }
 
+    /**
+     *
+     * @param loginUserDto 로그인 회원의 정보
+     * @return s3에 업로드 파일의 url을 통하여 전송
+     */
+    @Transactional
     @Override
     public byte[] getImageBytes(LoginUserDto loginUserDto) {
 
