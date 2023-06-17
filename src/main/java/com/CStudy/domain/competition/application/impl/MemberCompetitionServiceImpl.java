@@ -1,5 +1,6 @@
 package com.CStudy.domain.competition.application.impl;
 
+import com.CStudy.domain.aop.OptimisticAnnotation;
 import com.CStudy.domain.competition.application.MemberCompetitionService;
 import com.CStudy.domain.competition.entity.Competition;
 import com.CStudy.domain.competition.entity.MemberCompetition;
@@ -27,6 +28,7 @@ public class MemberCompetitionServiceImpl implements MemberCompetitionService {
 
     @Override
     @Transactional
+    @OptimisticAnnotation
     public void joinCompetition(LoginUserDto loginUserDto, Long competitionId) {
 
         preventionDuplicateParticipation(loginUserDto, competitionId);

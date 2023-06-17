@@ -1,6 +1,7 @@
 package com.CStudy.domain.competition.dto.response;
 
 import com.CStudy.domain.competition.entity.Competition;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +16,9 @@ public class CompetitionListResponseDto {
 
     private Long id;
     private String title;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime startTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime endTime;
     private int participants;
 

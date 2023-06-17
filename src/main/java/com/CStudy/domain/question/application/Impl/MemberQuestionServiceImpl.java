@@ -46,6 +46,8 @@ public class MemberQuestionServiceImpl implements MemberQuestionService {
             throw new existByMemberQuestionDataException(memberId, questionId, choiceNumber);
         }
 
+        member.addRankingPoint();
+
         memberQuestionRepository.save(MemberQuestion.builder()
                 .member(member)
                 .question(question)
@@ -65,6 +67,9 @@ public class MemberQuestionServiceImpl implements MemberQuestionService {
         if (memberQuestionRepository.existsByMemberAndQuestionAndFail(memberId, questionId, choiceNumber)) {
             throw new existByMemberQuestionDataException(memberId, questionId, choiceNumber);
         }
+
+        member.minusRankingPoint();
+
         memberQuestionRepository.save(MemberQuestion.builder()
                 .member(member)
                 .question(question)
