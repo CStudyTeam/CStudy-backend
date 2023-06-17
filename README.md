@@ -1,8 +1,8 @@
 # 📖 취업 CS 걱정하지마, CS;tudy
-- 
+
 
 <p align="center">
-사진
+  <img src="https://github.com/CStudyTeam/CStudy-backend/assets/103854287/8681bd61-0459-4d6c-8f92-74bf6168ced7" style="width: 50%; height: 40%;" />
 </p>
 
 <br>
@@ -170,7 +170,7 @@ src
 <br>
 
 # 🏛️ Architecture
-![image](https://user-images.githubusercontent.com/103854287/232328695-004b310c-c6b7-4fa0-849b-842292dcb471.png)
+![232328695-004b310c-c6b7-4fa0-849b-842292dcb471_preview_rev_1](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/2df76c46-e8d4-477e-8caa-24986bf43d2b)
 
 <br>
 <br>

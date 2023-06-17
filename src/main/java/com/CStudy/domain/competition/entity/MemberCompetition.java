@@ -1,6 +1,9 @@
 package com.CStudy.domain.competition.entity;
 
 import com.CStudy.domain.member.entity.Member;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,13 +27,38 @@ public class MemberCompetition {
     @JoinColumn(name = "member_id")
     private Member member;
 
+
     @Version
     private Long version;
+
+    private int score;
+
+    private LocalDateTime endTime;
+
+    @OneToMany(
+        mappedBy = "memberCompetition",
+        fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL
+    )
+    private List<CompetitionScore> competitionScore = new ArrayList<>();
+
 
     @Builder
     public MemberCompetition(Long id, Competition competition, Member member) {
         this.id = id;
         this.competition = competition;
         this.member = member;
+    }
+
+    public void setScore(int score){
+        this.score = score;
+    }
+
+    public void setEndTime(LocalDateTime endTime){
+        this.endTime = endTime;
+    }
+
+    public void addCompetitionScore(CompetitionScore competitionScore) {
+        this.competitionScore.add(competitionScore);
     }
 }

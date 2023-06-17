@@ -1,6 +1,7 @@
 package com.CStudy.domain.question.entity;
 
 import com.CStudy.domain.choice.entity.Choice;
+import com.CStudy.domain.workbook.entity.WorkbookQuestion;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,6 +48,13 @@ public class Question {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToMany(
+        mappedBy = "question",
+        fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL
+    )
+    private List<WorkbookQuestion> workbookQuestions;
 
     @Builder
     public Question(Long id, String title, String description, String explain, Set<MemberQuestion> questions, List<Choice> choices, Category category) {
