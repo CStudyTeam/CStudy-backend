@@ -2,7 +2,7 @@
 
 
 <p align="center">
-  <img src="https://github.com/CStudyTeam/CStudy-backend/assets/103854287/8681bd61-0459-4d6c-8f92-74bf6168ced7" style="width: 50%; height: 40%;" />
+  <img src="https://github.com/CStudyTeam/CStudy-backend/assets/103854287/8681bd61-0459-4d6c-8f92-74bf6168ced7" />
 </p>
 
 <br>
@@ -170,7 +170,8 @@ src
 <br>
 
 # 🏛️ Architecture
-![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/e92ef9c0-9420-48de-b294-a77487777600)
+![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/4863a291-0041-4170-a443-d5fea9d86551)
+
 
   
 <br>
