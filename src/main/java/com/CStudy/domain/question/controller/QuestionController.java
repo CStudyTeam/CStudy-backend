@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Question(문제 API)", description = "문제 관련 API(문제 생성, 조회)")
+
+@Tag(name = "문제 Question", description = "문제 생성 및 대량 데이터 Insert & 문제 페이징 및 정답 선택")
+
 @RestController
 @RequestMapping("/api")
 public class QuestionController {
@@ -39,77 +41,96 @@ public class QuestionController {
         this.memberQuestionService = memberQuestionService;
     }
 
-    @Operation(summary = "문제 생성", description = "문제 생성")
+
+    @Operation(summary = "문제 생성하기", description = "문제, 카테고리, 문제 보기, 정답을 생성을 합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "문제 생성 성공"),
-            @ApiResponse(responseCode = "400", description = "문제 생성 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "201", description = "문제 생성하기 성공"),
+            @ApiResponse(responseCode = "400", description = "문제 생성하기 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
     })
     @PostMapping("question")
     @ResponseStatus(HttpStatus.CREATED)
     public void createQuestionWithCategory(
-            @Parameter(description = "title: 문제 제목, desc: 문제 설명, explain: 문제 해설, category: 카테고리, "
-                                    + "number: 선택지 번호, content: 선택지 내용, answer: 정답 선택지")
+
+            @Parameter(name = "CreateQuestionAndCategoryRequestDto", description = "createQuestionRequestDto, categoryRequestDto, createChoicesAboutQuestionDto")
+
             @RequestBody CreateQuestionAndCategoryRequestDto requestDto
     ) {
         questionService.createQuestionChoice(requestDto);
     }
 
-    @Operation(summary = "문제 여러개 생성", description = "문제 여러개 생성")
+
+    @Operation(summary = "대량 문제 생성하기", description = "재귀를 통하여 문제 List Insert 하기")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "문제 생성 성공"),
-            @ApiResponse(responseCode = "400", description = "문제 생성 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "201", description = "문제 대량 생성하기 성공"),
+            @ApiResponse(responseCode = "400", description = "문제 대량 생성하기 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
     })
     @PostMapping("questions")
     @ResponseStatus(HttpStatus.CREATED)
     public void buildCreateQuestionWithCategory(
-            @Parameter(description = "title: 문제 제목, desc: 문제 설명, explain: 문제 해설, category: 카테고리, "
-                                    + "number: 선택지 번호, content: 선택지 내용, answer: 정답 선택지")
+
+            @Parameter(name = "List<CreateQuestionAndCategoryRequestDto>", description = "List<createQuestionRequestDto, categoryRequestDto, createChoicesAboutQuestionDto>")
+
             @RequestBody List<CreateQuestionAndCategoryRequestDto> requestDtos
     ) {
         questionService.recursiveCreateQuestionChoice(requestDtos);
     }
 
-    @Operation(summary = "문제 조회", description = "문제 id를 이용해 문제 조회")
+
+    @Operation(summary = "단일 문제 찾기", description = "question Id를 이용하여 단일 문제 찾기")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "문제 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "문제 조회 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "200", description = "단일 문제 찾기 성공"),
+            @ApiResponse(responseCode = "400", description = "단일 문제 찾기 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
     })
     @GetMapping("question/{questionId}")
     @ResponseStatus(HttpStatus.OK)
     public QuestionResponseDto haha(
-            @Parameter(name = "questionId", description = "문제 id", required = true)
+
+            @Parameter(name = "questionId", description = "문제 번호")
+
             @PathVariable Long questionId
     ) {
         return questionService.findQuestionWithChoiceAndCategory(questionId);
     }
 
-    @Operation(summary = "문제 채점", description = "문제 id와 고른 선택지 번호를 이용해 문제 채점")
+
+    @Operation(summary = "단일 문제 정답 선택하기", description = "question Id를 이용하여 단일 문제 정답 선택하기")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "문제 채점 성공"),
-            @ApiResponse(responseCode = "400", description = "문제 채점 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "201", description = "단일 문제 정답 선택하기 성공"),
+            @ApiResponse(responseCode = "400", description = "단일 문제 정답 선택하기 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
     })
     @PostMapping("question/{questionId}")
     @ResponseStatus(HttpStatus.CREATED)
     public void choiceQuestion(
-            @Parameter(name = "questionId", description = "문제 id", required = true)
+            @Parameter(name = "questionId", description = "문제 번호")
             @PathVariable Long questionId,
-            @Parameter(description = "choiceNumber: 유저가 고른 선택지 번호")
+            @Parameter(name = "ChoiceAnswerRequestDto", description = "정답 선택 번호")
             @RequestBody ChoiceAnswerRequestDto choiceNumber,
-            @Parameter(hidden = true) @IfLogin LoginUserDto loginUserDto
+            @Parameter(name = "LoginUserDto", description = "로그인 회원 정보")
+            @IfLogin LoginUserDto loginUserDto
+
     ) {
         memberQuestionService.findByQuestionAboutMemberIdAndQuestionId(loginUserDto.getMemberId(),questionId);
         questionService.choiceQuestion(loginUserDto, questionId, choiceNumber);
     }
 
-    @Operation(summary = "문제 리스트 조회", description = "문제 리스트 조회")
+
+    @Operation(summary = "전체 문제 페이징", description = "전체 문제 페이징 처리 default page:0, size:10")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "문제 리스트 조회 성공")
-    })
+            @ApiResponse(responseCode = "200", description = "전체 문제 페이징 성공"),
+            @ApiResponse(responseCode = "400", description = "전체 문제 페이징 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
     @GetMapping("questions")
     @ResponseStatus(HttpStatus.OK)
     public Page<QuestionPageWithCategoryAndTitle> findQuestionPageWithCategoryAndTitleConditionalSearch(
+            @Parameter(name = "searchCondition", description = "조건 검색")
             QuestionSearchCondition searchCondition,
+            @Parameter(name = "page", description = "페이징 default 0")
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @Parameter(name = "size", description = "페이징 default 10")
             @RequestParam(value = "size", defaultValue = "10", required = false) int size
     ) {
         return questionService.questionPageWithCategory(searchCondition, page, size);

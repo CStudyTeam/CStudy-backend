@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Ranking(전체 랭킹 API)", description = "전체 랭킹 조회")
+@Tag(name = "Ranking", description = "Redis Cache Aside 전략으로 랭킹보드")
 
 @RestController
 @RequestMapping("api")
@@ -28,9 +28,12 @@ public class RankingController {
         this.rankingService = rankingService;
     }
 
-    @Operation(summary = "전체 랭킹 조회", description = "전체 랭킹 조회")
+
+    @Operation(summary = "redis cache 랭킹 처리", description = "랭킹 sorted set")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "전체 랭킹 조회 성공")
+            @ApiResponse(responseCode = "200", description = "랭킹 가져오기 성공"),
+            @ApiResponse(responseCode = "500", description = "랭킹 가져오기 실패")
+
     })
     @GetMapping("members/ranks")
     @ResponseStatus(HttpStatus.OK)
