@@ -4,8 +4,10 @@ package com.CStudy.domain.member.controller;
 import com.CStudy.domain.member.application.FileService;
 import com.CStudy.domain.member.application.MemberService;
 import com.CStudy.domain.member.dto.request.MemberLoginRequest;
+import com.CStudy.domain.member.dto.request.MemberPasswordChangeRequest;
 import com.CStudy.domain.member.dto.request.MemberSignupRequest;
 import com.CStudy.domain.member.dto.response.MemberLoginResponse;
+import com.CStudy.domain.member.dto.response.MyPageResponseDto;
 import com.CStudy.domain.refresh.application.RefreshTokenService;
 import com.CStudy.domain.refresh.dto.request.RefreshTokenDto;
 import com.CStudy.global.exception.ErrorResponse;
@@ -151,4 +153,31 @@ public class MemberController {
                 .body(new ByteArrayResource(imageBytes));
     }
 
+    @Operation(summary = "마이페이지", description = "마이페이지")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "마이페이지 가져오기 성공"),
+            @ApiResponse(responseCode = "400", description = "마이페이지 가져오기 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/mypage")
+    public MyPageResponseDto myPage(
+            @Parameter(hidden = true)
+            @IfLogin LoginUserDto loginUserDto
+    ){
+        return memberService.getMyPage(loginUserDto.getMemberId());
+    }
+
+    @Operation(summary = "비밀번호 수정", description = "비밀번호 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "비밀번호 수정 성공"),
+            @ApiResponse(responseCode = "400", description = "비밀번호 수정 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+
+    @PostMapping("/mypage/password")
+    public void changePassword(
+            @RequestBody MemberPasswordChangeRequest request,
+            @Parameter(hidden = true)
+            @IfLogin LoginUserDto loginUserDto
+    ){
+        memberService.changePassword(request, loginUserDto.getMemberId());
+    }
 }
