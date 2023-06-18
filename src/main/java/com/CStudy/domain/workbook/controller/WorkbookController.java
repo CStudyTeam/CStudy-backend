@@ -6,8 +6,11 @@ import com.CStudy.domain.workbook.dto.request.CreateWorkbookRequestDto;
 import com.CStudy.domain.workbook.dto.request.UpdateWorkbookRequestDto;
 import com.CStudy.domain.workbook.dto.response.WorkbookQuestionResponseDto;
 import com.CStudy.domain.workbook.dto.response.WorkbookResponseDto;
+import com.CStudy.global.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,7 +60,7 @@ public class WorkbookController {
     @Operation(summary = "문제집 정보 요청", description = "문제집 id를 이용해 문제집 정보를 요청합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "문제집 정보 요청 성공"),
-            @ApiResponse(responseCode = "400", description = "문제집을 찾을 수 없습니다.")
+            @ApiResponse(responseCode = "400", description = "문제집을 찾을 수 없습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/workbook/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -71,7 +74,7 @@ public class WorkbookController {
     @Operation(summary = "문제집 문제 요청", description = "문제집 id를 이용해 문제집에 포함된 문제를 요청합니다. title: 문제집 제목, description: 문제집 설명")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "문제집 문제 요청 성공"),
-            @ApiResponse(responseCode = "400", description = "문제집을 찾을 수 없습니다.")
+            @ApiResponse(responseCode = "400", description = "문제집을 찾을 수 없습니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/workbook/question/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -87,7 +90,7 @@ public class WorkbookController {
     @Operation(summary = "문제집 생성", description = "문제집을 생성합니다. title: 문제집 제목, description: 문제집 설명")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "문제집 생성 성공"),
-            @ApiResponse(responseCode = "400", description = "문제집 생성 실패")
+            @ApiResponse(responseCode = "400", description = "문제집 생성 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/workbook/create")
     @ResponseStatus(HttpStatus.CREATED)
@@ -101,7 +104,7 @@ public class WorkbookController {
     @Operation(summary = "문제집에 문제 추가", description = "문제집 id와 문제 id를 이용해 문제집에 문제 리스트를 추가합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "문제 추가 성공"),
-            @ApiResponse(responseCode = "400", description = "문제 추가 실패")
+            @ApiResponse(responseCode = "400", description = "문제 추가 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/workbook/question/add")
     @ResponseStatus(HttpStatus.CREATED)
@@ -115,7 +118,7 @@ public class WorkbookController {
     @Operation(summary = "문제집 정보 수정", description = "문제집 이름과 설명을 수정합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "문제집 수정 성공"),
-            @ApiResponse(responseCode = "400", description = "문제집 수정 실패")
+            @ApiResponse(responseCode = "400", description = "문제집 수정 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/workbook/update")
     @ResponseStatus(HttpStatus.CREATED)
@@ -129,7 +132,7 @@ public class WorkbookController {
     @Operation(summary = "문제집에서 문제 삭제", description = "문제집 id, 문제 id를 이용해 문제집에서 문제를 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "문제 삭제 성공"),
-            @ApiResponse(responseCode = "400", description = "문제 삭제 실패")
+            @ApiResponse(responseCode = "400", description = "문제 삭제 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @DeleteMapping("/workbook/question/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)

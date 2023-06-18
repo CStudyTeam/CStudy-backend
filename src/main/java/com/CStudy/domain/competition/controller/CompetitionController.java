@@ -8,10 +8,13 @@ import com.CStudy.domain.competition.dto.request.createCompetitionRequestDto;
 import com.CStudy.domain.competition.dto.response.CompetitionListResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionRankingResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionResponseDto;
+import com.CStudy.global.exception.ErrorResponse;
 import com.CStudy.global.util.IfLogin;
 import com.CStudy.global.util.LoginUserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -61,7 +64,7 @@ public class CompetitionController {
     @Operation(summary = "대회 참여하기", description = "대회 id를 이용해 로그인 한 유저가 해당 대회 참여하기")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "대회 참여하기 성공"),
-            @ApiResponse(responseCode = "400", description = "대회 참여 인원 초과")
+            @ApiResponse(responseCode = "400", description = "대회 참여 인원 초과", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("join/competition/{competitionId}")
     @ResponseStatus(HttpStatus.CREATED)
@@ -77,7 +80,7 @@ public class CompetitionController {
     @Operation(summary = "대회 정보", description = "대회 id를 이용해 대회 정보 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "대회 정보 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "대회 정보 조회 실패")
+            @ApiResponse(responseCode = "400", description = "대회 정보 조회 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("competition/{competitionId}")
     @ResponseStatus(HttpStatus.OK)
@@ -91,7 +94,7 @@ public class CompetitionController {
     @Operation(summary = "참여 가능 대회 리스트", description = "참여 가능 대회 리스트")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "대회 리스트 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "대회 리스트 조회 실패")
+            @ApiResponse(responseCode = "400", description = "대회 리스트 조회 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("competition/list")
     @ResponseStatus(HttpStatus.OK)
@@ -105,7 +108,7 @@ public class CompetitionController {
     @Operation(summary = "종료된 대회 리스트", description = "종료된 대회 리스트")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "대회 리스트 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "대회 리스트 조회 실패")
+            @ApiResponse(responseCode = "400", description = "대회 리스트 조회 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("competition/finish/list")
     @ResponseStatus(HttpStatus.OK)
@@ -119,7 +122,7 @@ public class CompetitionController {
     @Operation(summary = "대회 랭킹", description = "대회 id를 이용해 대회에 참여한 회원들의 랭킹 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "랭킹 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "랭킹 조회 실패")
+            @ApiResponse(responseCode = "400", description = "랭킹 조회 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("competition/ranking/{id}")
     @ResponseStatus(HttpStatus.OK)

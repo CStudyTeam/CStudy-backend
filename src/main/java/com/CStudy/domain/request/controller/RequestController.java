@@ -4,10 +4,13 @@ import com.CStudy.domain.request.application.RequestService;
 import com.CStudy.domain.request.dto.request.CreateRequestRequestDto;
 import com.CStudy.domain.request.dto.request.FlagRequestDto;
 import com.CStudy.domain.request.dto.response.RequestResponseDto;
+import com.CStudy.global.exception.ErrorResponse;
 import com.CStudy.global.util.IfLogin;
 import com.CStudy.global.util.LoginUserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,7 +41,7 @@ public class RequestController {
     @Operation(summary = "게시판 문제 요청글 생성", description = "게시판 문제 요청글 생성. ")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "게시글 생성 성공"),
-            @ApiResponse(responseCode = "400", description = "게시글 생성 실패")
+            @ApiResponse(responseCode = "400", description = "게시글 생성 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/request/create")
     @ResponseStatus(HttpStatus.CREATED)
@@ -54,7 +57,7 @@ public class RequestController {
     @Operation(summary = "게시글 상태 수정", description = "게시판 상태를 대기에서 승인으로 변경.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "게시글 상태 변경 성공"),
-            @ApiResponse(responseCode = "400", description = "게시글 상태 변경 실패")
+            @ApiResponse(responseCode = "400", description = "게시글 상태 변경 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/request/approve")
     @ResponseStatus(HttpStatus.CREATED)
@@ -72,7 +75,7 @@ public class RequestController {
     @Operation(summary = "게시판 글 조회", description = "게시글 id를 이용해 게시글을 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
-            @ApiResponse(responseCode = "400", description = "조회 실패")
+            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/request/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -86,7 +89,7 @@ public class RequestController {
     @Operation(summary = "내가 요청한 문제 조회", description = "내가 요청한 문제 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
-            @ApiResponse(responseCode = "400", description = "조회 실패")
+            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/request/mylist")
     @ResponseStatus(HttpStatus.OK)

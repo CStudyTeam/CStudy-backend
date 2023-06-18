@@ -7,10 +7,13 @@ import com.CStudy.domain.question.dto.request.CreateQuestionAndCategoryRequestDt
 import com.CStudy.domain.question.dto.request.QuestionSearchCondition;
 import com.CStudy.domain.question.dto.response.QuestionPageWithCategoryAndTitle;
 import com.CStudy.domain.question.dto.response.QuestionResponseDto;
+import com.CStudy.global.exception.ErrorResponse;
 import com.CStudy.global.util.IfLogin;
 import com.CStudy.global.util.LoginUserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,8 +41,8 @@ public class QuestionController {
 
     @Operation(summary = "문제 생성", description = "문제 생성")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "문제 생성 성공"),
-        @ApiResponse(responseCode = "400", description = "문제 생성 실패")
+            @ApiResponse(responseCode = "201", description = "문제 생성 성공"),
+            @ApiResponse(responseCode = "400", description = "문제 생성 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("question")
     @ResponseStatus(HttpStatus.CREATED)
@@ -54,7 +57,7 @@ public class QuestionController {
     @Operation(summary = "문제 여러개 생성", description = "문제 여러개 생성")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "문제 생성 성공"),
-            @ApiResponse(responseCode = "400", description = "문제 생성 실패")
+            @ApiResponse(responseCode = "400", description = "문제 생성 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("questions")
     @ResponseStatus(HttpStatus.CREATED)
@@ -69,7 +72,7 @@ public class QuestionController {
     @Operation(summary = "문제 조회", description = "문제 id를 이용해 문제 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "문제 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "문제 조회 실패")
+            @ApiResponse(responseCode = "400", description = "문제 조회 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("question/{questionId}")
     @ResponseStatus(HttpStatus.OK)
@@ -83,7 +86,7 @@ public class QuestionController {
     @Operation(summary = "문제 채점", description = "문제 id와 고른 선택지 번호를 이용해 문제 채점")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "문제 채점 성공"),
-            @ApiResponse(responseCode = "400", description = "문제 채점 실패")
+            @ApiResponse(responseCode = "400", description = "문제 채점 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("question/{questionId}")
     @ResponseStatus(HttpStatus.CREATED)
