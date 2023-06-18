@@ -24,6 +24,10 @@ public class RankingService implements com.CStudy.domain.ranking.application.Ran
         this.memberRepository = memberRepository;
     }
 
+    /**
+     *
+     * @return redis에 회원의 정보를 가져와 포인트를 0~10까지 가져온다.
+     */
     @Cacheable(key = "1", value = RedisCacheKey.Ranking, cacheManager = "redisCacheManager")
     @Transactional(readOnly = true)
     public List<ZSetOperations.TypedTuple<String>> getRanking() {
