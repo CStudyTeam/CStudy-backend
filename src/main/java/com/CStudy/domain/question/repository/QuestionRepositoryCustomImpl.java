@@ -106,6 +106,6 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
     }
 
     private BooleanExpression memberIdEq(Long memberId) {
-        return memberId > 0 ? member.id.eq(memberId) : null;
+        return memberId != null ? member.id.eq(memberId) : null;
     }
 }
