@@ -20,4 +20,9 @@ public class Role {
 
     @Column(length = 20)
     private String name;
+
+
+    public Role(String roleName) {
+        this.name = roleName;
+    }
 }
