@@ -1,11 +1,14 @@
 package com.CStudy.domain.member.application.impl;
 
 import com.CStudy.domain.aop.TimeAnnotation;
+import com.CStudy.domain.member.application.FileService;
 import com.CStudy.domain.member.application.MemberService;
 import com.CStudy.domain.member.dto.request.MemberLoginRequest;
+import com.CStudy.domain.member.dto.request.MemberPasswordChangeRequest;
 import com.CStudy.domain.member.dto.request.MemberSignupRequest;
 import com.CStudy.domain.member.dto.response.MemberLoginResponse;
 import com.CStudy.domain.member.dto.response.MemberSignupResponse;
+import com.CStudy.domain.member.dto.response.MyPageResponseDto;
 import com.CStudy.domain.member.entity.Member;
 import com.CStudy.domain.member.repository.MemberRepository;
 import com.CStudy.domain.refresh.application.RefreshTokenService;
@@ -15,6 +18,7 @@ import com.CStudy.domain.role.repositry.RoleRepository;
 import com.CStudy.global.exception.member.EmailDuplication;
 import com.CStudy.global.exception.member.InvalidMatchPasswordException;
 import com.CStudy.global.exception.member.NotFoundMemberEmail;
+import com.CStudy.global.exception.member.NotFoundMemberId;
 import com.CStudy.global.jwt.util.JwtTokenizer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -134,6 +138,28 @@ public class MemberServiceImpl implements MemberService {
 
         return createToken(member);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MyPageResponseDto getMyPage(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(() -> new NotFoundMemberId(id));
+
+        return MyPageResponseDto.of(member);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public void changePassword(MemberPasswordChangeRequest request, Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(() -> new NotFoundMemberId(id));
+
+        if(!passwordEncoder.matches(request.getOldPassword(), member.getPassword())){
+            throw new InvalidMatchPasswordException(request.getOldPassword());
+        }
+
+        String newPassword = passwordEncoder.encode(request.getNewPassword());
+        member.changePassword(newPassword);
+    }
+
 
     private void signupWithRole(Member member) {
         Optional<Role> userRole = roleRepository.findByName(RoleEnum.CUSTOM.getRoleName());

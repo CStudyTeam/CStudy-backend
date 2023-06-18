@@ -18,6 +18,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -134,5 +136,23 @@ public class QuestionController {
             @RequestParam(value = "size", defaultValue = "10", required = false) int size
     ) {
         return questionService.questionPageWithCategory(searchCondition, page, size);
+    }
+
+    @Operation(summary = "내가 푼 문제 조회", description = "내가 푼 문제 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "내가 푼 문제 조회 성공")
+    })
+    @GetMapping("questions/myquestion")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<QuestionPageWithCategoryAndTitle> findMyQuestion(
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "5", required = false) int size,
+            @Parameter(hidden = true)
+            @IfLogin LoginUserDto loginUserDto
+    ) {
+        QuestionSearchCondition condition = QuestionSearchCondition.builder()
+                .memberId(loginUserDto.getMemberId())
+                .build();
+        return questionService.questionPageWithCategory(condition, page, size);
     }
 }
