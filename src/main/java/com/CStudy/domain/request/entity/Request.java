@@ -32,8 +32,8 @@ public class Request {
     @Column(name = "request_title")
     private String title;
 
-    @Column(name = "request_content")
-    private String content;
+    @Column(name = "request_description")
+    private String description;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -47,14 +47,14 @@ public class Request {
     private Member member;
 
     @Builder
-    public Request(String title, String content, Member member){
+    public Request(String title, String description, Member member){
         this.flag = false;
         this.title = title;
-        this.content = content;
+        this.description = description;
         this.member = member;
     }
 
-    public void updateFlag(){
-        this.flag = true;
+    public void updateFlag(boolean flag){
+        this.flag = flag;
     }
 }

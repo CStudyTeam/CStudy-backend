@@ -4,18 +4,13 @@ import com.CStudy.domain.member.entity.Member;
 import com.CStudy.domain.member.repository.MemberRepository;
 import com.CStudy.domain.request.application.RequestService;
 import com.CStudy.domain.request.dto.request.CreateRequestRequestDto;
+import com.CStudy.domain.request.dto.request.FlagRequestDto;
 import com.CStudy.domain.request.dto.response.RequestResponseDto;
 import com.CStudy.domain.request.entity.Request;
 import com.CStudy.domain.request.repository.RequestRepository;
-import com.CStudy.global.exception.category.NotFoundCategoryTile;
 import com.CStudy.global.exception.member.NotFoundMemberId;
 import com.CStudy.global.exception.request.NotFoundRequest;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +43,7 @@ public class RequestServiceImpl implements RequestService {
 
         Request request = Request.builder()
                 .title(requestDto.getTitle())
-                .content(requestDto.getContent())
+                .description(requestDto.getDescription())
                 .member(member)
                 .build();
 
@@ -109,12 +104,12 @@ public class RequestServiceImpl implements RequestService {
      */
     @Override
     @Transactional
-    public void updateFlag(Long id) {
+    public void updateFlag(FlagRequestDto flagDto) {
 
-        Request request = requestRepository.findById(id)
-                .orElseThrow(() -> new NotFoundRequest(id));
+        Request request = requestRepository.findById(flagDto.getId())
+                .orElseThrow(() -> new NotFoundRequest(flagDto.getId()));
 
-        request.updateFlag();
+        request.updateFlag(flagDto.isFlag());
     }
 
 
