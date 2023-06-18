@@ -89,6 +89,12 @@ public class QuestionServiceImpl implements QuestionService {
         choiceRepository.saveAll(new ArrayList<>(choices));
     }
 
+    /**
+     * Create a problem that is appropriate for the category.
+     * Create a view (list) of the following problems.
+     *
+     * @param List<CreateQuestionAndCategoryRequestDto> requestDtos 단일 파일이 아닌 다중 문제를 List 형태로 전달
+     */
     @Override
     @Transactional
     public void recursiveCreateQuestionChoice(List<CreateQuestionAndCategoryRequestDto> requestDtos) {
@@ -98,6 +104,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @Transactional
     public QuestionResponseDto findQuestionWithChoiceAndCategory(Long questionId) {
 
         Question question = questionRepository.findQuestionWithChoicesAndCategoryById(questionId)
@@ -106,6 +113,14 @@ public class QuestionServiceImpl implements QuestionService {
         return QuestionResponseDto.of(question);
     }
 
+    /**
+     * After inquiring about a single question, select the correct answer for the 4-point multiple question.
+     * Save the correct or incorrect answers afterwards.
+     *
+     * @param loginUserDto 로그인 회원의 정보를 저장
+     * @param questionId 단일 회원의 질문 아이디
+     * @param choiceNumber 문제에 대한 정답을 선택을 한다.
+     */
     @Override
     @Transactional
     public void choiceQuestion(LoginUserDto loginUserDto, Long questionId, ChoiceAnswerRequestDto choiceNumber) {
@@ -133,7 +148,16 @@ public class QuestionServiceImpl implements QuestionService {
         redisPublisher.publish(ChannelTopic.of("ranking-invalidation"), "ranking");
     }
 
+    /**
+     * Paging the problem.
+     *
+     * @param searchCondition Select 조건
+     * @param page 페이징 페이지
+     * @param size 페이징 사이즈
+     * @return questionRepository
+     */
     @Override
+    @Transactional(readOnly = true)
     public Page<QuestionPageWithCategoryAndTitle> questionPageWithCategory(
             QuestionSearchCondition searchCondition,
             int page,

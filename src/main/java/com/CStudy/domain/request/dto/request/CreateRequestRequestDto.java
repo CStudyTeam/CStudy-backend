@@ -13,6 +13,6 @@ public class CreateRequestRequestDto {
 
     private String title;
 
-    private String content;
+    private String description;
 
 }

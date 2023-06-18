@@ -146,7 +146,6 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    @Transactional(readOnly = true)
     private MemberLoginResponse createToken(Member member){
 
         List<String> roles = member.getRoles().stream()

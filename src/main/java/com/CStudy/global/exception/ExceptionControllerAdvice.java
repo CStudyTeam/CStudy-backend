@@ -1,11 +1,16 @@
 package com.CStudy.global.exception;
 
 import com.CStudy.global.exception.category.NotFoundCategoryTile;
+import com.CStudy.global.exception.competition.DuplicateMemberWithCompetition;
+import com.CStudy.global.exception.competition.NotFoundCompetitionId;
+import com.CStudy.global.exception.competition.NotFoundMemberCompetition;
+import com.CStudy.global.exception.competition.participantsWereInvitedParticipateException;
 import com.CStudy.global.exception.enums.ErrorCode;
 import com.CStudy.global.exception.member.EmailDuplication;
 import com.CStudy.global.exception.member.InvalidMatchPasswordException;
 import com.CStudy.global.exception.member.NotFoundMemberEmail;
 import com.CStudy.global.exception.member.NotFoundMemberId;
+import com.CStudy.global.exception.request.NotFoundRequest;
 import com.CStudy.global.exception.workbook.NotFoundWorkbook;
 import com.CStudy.global.exception.workbook.NotFoundWorkbookQuestion;
 import lombok.extern.slf4j.Slf4j;
@@ -73,6 +78,56 @@ public class ExceptionControllerAdvice {
     ) throws IOException {
         viewSlackLog(request);
         return new ErrorResponse(ErrorCode.NotFoundMemberId.getErrorCode(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NotFoundCompetitionId.class)
+    public ErrorResponse NotFoundCompetitionId(
+        NotFoundCompetitionId e,
+        HttpServletRequest request
+    ) throws IOException {
+        viewSlackLog(request);
+        return new ErrorResponse(ErrorCode.NotFoundCompetitionId.getErrorCode(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NotFoundMemberCompetition.class)
+    public ErrorResponse NotFoundMemberCompetition(
+        NotFoundMemberCompetition e,
+        HttpServletRequest request
+    ) throws IOException {
+        viewSlackLog(request);
+        return new ErrorResponse(ErrorCode.NotFoundMemberCompetition.getErrorCode(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(participantsWereInvitedParticipateException.class)
+    public ErrorResponse participantsWereInvitedParticipateException(
+        participantsWereInvitedParticipateException e,
+        HttpServletRequest request
+    ) throws IOException {
+        viewSlackLog(request);
+        return new ErrorResponse(ErrorCode.participantsWereInvitedParticipateException.getErrorCode(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DuplicateMemberWithCompetition.class)
+    public ErrorResponse DuplicateMemberWithCompetition(
+        DuplicateMemberWithCompetition e,
+        HttpServletRequest request
+    ) throws IOException {
+        viewSlackLog(request);
+        return new ErrorResponse(ErrorCode.DuplicateMemberWithCompetition.getErrorCode(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NotFoundRequest.class)
+    public ErrorResponse NotFoundRequest(
+        NotFoundRequest e,
+        HttpServletRequest request
+    ) throws IOException {
+        viewSlackLog(request);
+        return new ErrorResponse(ErrorCode.NotFoundRequest.getErrorCode(), e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -32,6 +32,13 @@ public class MemberQuestionServiceImpl implements MemberQuestionService {
         this.questionRepository = questionRepository;
     }
 
+    /**
+     * Select a problem. If you choose the correct answer,
+     * add the correct answer to the memberQuestion table.
+     * @param memberId 회원 아이디
+     * @param questionId 단일 문제에 대한 아이디
+     * @param choiceNumber 문제 선택
+     */
     @Override
     @Transactional
     public void findMemberAndMemberQuestionSuccess(Long memberId, Long questionId, int choiceNumber) {
@@ -55,6 +62,13 @@ public class MemberQuestionServiceImpl implements MemberQuestionService {
                 .build());
     }
 
+    /**
+     * Select a problem. If you choose the correct answer,
+     * add the wrong answer to the memberQuestion table.
+     * @param memberId 회원 아이디
+     * @param questionId 단일 문제에 대한 아이디
+     * @param choiceNumber 선택 문제
+     */
     @Override
     @Transactional
     public void findMemberAndMemberQuestionFail(Long memberId, Long questionId, int choiceNumber) {
@@ -77,6 +91,12 @@ public class MemberQuestionServiceImpl implements MemberQuestionService {
                 .build());
     }
 
+    /**
+     * If the memberQuestion table contains information
+     * that is an existing incorrect answer, delete the incorrect answer and add the correct answer.
+     * @param memberId 회원 아이디
+     * @param questionId 단일 문제에 대한 아이디
+     */
     @Override
     @Transactional
     public void findByQuestionAboutMemberIdAndQuestionId(Long memberId, Long questionId) {
