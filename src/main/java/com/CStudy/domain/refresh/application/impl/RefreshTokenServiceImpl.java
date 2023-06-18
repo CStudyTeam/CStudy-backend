@@ -34,6 +34,11 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         redisService.delValues(refreshToken);
     }
 
+    /**
+     *
+     * @param refreshTokenDto refresh Token의 정보
+     * @return MemberLoginResponse 재할당 access Token, refresh Token, member의 정보를 보여준다.
+     */
     @Override
     public MemberLoginResponse AccessTokenWithRefreshToken(RefreshTokenDto refreshTokenDto) {
 
