@@ -34,7 +34,7 @@ public class RequestServiceImpl implements RequestService {
      */
     @Override
     @Transactional
-    public void createRequest(
+    public Long createRequest(
                 CreateRequestRequestDto requestDto,
                 Long memberId
     ) {
@@ -50,6 +50,8 @@ public class RequestServiceImpl implements RequestService {
         requestRepository.save(request);
 
         member.addRequest(request);
+
+        return request.getId();
     }
 
 

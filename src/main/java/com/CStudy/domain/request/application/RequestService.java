@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface RequestService {
 
-    void createRequest(CreateRequestRequestDto requestDto, Long memberId);
+    Long createRequest(CreateRequestRequestDto requestDto, Long memberId);
 
     RequestResponseDto getRequest(Long id);
 
