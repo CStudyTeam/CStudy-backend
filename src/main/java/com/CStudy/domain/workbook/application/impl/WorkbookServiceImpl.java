@@ -90,7 +90,7 @@ public class WorkbookServiceImpl implements WorkbookService {
      */
     @Override
     @Transactional
-    public void createWorkbook(CreateWorkbookRequestDto workbookDto) {
+    public Long createWorkbook(CreateWorkbookRequestDto workbookDto) {
 
         Workbook workbook = Workbook.builder()
                 .title(workbookDto.getTitle())
@@ -98,6 +98,7 @@ public class WorkbookServiceImpl implements WorkbookService {
                 .build();
 
         workbookRepository.save(workbook);
+        return workbook.getId();
     }
 
     /**

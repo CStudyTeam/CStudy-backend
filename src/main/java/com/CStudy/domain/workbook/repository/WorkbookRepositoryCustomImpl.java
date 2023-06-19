@@ -4,16 +4,17 @@ import static com.CStudy.domain.question.entity.QQuestion.question;
 import static com.CStudy.domain.workbook.entity.QWorkbook.workbook;
 import static com.CStudy.domain.workbook.entity.QWorkbookQuestion.workbookQuestion;
 
-import com.CStudy.domain.question.dto.response.QuestionPageWithCategoryAndTitle;
 import com.CStudy.domain.workbook.dto.response.WorkbookQuestionResponseDto;
 import com.CStudy.domain.workbook.dto.response.WorkbookResponseDto;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
 
 public class WorkbookRepositoryCustomImpl implements WorkbookRepositoryCustom{
 
@@ -34,16 +35,21 @@ public class WorkbookRepositoryCustomImpl implements WorkbookRepositoryCustom{
                         workbook.createdAt
                 ))
                 .from(workbook)
-                .where(workbook.competitionEndTime.between(LocalDateTime.MIN, now))
-                .where(workbook.title.contains(title))
-                .where(workbook.description.contains(description))
+                .where(
+                    titleContains(title),
+                    descriptionContains(description),
+                    workbook.competitionEndTime.between(LocalDateTime.MIN, now)
+                )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(workbook.createdAt.desc())
                 .fetch();
         long total = queryFactory.selectFrom(workbook)
-                .where(workbook.title.contains(title))
-                .where(workbook.description.contains(description))
+                .where(
+                    titleContains(title),
+                    descriptionContains(description),
+                    workbook.competitionEndTime.between(LocalDateTime.MIN, now)
+                )
                 .fetchCount();
         return new PageImpl<>(content, pageable, total);
     }
@@ -73,5 +79,13 @@ public class WorkbookRepositoryCustomImpl implements WorkbookRepositoryCustom{
                 .where(workbook.id.eq(id))
                 .fetchCount();
         return new PageImpl<>(content, pageable, total);
+    }
+
+    private BooleanExpression titleContains(String title) {
+        return StringUtils.hasText(title) ? workbook.title.contains(title) : null;
+    }
+
+    private BooleanExpression descriptionContains(String description) {
+        return StringUtils.hasText(description) ? workbook.description.contains(description) : null;
     }
 }

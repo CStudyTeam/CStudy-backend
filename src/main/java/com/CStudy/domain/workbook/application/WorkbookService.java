@@ -17,7 +17,7 @@ public interface WorkbookService {
 
     Page<WorkbookQuestionResponseDto> getQuestions(Long id, Pageable pageable);
 
-    void createWorkbook(CreateWorkbookRequestDto workbookDto);
+    Long createWorkbook(CreateWorkbookRequestDto workbookDto);
 
     void addQuestion(WorkbookQuestionRequestDto requestDto);
 
