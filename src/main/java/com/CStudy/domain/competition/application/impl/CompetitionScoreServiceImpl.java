@@ -64,6 +64,14 @@ public class CompetitionScoreServiceImpl implements CompetitionScoreService {
         memberCompetition.setScore(score);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public int getScore(Long memberId, Long competitionId) {
+        MemberCompetition memberCompetition = memberCompetitionRepository.findByMemberIdAndCompetitionId(memberId, competitionId)
+                .orElseThrow(() -> new NotFoundMemberCompetition());
+        return memberCompetition.getScore();
+    }
+
     @Transactional(readOnly = true)
     private boolean isCorrectAnswer(Question question, int number) {
         Choice choice = choiceRepository.findByQuestionAndNumber(question, number)

@@ -4,7 +4,7 @@ import com.CStudy.domain.competition.application.CompetitionScoreService;
 import com.CStudy.domain.competition.application.CompetitionService;
 import com.CStudy.domain.competition.application.MemberCompetitionService;
 import com.CStudy.domain.competition.dto.request.CompetitionScoreRequestDto;
-import com.CStudy.domain.competition.dto.request.createCompetitionRequestDto;
+import com.CStudy.domain.competition.dto.request.CreateCompetitionRequestDto;
 import com.CStudy.domain.competition.dto.response.CompetitionListResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionRankingResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionResponseDto;
@@ -56,7 +56,7 @@ public class CompetitionController {
     @ResponseStatus(HttpStatus.CREATED)
     public void createCompetition(
             @Parameter(name = "createCompetitionRequestDto", description = "createCompetitionRequestDto")
-            @RequestBody createCompetitionRequestDto createCompetitionRequestDto
+            @RequestBody CreateCompetitionRequestDto createCompetitionRequestDto
     ) {
         competitionService.createCompetition(createCompetitionRequestDto);
     }

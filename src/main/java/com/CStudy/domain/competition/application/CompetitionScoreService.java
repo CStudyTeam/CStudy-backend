@@ -7,5 +7,5 @@ public interface CompetitionScoreService {
 
     void scoring(CompetitionScoreRequestDto requestDto, LoginUserDto userDto);
 
-
+    int getScore(Long memberId, Long competitionId);
 }

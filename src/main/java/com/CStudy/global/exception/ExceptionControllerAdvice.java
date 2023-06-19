@@ -4,7 +4,7 @@ import com.CStudy.global.exception.category.NotFoundCategoryTile;
 import com.CStudy.global.exception.competition.DuplicateMemberWithCompetition;
 import com.CStudy.global.exception.competition.NotFoundCompetitionId;
 import com.CStudy.global.exception.competition.NotFoundMemberCompetition;
-import com.CStudy.global.exception.competition.participantsWereInvitedParticipateException;
+import com.CStudy.global.exception.competition.ParticipantsWereInvitedParticipateException;
 import com.CStudy.global.exception.enums.ErrorCode;
 import com.CStudy.global.exception.member.EmailDuplication;
 import com.CStudy.global.exception.member.InvalidMatchPasswordException;
@@ -101,9 +101,9 @@ public class ExceptionControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(participantsWereInvitedParticipateException.class)
+    @ExceptionHandler(ParticipantsWereInvitedParticipateException.class)
     public ErrorResponse participantsWereInvitedParticipateException(
-        participantsWereInvitedParticipateException e,
+        ParticipantsWereInvitedParticipateException e,
         HttpServletRequest request
     ) throws IOException {
         viewSlackLog(request);

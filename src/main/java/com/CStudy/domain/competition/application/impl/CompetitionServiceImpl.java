@@ -1,7 +1,7 @@
 package com.CStudy.domain.competition.application.impl;
 
 import com.CStudy.domain.competition.application.CompetitionService;
-import com.CStudy.domain.competition.dto.request.createCompetitionRequestDto;
+import com.CStudy.domain.competition.dto.request.CreateCompetitionRequestDto;
 import com.CStudy.domain.competition.dto.response.CompetitionListResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionQuestionDto;
 import com.CStudy.domain.competition.dto.response.CompetitionRankingResponseDto;
@@ -44,7 +44,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     @Transactional
-    public void createCompetition(createCompetitionRequestDto createCompetitionRequestDto) {
+    public Long createCompetition(CreateCompetitionRequestDto createCompetitionRequestDto) {
 
         Workbook workbook = Workbook.builder()
                 .title(createCompetitionRequestDto.getCompetitionTitle())
@@ -63,6 +63,8 @@ public class CompetitionServiceImpl implements CompetitionService {
 
         competitionRepository.save(competition);
         workbook.setCompetition(competition);
+
+        return competition.getId();
     }
 
     /**
