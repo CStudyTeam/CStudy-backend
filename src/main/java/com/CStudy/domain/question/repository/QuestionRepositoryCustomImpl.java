@@ -68,7 +68,8 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
                 .leftJoin(question.questions, memberQuestion)
                 .where(
                         questionTitleEq(questionSearchCondition.getQuestionTitle()),
-                        categoryTitleEq(questionSearchCondition.getCategoryTitle())
+                        categoryTitleEq(questionSearchCondition.getCategoryTitle()),
+                        memberIdEq(questionSearchCondition.getMemberId())
                 );
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
