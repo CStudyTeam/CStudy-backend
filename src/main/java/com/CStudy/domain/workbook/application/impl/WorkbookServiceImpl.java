@@ -116,6 +116,9 @@ public class WorkbookServiceImpl implements WorkbookService {
         for (QuestionIdRequestDto qId: requestDto.getQuestionIds()) {
             Question question = questionRepository.findById(qId.getId())
                     .orElseThrow(() -> new NotFoundQuestionWithChoicesAndCategoryById(qId.getId()));
+            if(workbookQuestionRepository.existsByWorkbookAndQuestion(workbook, question)){
+                continue;
+            }
             addWorkbookQuestion(workbook, question);
         }
     }

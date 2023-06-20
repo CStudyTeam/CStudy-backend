@@ -1,5 +1,6 @@
 package com.CStudy.domain.workbook.repository;
 
+import static com.CStudy.domain.competition.entity.QCompetition.competition;
 import static com.CStudy.domain.question.entity.QQuestion.question;
 import static com.CStudy.domain.workbook.entity.QWorkbook.workbook;
 import static com.CStudy.domain.workbook.entity.QWorkbookQuestion.workbookQuestion;
@@ -35,10 +36,11 @@ public class WorkbookRepositoryCustomImpl implements WorkbookRepositoryCustom{
                         workbook.createdAt
                 ))
                 .from(workbook)
+                .leftJoin(workbook.competition, competition).on(competition.eq(competition))
                 .where(
                     titleContains(title),
                     descriptionContains(description),
-                    workbook.competitionEndTime.between(LocalDateTime.MIN, now)
+                    competition.competitionEnd.between(LocalDateTime.MIN, now).or(competition.isNull())
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -87,5 +89,10 @@ public class WorkbookRepositoryCustomImpl implements WorkbookRepositoryCustom{
 
     private BooleanExpression descriptionContains(String description) {
         return StringUtils.hasText(description) ? workbook.description.contains(description) : null;
+    }
+
+    private BooleanExpression competitionEndBetween() {
+        return workbook.competition.competitionEnd != null ?
+                workbook.competition.competitionEnd.between(LocalDateTime.MIN, LocalDateTime.now()) : null;
     }
 }
