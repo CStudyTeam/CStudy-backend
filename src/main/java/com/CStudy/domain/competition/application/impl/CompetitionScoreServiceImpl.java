@@ -5,6 +5,8 @@ import com.CStudy.domain.choice.repository.ChoiceRepository;
 import com.CStudy.domain.competition.application.CompetitionScoreService;
 import com.CStudy.domain.competition.dto.request.CompetitionScoreRequestDto;
 import com.CStudy.domain.competition.dto.request.CompetitionScoreRequestDto.CompetitionQuestionRequestDto;
+import com.CStudy.domain.competition.dto.response.CompetitionScoreResponseDto;
+import com.CStudy.domain.competition.dto.response.CompetitionScoreResponseDto.ScoreDetail;
 import com.CStudy.domain.competition.entity.CompetitionScore;
 import com.CStudy.domain.competition.entity.MemberCompetition;
 import com.CStudy.domain.competition.repository.CompetitionScoreRepository;
@@ -15,6 +17,8 @@ import com.CStudy.global.exception.Question.NotFoundQuestionId;
 import com.CStudy.global.exception.choice.NotFoundChoiceWithQuestionAndNumber;
 import com.CStudy.global.exception.competition.NotFoundMemberCompetition;
 import com.CStudy.global.util.LoginUserDto;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +44,7 @@ public class CompetitionScoreServiceImpl implements CompetitionScoreService {
     public void scoring(CompetitionScoreRequestDto requestDto, LoginUserDto userDto) {
         MemberCompetition memberCompetition = memberCompetitionRepository
                 .findByMemberIdAndCompetitionId(userDto.getMemberId(), requestDto.getCompetitionId())
-            .orElseThrow(() -> new NotFoundMemberCompetition());
+                .orElseThrow(() -> new NotFoundMemberCompetition());
 
         int score = 0;
         memberCompetition.setEndTime(requestDto.getEndTime());
@@ -52,16 +56,48 @@ public class CompetitionScoreServiceImpl implements CompetitionScoreService {
             CompetitionScore competitionScore = CompetitionScore.builder()
                     .memberCompetition(memberCompetition)
                     .question(question)
+                    .choiceNumber(questionDto.getChoiceNumber())
                     .build();
-            if(isCorrectAnswer(question, questionDto.getChoiceNumber())){
+            boolean correct = isCorrectAnswer(question, questionDto.getChoiceNumber());
+            if(correct){
                 competitionScore.setSuccess(true);
                 score++;
             }
+
             competitionScoreRepository.save(competitionScore);
             memberCompetition.addCompetitionScore(competitionScore);
         }
 
         memberCompetition.setScore(score);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CompetitionScoreResponseDto getAnswer(Long memberId, Long competitionId) {
+        List<CompetitionScore> memberScores = competitionScoreRepository
+                .findByCompetitionIdAndMemberId(memberId, competitionId);
+        if(memberScores.isEmpty()){
+            throw new NotFoundMemberCompetition();
+        }
+        List<ScoreDetail> answer = new ArrayList<>();
+
+        int score = 0;
+        for (CompetitionScore competitionScore: memberScores) {
+            answer.add(ScoreDetail.builder()
+                .questionId(competitionScore.getQuestion().getId())
+                .choiceNumber(competitionScore.getChoiceNumber())
+                .correct(competitionScore.isSuccess())
+                .build());
+
+            if(competitionScore.isSuccess()){
+                score++;
+            }
+        }
+        return CompetitionScoreResponseDto.builder()
+                .score(score)
+                .total(memberScores.size())
+                .details(answer)
+                .build();
     }
 
     @Override

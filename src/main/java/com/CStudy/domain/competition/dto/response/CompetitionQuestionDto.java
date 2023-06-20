@@ -14,11 +14,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CompetitionQuestionDto {
+    private Long questionId;
     private String description;
     private List<ChoiceQuestionResponseDto> choices;
 
     public static CompetitionQuestionDto of(Question question){
         return CompetitionQuestionDto.builder()
+                .questionId(question.getId())
                 .description(question.getDescription())
                 .choices(question.getChoices().stream()
                     .map(ChoiceQuestionResponseDto::new)
