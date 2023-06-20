@@ -86,6 +86,7 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
                 .transform(
                     groupBy(question.id).list(
                         Projections.constructor(CompetitionQuestionDto.class,
+                            question.id,
                             question.description,
                             list(
                             Projections.constructor(ChoiceQuestionResponseDto.class,

@@ -23,14 +23,16 @@ public class CompetitionResponseDto {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime endTime;
 
-    private List<CompetitionQuestionDto> questions;
+    private int MaxParticipants;
+    private int participants;
 
-    public static CompetitionResponseDto of(Competition competition, List<CompetitionQuestionDto> questions) {
+    public static CompetitionResponseDto of(Competition competition, int participants) {
         return CompetitionResponseDto.builder()
                 .title(competition.getCompetitionTitle())
                 .startTime(competition.getCompetitionStart())
                 .endTime(competition.getCompetitionEnd())
-                .questions(questions)
+                .MaxParticipants(competition.getParticipants() + participants)
+                .participants(participants)
                 .build();
     }
 

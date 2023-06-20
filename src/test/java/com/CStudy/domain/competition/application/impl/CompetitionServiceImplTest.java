@@ -13,6 +13,7 @@ import com.CStudy.domain.competition.dto.request.CreateCompetitionRequestDto;
 import com.CStudy.domain.competition.dto.response.CompetitionListResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionRankingResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionResponseDto;
+import com.CStudy.domain.competition.dto.response.CompetitionScoreResponseDto;
 import com.CStudy.domain.member.application.MemberService;
 import com.CStudy.domain.member.dto.request.MemberSignupRequest;
 import com.CStudy.domain.member.entity.Member;
@@ -25,6 +26,7 @@ import com.CStudy.domain.workbook.dto.request.WorkbookQuestionRequestDto;
 import com.CStudy.domain.workbook.entity.Workbook;
 import com.CStudy.domain.workbook.repository.WorkbookRepository;
 import com.CStudy.global.exception.competition.DuplicateMemberWithCompetition;
+import com.CStudy.global.exception.competition.NotFoundMemberCompetition;
 import com.CStudy.global.exception.competition.ParticipantsWereInvitedParticipateException;
 import com.CStudy.global.exception.member.NotFoundMemberEmail;
 import com.CStudy.global.util.LoginUserDto;
@@ -89,12 +91,14 @@ class CompetitionServiceImplTest {
         CreateCompetitionRequestDto competitionDto = CreateCompetitionRequestDto.builder()
                 .competitionTitle("대회 이름1")
                 .participants(5)
+                .competitionStart(LocalDateTime.of(2024, 5, 19, 20, 0))
                 .competitionEnd(LocalDateTime.of(2024, 6, 19, 20, 0)).build();
         competitionId1 = competitionService.createCompetition(competitionDto);
 
         CreateCompetitionRequestDto competitionDto1 = CreateCompetitionRequestDto.builder()
                 .competitionTitle("대회 이름2")
                 .participants(5)
+                .competitionStart(LocalDateTime.of(2022, 5, 19, 20, 0))
                 .competitionEnd(LocalDateTime.of(2022, 6, 19, 20, 0)).build();
         competitionId2 = competitionService.createCompetition(competitionDto1);
     }
@@ -142,8 +146,11 @@ class CompetitionServiceImplTest {
                 .memberId(memberId)
                 .build();
             memberCompetitionService.joinCompetition(loginUserDto, competitionId1);
+            CompetitionResponseDto competition = competitionService.getCompetition(competitionId1);
 
             assertEquals(memberCompetitionService.getJoinMemberCount(competitionId1), 1);
+            assertEquals(competition.getMaxParticipants(), 5);
+            assertEquals(competition.getParticipants(), 1);
 
         }
 
@@ -230,7 +237,7 @@ class CompetitionServiceImplTest {
             workbookService.addQuestion(requestDto);
         }
         @Test
-        @DisplayName("대회 점수 채점")
+        @DisplayName("대회 점수 채점 및 점수 조회")
         public void score() {
             Long memberId = memberIds.get(0);
             LoginUserDto loginUserDto = LoginUserDto.builder()
@@ -246,7 +253,12 @@ class CompetitionServiceImplTest {
                     assertEquals(competitionScoreService.getScore(memberId, competitionId1), 2);
                 }
             };
+            Exception exception = assertThrows(NotFoundMemberCompetition.class, () -> {
+                competitionScoreService.getAnswer(memberIds.get(1), competitionId1);
+            });
+            assertTrue(exception.getMessage().contains("Not Found MemberCompetition"));
         }
+
         @Test
         @DisplayName("대회 랭킹 조회")
         public void ranking(){

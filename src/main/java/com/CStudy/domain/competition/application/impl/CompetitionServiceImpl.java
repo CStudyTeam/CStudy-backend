@@ -1,6 +1,7 @@
 package com.CStudy.domain.competition.application.impl;
 
 import com.CStudy.domain.competition.application.CompetitionService;
+import com.CStudy.domain.competition.application.MemberCompetitionService;
 import com.CStudy.domain.competition.dto.request.CreateCompetitionRequestDto;
 import com.CStudy.domain.competition.dto.response.CompetitionListResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionQuestionDto;
@@ -29,17 +30,20 @@ public class CompetitionServiceImpl implements CompetitionService {
     private final WorkbookRepository workbookRepository;
     private final QuestionRepository questionRepository;
     private final MemberCompetitionRepository memberCompetitionRepository;
+    private final MemberCompetitionService memberCompetitionService;
 
     public CompetitionServiceImpl(
         CompetitionRepository competitionRepository,
         WorkbookRepository workbookRepository,
         QuestionRepository questionRepository,
-        MemberCompetitionRepository memberCompetitionRepository
+        MemberCompetitionRepository memberCompetitionRepository,
+        MemberCompetitionService memberCompetitionService
     ) {
         this.competitionRepository = competitionRepository;
         this.workbookRepository = workbookRepository;
         this.questionRepository = questionRepository;
         this.memberCompetitionRepository = memberCompetitionRepository;
+        this.memberCompetitionService = memberCompetitionService;
     }
 
     @Override
@@ -56,7 +60,7 @@ public class CompetitionServiceImpl implements CompetitionService {
         Competition competition = Competition.builder()
                 .competitionTitle(createCompetitionRequestDto.getCompetitionTitle())
                 .participants(createCompetitionRequestDto.getParticipants())
-                .competitionStart(LocalDateTime.now())
+                .competitionStart(createCompetitionRequestDto.getCompetitionStart())
                 .competitionEnd(createCompetitionRequestDto.getCompetitionEnd())
                 .workbook(workbook)
                 .build();
@@ -78,10 +82,10 @@ public class CompetitionServiceImpl implements CompetitionService {
 
         Competition competition = competitionRepository.findById(competitionId)
                 .orElseThrow(() -> new NotFoundCompetitionId(competitionId));
-        List<CompetitionQuestionDto> question = questionRepository
-                .findQuestionWithCompetitionById(competitionId);
 
-        return CompetitionResponseDto.of(competition, question);
+        int participants = memberCompetitionService.getJoinMemberCount(competitionId);
+
+        return CompetitionResponseDto.of(competition, participants);
     }
 
     /**
@@ -118,6 +122,11 @@ public class CompetitionServiceImpl implements CompetitionService {
         Page<MemberCompetition> memberRanking = memberCompetitionRepository.findByCompetition(competition, pageable);
 
         return memberRanking.map(CompetitionRankingResponseDto::of);
+    }
+
+    @Override
+    public List<CompetitionQuestionDto> getCompetitionQuestion(Long competitionId) {
+        return questionRepository.findQuestionWithCompetitionById(competitionId);
     }
 
 }
