@@ -159,22 +159,12 @@ class WorkbookServiceImplTest {
                 .description("문제집 설명1")
                 .build();
         Long workbookId = workbookService.createWorkbook(requestDto);
-        List<QuestionIdRequestDto> questionIdRequestDtos = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            Question question = Question.builder()
-                    .title("문제"+i)
-                    .description("문제 내용"+i).build();
-            questionRepository.save(question);
-            QuestionIdRequestDto questionIdRequestDto = QuestionIdRequestDto.builder()
-                    .id(question.getId())
-                    .build();
-            questionIdRequestDtos.add(questionIdRequestDto);
-        }
+        List<QuestionIdRequestDto> questionIdRequestDtos = createQuestionDto(10);
 
         WorkbookQuestionRequestDto requestDto1 = WorkbookQuestionRequestDto.builder()
-            .workbookId(workbookId)
-            .questionIds(questionIdRequestDtos)
-            .build();
+                .workbookId(workbookId)
+                .questionIds(questionIdRequestDtos)
+                .build();
         workbookService.addQuestion(requestDto1);
 
         Pageable pageable = PageRequest.of(0, 5);
@@ -184,17 +174,7 @@ class WorkbookServiceImplTest {
             assertEquals(questions.getContent().get(i).getQuestionId(), questionIdRequestDtos.get(9-i).getId());
         }
 
-        List<QuestionIdRequestDto> questionIdRequestDtos1 = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            Question question = Question.builder()
-                .title("문제1"+i)
-                .description("문제 내용1"+i).build();
-            questionRepository.save(question);
-            QuestionIdRequestDto questionIdRequestDto = QuestionIdRequestDto.builder()
-                .id(question.getId())
-                .build();
-            questionIdRequestDtos1.add(questionIdRequestDto);
-        }
+        List<QuestionIdRequestDto> questionIdRequestDtos1 = createQuestionDto(5);
 
         WorkbookQuestionRequestDto requestDto2 = WorkbookQuestionRequestDto.builder()
             .workbookId(workbookId)
@@ -215,17 +195,7 @@ class WorkbookServiceImplTest {
             .build();
         Long workbookId = workbookService.createWorkbook(requestDto);
 
-        List<QuestionIdRequestDto> questionIdRequestDtos = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            Question question = Question.builder()
-                    .title("문제"+i)
-                    .description("문제 내용"+i).build();
-            questionRepository.save(question);
-            QuestionIdRequestDto questionIdRequestDto = QuestionIdRequestDto.builder()
-                    .id(question.getId())
-                    .build();
-            questionIdRequestDtos.add(questionIdRequestDto);
-        }
+        List<QuestionIdRequestDto> questionIdRequestDtos = createQuestionDto(10);
 
         WorkbookQuestionRequestDto requestDto1 = WorkbookQuestionRequestDto.builder()
                 .workbookId(workbookId)
@@ -247,5 +217,20 @@ class WorkbookServiceImplTest {
         Pageable pageable = PageRequest.of(0, 5, Sort.by("id").descending());
         Page<WorkbookQuestionResponseDto> questions = workbookService.getQuestions(workbookId, pageable);
         assertEquals(questions.getTotalElements(), 5);
+    }
+
+    public List<QuestionIdRequestDto> createQuestionDto(int num){
+        List<QuestionIdRequestDto> questionIdRequestDtos = new ArrayList<>();
+        for (int i = 0; i < num; i++) {
+            Question question = Question.builder()
+                .title("문제"+i)
+                .description("문제 내용"+i).build();
+            questionRepository.save(question);
+            QuestionIdRequestDto questionIdRequestDto = QuestionIdRequestDto.builder()
+                .id(question.getId())
+                .build();
+            questionIdRequestDtos.add(questionIdRequestDto);
+        }
+        return  questionIdRequestDtos;
     }
 }
