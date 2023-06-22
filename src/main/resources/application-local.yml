@@ -38,7 +38,17 @@ jwt:
   secretKey: ${secretKey}
   refreshKey: ${refresh}
 
-
+cloud:
+  aws:
+    credentials:
+      accessKey: ${accessKey}
+      secretKey: ${secretKey}
+    s3:
+      bucket: ${bucket}
+    region:
+      static: ${region}
+    stack:
+      auto: false
 #logging:
 #  slack:
 #    webhook-uri: ${webhook}

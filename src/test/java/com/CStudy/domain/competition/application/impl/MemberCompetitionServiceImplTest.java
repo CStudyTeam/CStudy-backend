@@ -2,7 +2,7 @@ package com.CStudy.domain.competition.application.impl;
 
 import com.CStudy.domain.competition.application.CompetitionService;
 import com.CStudy.domain.competition.application.MemberCompetitionService;
-import com.CStudy.domain.competition.dto.request.createCompetitionRequestDto;
+import com.CStudy.domain.competition.dto.request.CreateCompetitionRequestDto;
 import com.CStudy.domain.competition.entity.Competition;
 import com.CStudy.domain.competition.repository.CompetitionRepository;
 import com.CStudy.domain.member.application.MemberService;
@@ -67,7 +67,7 @@ class MemberCompetitionServiceImplTest {
         memberService.signUp(memberSignupRequest2);
 
 
-        createCompetitionRequestDto requestDto = createCompetitionRequestDto.builder()
+        CreateCompetitionRequestDto requestDto = CreateCompetitionRequestDto.builder()
                 .competitionTitle("CS 대회")
                 .participants(5)
                 .competitionEnd(LocalDateTime.now().plusHours(1))
