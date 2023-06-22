@@ -20,6 +20,7 @@ import java.util.List;
 
 import static com.CStudy.domain.choice.entity.QChoice.choice;
 import static com.CStudy.domain.competition.entity.QCompetition.competition;
+import static com.CStudy.domain.member.entity.QMember.member;
 import static com.CStudy.domain.question.entity.QCategory.category;
 import static com.CStudy.domain.question.entity.QMemberQuestion.memberQuestion;
 import static com.CStudy.domain.question.entity.QQuestion.question;
@@ -51,9 +52,11 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
                         )).from(question)
                 .leftJoin(question.category, category)
                 .leftJoin(question.questions, memberQuestion)
+                .leftJoin(memberQuestion.member, member)
                 .where(
                         questionTitleEq(questionSearchCondition.getQuestionTitle()),
-                        categoryTitleEq(questionSearchCondition.getCategoryTitle())
+                        categoryTitleEq(questionSearchCondition.getCategoryTitle()),
+                        memberIdEq(questionSearchCondition.getMemberId())
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -65,7 +68,8 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
                 .leftJoin(question.questions, memberQuestion)
                 .where(
                         questionTitleEq(questionSearchCondition.getQuestionTitle()),
-                        categoryTitleEq(questionSearchCondition.getCategoryTitle())
+                        categoryTitleEq(questionSearchCondition.getCategoryTitle()),
+                        memberIdEq(questionSearchCondition.getMemberId())
                 );
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
@@ -82,6 +86,7 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
                 .transform(
                     groupBy(question.id).list(
                         Projections.constructor(CompetitionQuestionDto.class,
+                            question.id,
                             question.description,
                             list(
                             Projections.constructor(ChoiceQuestionResponseDto.class,
@@ -100,5 +105,9 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
 
     private BooleanExpression questionTitleEq(String questionTitle) {
         return StringUtils.hasText(questionTitle) ? question.title.eq(questionTitle) : null;
+    }
+
+    private BooleanExpression memberIdEq(Long memberId) {
+        return memberId != null ? member.id.eq(memberId) : null;
     }
 }

@@ -31,12 +31,14 @@ public class CompetitionScore {
     @JoinColumn(name = "question_id")
     private Question question;
 
+    private int choiceNumber;
     private boolean success;
 
     @Builder
-    public CompetitionScore(MemberCompetition memberCompetition, Question question){
+    public CompetitionScore(MemberCompetition memberCompetition, Question question, int choiceNumber){
         this.memberCompetition = memberCompetition;
         this.question = question;
+        this.choiceNumber = choiceNumber;
         this.success = false;
     }
 

@@ -10,8 +10,10 @@ import com.CStudy.domain.member.entity.Member;
 import com.CStudy.domain.member.repository.MemberRepository;
 import com.CStudy.global.exception.competition.DuplicateMemberWithCompetition;
 import com.CStudy.global.exception.competition.NotFoundCompetitionId;
+import com.CStudy.global.exception.competition.ParticipantsWereInvitedParticipateException;
 import com.CStudy.global.exception.member.NotFoundMemberId;
 import com.CStudy.global.util.LoginUserDto;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,10 +51,19 @@ public class MemberCompetitionServiceImpl implements MemberCompetitionService {
         memberCompetitionRepository.save(memberCompetition);
     }
 
+    @Override
+    public int getJoinMemberCount(Long competitionId) {
+        List<MemberCompetition> memberCompetitions =
+                memberCompetitionRepository.findAllWithMemberAndCompetition(competitionId);
+        return memberCompetitions.size();
+    }
+
     private void decreaseParticipantsCountIfPossible(Competition competition) {
-        Optional.of(competition)
-                .filter(c -> c.getParticipants() != 0)
-                .ifPresent(Competition::decreaseParticipantsCount);
+        if(competition.getParticipants() != 0){
+            competition.decreaseParticipantsCount();
+        } else {
+            throw new ParticipantsWereInvitedParticipateException();
+        }
     }
 
     private void preventionDuplicateParticipation(LoginUserDto loginUserDto, Long competitionId) {

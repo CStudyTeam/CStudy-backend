@@ -21,4 +21,6 @@ public interface WorkbookQuestionRepository extends JpaRepository<WorkbookQuesti
 //    Page<WorkbookQuestion> findWorkbookQuestion(@Param("id") Long id, Pageable pageable);
 
     Optional<WorkbookQuestion> findByWorkbookAndQuestion(Workbook workbook, Question question);
+
+    boolean existsByWorkbookAndQuestion(Workbook workbook, Question question);
 }

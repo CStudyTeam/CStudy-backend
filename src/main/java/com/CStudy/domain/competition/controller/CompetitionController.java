@@ -4,10 +4,12 @@ import com.CStudy.domain.competition.application.CompetitionScoreService;
 import com.CStudy.domain.competition.application.CompetitionService;
 import com.CStudy.domain.competition.application.MemberCompetitionService;
 import com.CStudy.domain.competition.dto.request.CompetitionScoreRequestDto;
-import com.CStudy.domain.competition.dto.request.createCompetitionRequestDto;
+import com.CStudy.domain.competition.dto.request.CreateCompetitionRequestDto;
 import com.CStudy.domain.competition.dto.response.CompetitionListResponseDto;
+import com.CStudy.domain.competition.dto.response.CompetitionQuestionDto;
 import com.CStudy.domain.competition.dto.response.CompetitionRankingResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionResponseDto;
+import com.CStudy.domain.competition.dto.response.CompetitionScoreResponseDto;
 import com.CStudy.global.exception.ErrorResponse;
 import com.CStudy.global.util.IfLogin;
 import com.CStudy.global.util.LoginUserDto;
@@ -18,6 +20,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,7 +59,7 @@ public class CompetitionController {
     @ResponseStatus(HttpStatus.CREATED)
     public void createCompetition(
             @Parameter(name = "createCompetitionRequestDto", description = "createCompetitionRequestDto")
-            @RequestBody createCompetitionRequestDto createCompetitionRequestDto
+            @RequestBody CreateCompetitionRequestDto createCompetitionRequestDto
     ) {
         competitionService.createCompetition(createCompetitionRequestDto);
     }
@@ -66,7 +69,7 @@ public class CompetitionController {
             @ApiResponse(responseCode = "201", description = "대회 참여하기 성공"),
             @ApiResponse(responseCode = "400", description = "대회 참여 인원 초과", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @PostMapping("join/competition/{competitionId}")
+    @PostMapping("competition/join/{competitionId}")
     @ResponseStatus(HttpStatus.CREATED)
     public void joinCompetitionById(
             @Parameter(hidden = true)
@@ -91,6 +94,20 @@ public class CompetitionController {
         return competitionService.getCompetition(competitionId);
     }
 
+    @Operation(summary = "대회 문제 조회", description = "대회 id를 이용해 대회 문제 조회")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "대회 문제 조회 성공"),
+        @ApiResponse(responseCode = "400", description = "대회 문제 조회 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("competition/question/{competitionId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CompetitionQuestionDto> getCompetitionQuestion(
+            @Parameter(description = "대회 id")
+            @PathVariable Long competitionId
+    ) {
+        return competitionService.getCompetitionQuestion(competitionId);
+    }
+
     @Operation(summary = "참여 가능 대회 리스트", description = "참여 가능 대회 리스트")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "대회 리스트 조회 성공"),
@@ -110,7 +127,7 @@ public class CompetitionController {
             @ApiResponse(responseCode = "200", description = "대회 리스트 조회 성공"),
             @ApiResponse(responseCode = "400", description = "대회 리스트 조회 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @GetMapping("competition/finish/list")
+    @GetMapping("competition/list/finish")
     @ResponseStatus(HttpStatus.OK)
     public Page<CompetitionListResponseDto> getFinishCompetition(
             @Parameter(description = "page: 페이지 번호, size: 한 페이지 문제 수.")
@@ -151,5 +168,20 @@ public class CompetitionController {
             @IfLogin LoginUserDto loginUserDto
     ) {
         competitionScoreService.scoring(requestDto, loginUserDto);
+    }
+
+    @Operation(summary = "대회 답안 조회", description = "문제를 다 풀고 답안 조회")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "조회 성공")
+    })
+    @GetMapping("competition/result/{competitionId}")
+    @ResponseStatus(HttpStatus.OK)
+    public CompetitionScoreResponseDto getScore(
+            @Parameter(description = "competitionId: 대회 id")
+            @PathVariable("competitionId") Long id,
+            @Parameter(hidden = true)
+            @IfLogin LoginUserDto loginUserDto
+    ) {
+        return competitionScoreService.getAnswer(loginUserDto.getMemberId(), id);
     }
 }

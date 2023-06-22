@@ -19,7 +19,7 @@ public interface MemberCompetitionRepository extends JpaRepository<MemberCompeti
     @Query("SELECT MC FROM MemberCompetition MC " +
             "JOIN FETCH MC.member M " +
             "JOIN FETCH MC.competition C " +
-            "WHERE C.id =: competitionId")
+            "WHERE C.id = :competitionId")
     List<MemberCompetition>findAllWithMemberAndCompetition(@Param("competitionId") Long competitionId);
 
     @Lock(LockModeType.OPTIMISTIC)
