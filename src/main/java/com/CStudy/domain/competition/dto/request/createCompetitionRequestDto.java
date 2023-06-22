@@ -1,11 +1,13 @@
 package com.CStudy.domain.competition.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 public class createCompetitionRequestDto {
     private String competitionTitle;
     private int participants;

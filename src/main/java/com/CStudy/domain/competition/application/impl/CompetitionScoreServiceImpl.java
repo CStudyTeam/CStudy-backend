@@ -40,7 +40,7 @@ public class CompetitionScoreServiceImpl implements CompetitionScoreService {
     public void scoring(CompetitionScoreRequestDto requestDto, LoginUserDto userDto) {
         MemberCompetition memberCompetition = memberCompetitionRepository
                 .findByMemberIdAndCompetitionId(userDto.getMemberId(), requestDto.getCompetitionId())
-            .orElseThrow(() -> new NotFoundMemberCompetition());
+            .orElseThrow(NotFoundMemberCompetition::new);
 
         int score = 0;
         memberCompetition.setEndTime(requestDto.getEndTime());
@@ -65,7 +65,7 @@ public class CompetitionScoreServiceImpl implements CompetitionScoreService {
     }
 
     @Transactional(readOnly = true)
-    private boolean isCorrectAnswer(Question question, int number) {
+    public boolean isCorrectAnswer(Question question, int number) {
         Choice choice = choiceRepository.findByQuestionAndNumber(question, number)
                 .orElseThrow(() -> new NotFoundChoiceWithQuestionAndNumber(question.getId(), number));
         return choice.isAnswer();
