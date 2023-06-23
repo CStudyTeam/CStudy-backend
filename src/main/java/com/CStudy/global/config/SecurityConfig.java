@@ -9,6 +9,7 @@ import com.CStudy.global.oauth.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -41,8 +42,9 @@ public class SecurityConfig {
                 .and()
                 .httpBasic().disable()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/api/questions").hasAuthority("ROLE_ADMIN")
                 .antMatchers("/api/workbook/update","/api/workbook/question/delete","/api/workbook/question/add","/api/workbook/create",
-                        "/api/request/approve", "/api/questions","/api/question","/api/competition").hasAuthority("ROLE_ADMIN")
+                        "/api/request/approve", "/api/question","/api/competition").hasAuthority("ROLE_ADMIN")
                 .antMatchers("/api/upload","/api/request/mylist","/api/request/create","/api/refreshToken","/api/questions/myquestion",
                         "/api/question/**", "/api/mypage", "/api/mypage/password","/api/competition/submit","/api/competition/join/**",
                         "/api/competition/result/**", "/api/competition/question/**").hasAuthority("ROLE_CUSTOM")
