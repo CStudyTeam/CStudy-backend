@@ -74,7 +74,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         HashMap<String, Object> errorInfo = new HashMap<>();
         errorInfo.put("message", exceptionCode.getMessage());
-        errorInfo.put("code", exceptionCode.getCode());
+        errorInfo.put("code", "401");
 
         Gson gson = new Gson();
 
