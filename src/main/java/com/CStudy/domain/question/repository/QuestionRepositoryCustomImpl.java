@@ -49,7 +49,7 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
                                         .when(memberQuestion.success.ne(0)).then(memberQuestion.success)
                                         .otherwise(0)
                                         .as("success")
-                        )).from(question)
+                        )).from(question).distinct()
                 .leftJoin(question.category, category)
                 .leftJoin(question.questions, memberQuestion)
                 .leftJoin(memberQuestion.member, member)
@@ -66,6 +66,7 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
                 .selectFrom(question)
                 .leftJoin(question.category, category)
                 .leftJoin(question.questions, memberQuestion)
+                .leftJoin(memberQuestion.member, member)
                 .where(
                         questionTitleEq(questionSearchCondition.getQuestionTitle()),
                         categoryTitleEq(questionSearchCondition.getCategoryTitle()),
