@@ -40,7 +40,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (StringUtils.hasText(token)) {
                 getAuthentication(token);
             }
-            filterChain.doFilter(request, response);
         } catch (NullPointerException | IllegalStateException e) {
             extracted(request, JwtExceptionCode.NOT_FOUND_TOKEN, "Not found Token // token : {}", token, "throw new not found token exception");
         } catch (SecurityException | MalformedJwtException e) {//JWT 토큰의 서명이나 암호화와 관련된 오류입니다. -> 시그니처 오류
@@ -53,15 +52,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.error("JwtFilter - doFilterInternal() 오류 발생");
             log.error("token : {}", token);
             log.error("Exception Message : {}", e.getMessage());
-            throw new BadCredentialsException("throw new exception");
+            //throw new BadCredentialsException("throw new exception");
         }
+        filterChain.doFilter(request, response);
     }
 
     private static void extracted(HttpServletRequest request, JwtExceptionCode notFoundToken, String format, String token, String msg) {
         request.setAttribute("exception", notFoundToken.getCode());
         log.error(format, token);
         log.error("Set Request Exception Code : {}", request.getAttribute("exception"));
-        throw new BadCredentialsException(msg);
+        //throw new BadCredentialsException(msg);
     }
 
     private void getAuthentication(String token) {
