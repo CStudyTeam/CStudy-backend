@@ -39,6 +39,11 @@ public class SecurityConfig {
                 .and()
                 .httpBasic().disable()
                 .authorizeRequests()
+                .antMatchers("/api/workbook/update","/api/workbook/question/delete","/api/workbook/question/add","/api/workbook/create",
+                        "/api/request/approve", "/api/questions","/api/question","/api/competition").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/api/upload","/api/request/mylist","/api/request/create","/api/refreshToken","/api/questions/myquestion",
+                        "/api/question/**", "/api/mypage", "/api/mypage/password","/api/competition/submit","/api/competition/join/**",
+                        "/api/competition/result/**", "/api/competition/question/**").hasAuthority("ROLE_CUSTOM")
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .mvcMatchers("/api/signup","/api/login","/api/logout").permitAll()
                 .and()
