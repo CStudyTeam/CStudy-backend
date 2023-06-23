@@ -42,7 +42,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } else {
                 extracted(request, JwtExceptionCode.NOT_FOUND_TOKEN, "Not found Token // token : {}", token, "throw new not found token exception");
             }
-
         } catch (NullPointerException | IllegalStateException e) {
             extracted(request, JwtExceptionCode.NOT_FOUND_TOKEN, "Not found Token // token : {}", token, "throw new not found token exception");
         } catch (SecurityException | MalformedJwtException e) {//JWT 토큰의 서명이나 암호화와 관련된 오류입니다. -> 시그니처 오류

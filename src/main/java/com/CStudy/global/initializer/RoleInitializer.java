@@ -51,8 +51,8 @@ public class RoleInitializer {
                     Role adminRole = adminRoleOptional.get();
 
                     Member member = Member.builder()
-                            .email("admin")
-                            .password(passwordEncoder.encode("1234"))
+                            .email("admin@admin.com")
+                            .password(passwordEncoder.encode("admin1234!"))
                             .name("관리자")
                             .roles(Collections.singleton(adminRole))
                             .build();
