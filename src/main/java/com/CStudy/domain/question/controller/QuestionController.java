@@ -124,7 +124,7 @@ public class QuestionController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "전체 문제 페이징 성공"),
             @ApiResponse(responseCode = "400", description = "전체 문제 페이징 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-
+    })
     @GetMapping("questions")
     @ResponseStatus(HttpStatus.OK)
     public Page<QuestionPageWithCategoryAndTitle> findQuestionPageWithCategoryAndTitleConditionalSearch(

@@ -17,7 +17,6 @@ public class CreateCompetitionRequestDto {
     private int participants;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime competitionStart;
-
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime competitionEnd;
 }
