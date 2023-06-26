@@ -8,7 +8,11 @@ public enum ErrorCode {
     NotFoundMemberId("1000"),//회원 아이디를 찾을 수 없습니다.
     EmailDuplication("1001"),//회원가입 이메일 중복이 되었습니다.
     InvalidMatchPasswordException("1002"),//로그인 비밀번호가 일치하지 않습니다.
+    NotFoundMemberEmail("1003"),
     NotFoundCategoryTile("2001"),//카테고리 제목을 찾을 수 없습니다.
+    existByMemberQuestionDataException("3000"),//회원 아이디를 가진 사람이 문제에 데이터 존재
+    NotFoundQuestionId("3001"),//문제에 대한 아이디를 찾을 수 없습니다.
+    NotFoundQuestionWithChoicesAndCategoryById("3002"),//문제에 대한 카테고리 및 선택을 찾을 수 없습니다.
     NotFoundWorkbook("4001"), //문제집을 찾을 수 없습니다.
     NotFoundWorkbookQuestion("4002"), // 문제집에서 해당 문제를 찾을 수 없습니다.
     NotFoundCompetitionId("5001"), //대회 정보를 찾을 수 없습니다.

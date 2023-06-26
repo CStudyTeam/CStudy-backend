@@ -1,8 +1,21 @@
 package com.CStudy.global.exception.member;
 
 
-public class NotFoundMemberEmail extends RuntimeException {
-    public NotFoundMemberEmail(String email) {
-        super("User email is not found : " + email);
+import com.CStudy.global.exception.MemberAbstractException;
+
+public class NotFoundMemberEmail extends MemberAbstractException {
+
+    public NotFoundMemberEmail(String message) {
+        super("User email is not found : " + message);
+    }
+
+    public NotFoundMemberEmail(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+
+    @Override
+    public int getStatusCode() {
+        return 1003;
     }
 }
