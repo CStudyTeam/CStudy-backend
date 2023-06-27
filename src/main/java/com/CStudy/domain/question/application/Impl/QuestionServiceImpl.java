@@ -93,7 +93,7 @@ public class QuestionServiceImpl implements QuestionService {
      * Create a problem that is appropriate for the category.
      * Create a view (list) of the following problems.
      *
-     * @param List<CreateQuestionAndCategoryRequestDto> requestDtos 단일 파일이 아닌 다중 문제를 List 형태로 전달
+     * @param requestDtos 단일 파일이 아닌 다중 문제를 List 형태로 전달
      */
     @Override
     @Transactional
@@ -124,29 +124,32 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     @Transactional
     public void choiceQuestion(LoginUserDto loginUserDto, Long questionId, ChoiceAnswerRequestDto choiceNumber) {
-        Question question = questionRepository.findById(questionId)
-                .orElseThrow();
 
-        List<Choice> choices = question.getChoices();
-        choices.stream()
-                .filter(Choice::isAnswer)
-                .forEach(choice -> {
-                    if (choice.getNumber() == choiceNumber.getChoiceNumber()) {
-                        memberQuestionService.findMemberAndMemberQuestionSuccess(
-                                loginUserDto.getMemberId(),
-                                questionId,
-                                choiceNumber.getChoiceNumber()
-                        );
-                    } else {
-                        memberQuestionService.findMemberAndMemberQuestionFail(
-                                loginUserDto.getMemberId(),
-                                questionId,
-                                choiceNumber.getChoiceNumber()
-                        );
-                    }
-                });
-        redisPublisher.publish(ChannelTopic.of("ranking-invalidation"), "ranking");
+            Question question = questionRepository.findById(questionId)
+                    .orElseThrow();
+
+            List<Choice> choices = question.getChoices();
+            choices.stream()
+                    .filter(Choice::isAnswer)
+                    .forEach(choice -> {
+                        if (choice.getNumber() == choiceNumber.getChoiceNumber()) {
+                            memberQuestionService.findMemberAndMemberQuestionSuccess(
+                                    loginUserDto.getMemberId(),
+                                    questionId,
+                                    choiceNumber
+                            );
+                        } else {
+                            memberQuestionService.findMemberAndMemberQuestionFail(
+                                    loginUserDto.getMemberId(),
+                                    questionId,
+                                    choiceNumber
+                            );
+                        }
+                    });
+            redisPublisher.publish(ChannelTopic.of("ranking-invalidation"), "ranking");
     }
+
+
 
     /**
      * Paging the problem.

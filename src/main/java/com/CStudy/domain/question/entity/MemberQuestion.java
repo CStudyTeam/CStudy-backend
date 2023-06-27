@@ -22,6 +22,8 @@ public class MemberQuestion {
     @Column(name = "question_fail")
     private int fail;
 
+    private Long solveTime;
+
     @ManyToOne(
             fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST
@@ -40,11 +42,13 @@ public class MemberQuestion {
     public MemberQuestion(
             int success,
             int fail,
+            Long solveTime,
             Member member,
             Question question
     ) {
         this.success = success;
         this.fail = fail;
+        this.solveTime = solveTime;
         this.member = member;
         this.question = question;
     }
