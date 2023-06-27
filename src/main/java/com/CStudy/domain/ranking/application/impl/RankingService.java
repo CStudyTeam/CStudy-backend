@@ -2,6 +2,7 @@ package com.CStudy.domain.ranking.application.impl;
 
 import com.CStudy.domain.member.entity.Member;
 import com.CStudy.domain.member.repository.MemberRepository;
+import com.CStudy.domain.question.entity.MemberQuestion;
 import com.CStudy.global.redis.RedisCacheKey;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -11,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class RankingService implements com.CStudy.domain.ranking.application.RankingService {
@@ -25,18 +28,34 @@ public class RankingService implements com.CStudy.domain.ranking.application.Ran
     }
 
     /**
-     *
      * @return redis에 회원의 정보를 가져와 포인트를 0~10까지 가져온다.
      */
     @Cacheable(key = "1", value = RedisCacheKey.Ranking, cacheManager = "redisCacheManager")
     @Transactional(readOnly = true)
     public List<ZSetOperations.TypedTuple<String>> getRanking() {
-        List<Member> memberList = memberRepository.findAll();
+
+        List<Member> memberList = memberRepository.findAllWithQuestions();
+
+        Map<Long, Long> memberSolveTimeMap = memberList.stream()
+                .collect(Collectors.toMap(Member::getId, this::calculateSolveTime));
 
         ZSetOperations<String, String> stringStringZSetOperations = redisTemplate.opsForZSet();
 
-        memberList.forEach(member -> stringStringZSetOperations.add("ranking", member.getName(), member.getRankingPoint()));
+        memberList.forEach(member -> {
+            double rankingPoint = member.getRankingPoint();
+            long solveTime = memberSolveTimeMap.get(member.getId());
 
-        return new ArrayList<>(Objects.requireNonNull(stringStringZSetOperations.rangeWithScores("ranking", 0, 10),"Ranking Board Data null"));
+            double combinedDouble = rankingPoint + (solveTime / 1000.0);
+
+            stringStringZSetOperations.add("ranking", member.getName(), combinedDouble);
+        });
+
+        return new ArrayList<>(Objects.requireNonNull(stringStringZSetOperations.reverseRangeWithScores("ranking", 0, 10), "Ranking Board Data null"));
+    }
+
+    private long calculateSolveTime(Member member) {
+        return member.getQuestions().stream()
+                .mapToLong(MemberQuestion::getSolveTime)
+                .sum();
     }
 }
