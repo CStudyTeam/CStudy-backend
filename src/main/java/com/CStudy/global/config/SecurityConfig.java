@@ -47,7 +47,7 @@ public class SecurityConfig {
                         "/api/request/approve", "/api/question","/api/competition").hasAuthority("ROLE_ADMIN")
                 .antMatchers("/api/upload","/api/request/mylist","/api/request/create","/api/questions/myquestion",
                         "/api/question/**", "/api/mypage", "/api/mypage/password","/api/competition/submit","/api/competition/join/**",
-                        "/api/competition/result/**", "/api/competition/question/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        "/api/competition/result/**", "/api/competition/question/**").hasAnyAuthority("ROLE_CUSTOM", "ROLE_ADMIN")
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .mvcMatchers("/api/signup","/api/login","/api/logout").permitAll()
                 .and()
