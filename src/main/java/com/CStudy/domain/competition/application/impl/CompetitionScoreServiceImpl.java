@@ -4,7 +4,7 @@ import com.CStudy.domain.choice.entity.Choice;
 import com.CStudy.domain.choice.repository.ChoiceRepository;
 import com.CStudy.domain.competition.application.CompetitionScoreService;
 import com.CStudy.domain.competition.dto.request.CompetitionScoreRequestDto;
-import com.CStudy.domain.competition.dto.request.CompetitionScoreRequestDto.CompetitionQuestionRequestDto;
+import com.CStudy.domain.competition.dto.request.CompetitionScoreRequestDto.CompetitionAnswerRequestDto;
 import com.CStudy.domain.competition.dto.response.CompetitionScoreResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionScoreResponseDto.ScoreDetail;
 import com.CStudy.domain.competition.entity.CompetitionScore;
@@ -49,7 +49,7 @@ public class CompetitionScoreServiceImpl implements CompetitionScoreService {
         int score = 0;
         memberCompetition.setEndTime(requestDto.getEndTime());
 
-        for (CompetitionQuestionRequestDto questionDto : requestDto.getQuestions()) {
+        for (CompetitionAnswerRequestDto questionDto : requestDto.getQuestions()) {
             Question question = questionRepository.findById(questionDto.getQuestionId())
                     .orElseThrow(() -> new NotFoundQuestionId(questionDto.getQuestionId()));
 

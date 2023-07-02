@@ -8,12 +8,11 @@ import com.CStudy.domain.competition.application.CompetitionScoreService;
 import com.CStudy.domain.competition.application.CompetitionService;
 import com.CStudy.domain.competition.application.MemberCompetitionService;
 import com.CStudy.domain.competition.dto.request.CompetitionScoreRequestDto;
-import com.CStudy.domain.competition.dto.request.CompetitionScoreRequestDto.CompetitionQuestionRequestDto;
+import com.CStudy.domain.competition.dto.request.CompetitionScoreRequestDto.CompetitionAnswerRequestDto;
 import com.CStudy.domain.competition.dto.request.CreateCompetitionRequestDto;
 import com.CStudy.domain.competition.dto.response.CompetitionListResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionRankingResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionResponseDto;
-import com.CStudy.domain.competition.dto.response.CompetitionScoreResponseDto;
 import com.CStudy.domain.member.application.MemberService;
 import com.CStudy.domain.member.dto.request.MemberSignupRequest;
 import com.CStudy.domain.member.entity.Member;
@@ -281,9 +280,9 @@ class CompetitionServiceImplTest {
 
 
         public void scoring(Long memberId, int choice) {
-            List<CompetitionQuestionRequestDto> questionDto = new ArrayList<>();
+            List<CompetitionAnswerRequestDto> questionDto = new ArrayList<>();
             for (int i = 0; i < 10; i++) {
-                questionDto.add(CompetitionQuestionRequestDto.builder()
+                questionDto.add(CompetitionAnswerRequestDto.builder()
                     .questionId(questionIds.get(i))
                     .choiceNumber(choice)
                     .build()

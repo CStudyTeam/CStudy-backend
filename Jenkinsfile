@@ -33,10 +33,10 @@ pipeline {
             steps{
                 echo 'SSH'
                 sshagent (credentials: ['dockerHubPwd']) {
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@13.209.xxx.xxx 'whoami'"
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@13.209.121.180 'docker ps -q --filter name=docker-jenkins-github-test | grep -q . && docker rm -f \$(docker ps -aq --filter name=docker-jenkins-github-test)'"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@13.209.121.180 'whoami'"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@13.209.121.180 'docker ps -q --filter name=docker-jenkins-github-cstudy | grep -q . && docker rm -f \$(docker ps -aq --filter name=docker-jenkins-github-cstudy)'"
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@13.209.121.180 'docker rmi -f kimmugeon/docker-jenkins-github-cstudy'"
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@13.209.xxx.xxx 'docker run -d --name docker-jenkins-github-test -p 8081:8080 kimmugeon/docker-jenkins-github-cstudy'"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@13.209.121.180 'docker run -d --name docker-jenkins-github-test -p 8081:8080 kimmugeon/docker-jenkins-github-cstudy'"
                 }
 
             }
