@@ -4,6 +4,7 @@ import com.CStudy.domain.member.entity.Member;
 import com.CStudy.domain.member.repository.MemberRepository;
 import com.CStudy.domain.question.application.MemberQuestionService;
 import com.CStudy.domain.question.dto.request.ChoiceAnswerRequestDto;
+import com.CStudy.domain.question.dto.response.QuestionAnswerDto;
 import com.CStudy.domain.question.entity.MemberQuestion;
 import com.CStudy.domain.question.entity.Question;
 import com.CStudy.domain.question.repository.MemberQuestionRepository;
@@ -112,5 +113,16 @@ public class MemberQuestionServiceImpl implements MemberQuestionService {
             questionOptional.ifPresent(question -> memberQuestionRepository.deleteById(question.getId()));
             questionOptional.orElseThrow(() -> new RuntimeException("MemberQuestion not found"));
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public QuestionAnswerDto isCorrectAnswer(Long memberId, Long questionId,
+        ChoiceAnswerRequestDto requestDto) {
+        boolean answer = memberQuestionRepository.existsByMemberAndQuestionAndSuccess(memberId, questionId, requestDto.getChoiceNumber());
+
+        return QuestionAnswerDto.builder()
+                .answer(answer)
+                .build();
     }
 }
