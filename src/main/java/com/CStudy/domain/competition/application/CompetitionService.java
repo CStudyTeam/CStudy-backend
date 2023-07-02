@@ -1,5 +1,6 @@
 package com.CStudy.domain.competition.application;
 
+import com.CStudy.domain.competition.dto.request.CompetitionQuestionRequestDto;
 import com.CStudy.domain.competition.dto.request.CreateCompetitionRequestDto;
 import com.CStudy.domain.competition.dto.response.CompetitionListResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionQuestionDto;
@@ -19,4 +20,7 @@ public interface CompetitionService {
     Page<CompetitionRankingResponseDto> getCompetitionRanking(Long id, Pageable pageable);
 
     List<CompetitionQuestionDto> getCompetitionQuestion(Long competitionId);
+
+    void addCompetitionQuestion(CompetitionQuestionRequestDto requestDto);
+    void deleteCompetitionQuestion(CompetitionQuestionRequestDto requestDto);
 }

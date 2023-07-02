@@ -17,13 +17,13 @@ public class CompetitionScoreRequestDto {
     private Long competitionId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endTime;
-    private List<CompetitionQuestionRequestDto> questions;
+    private List<CompetitionAnswerRequestDto> questions;
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CompetitionQuestionRequestDto {
+    public static class CompetitionAnswerRequestDto {
         private int questionNumber;
         private Long questionId;
         private int choiceNumber;
