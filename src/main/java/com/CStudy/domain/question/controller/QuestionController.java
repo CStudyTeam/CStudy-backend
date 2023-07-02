@@ -5,6 +5,7 @@ import com.CStudy.domain.question.application.QuestionService;
 import com.CStudy.domain.question.dto.request.ChoiceAnswerRequestDto;
 import com.CStudy.domain.question.dto.request.CreateQuestionAndCategoryRequestDto;
 import com.CStudy.domain.question.dto.request.QuestionSearchCondition;
+import com.CStudy.domain.question.dto.response.QuestionAnswerDto;
 import com.CStudy.domain.question.dto.response.QuestionPageWithCategoryAndTitle;
 import com.CStudy.domain.question.dto.response.QuestionResponseDto;
 import com.CStudy.global.exception.ErrorResponse;
@@ -106,7 +107,7 @@ public class QuestionController {
     })
     @PostMapping("question/{questionId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void choiceQuestion(
+    public QuestionAnswerDto choiceQuestion(
             @Parameter(name = "questionId", description = "문제 번호")
             @PathVariable Long questionId,
             @Parameter(name = "ChoiceAnswerRequestDto", description = "정답 선택 번호")
@@ -117,6 +118,7 @@ public class QuestionController {
     ) {
         memberQuestionService.findByQuestionAboutMemberIdAndQuestionId(loginUserDto.getMemberId(),questionId);
         questionService.choiceQuestion(loginUserDto, questionId, choiceNumber);
+        return memberQuestionService.isCorrectAnswer(loginUserDto.getMemberId(), questionId, choiceNumber);
     }
 
 
