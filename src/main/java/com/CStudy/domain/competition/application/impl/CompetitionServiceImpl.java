@@ -2,6 +2,7 @@ package com.CStudy.domain.competition.application.impl;
 
 import com.CStudy.domain.competition.application.CompetitionService;
 import com.CStudy.domain.competition.application.MemberCompetitionService;
+import com.CStudy.domain.competition.dto.request.CompetitionQuestionRequestDto;
 import com.CStudy.domain.competition.dto.request.CreateCompetitionRequestDto;
 import com.CStudy.domain.competition.dto.response.CompetitionListResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionQuestionDto;
@@ -12,6 +13,8 @@ import com.CStudy.domain.competition.entity.MemberCompetition;
 import com.CStudy.domain.competition.repository.CompetitionRepository;
 import com.CStudy.domain.competition.repository.MemberCompetitionRepository;
 import com.CStudy.domain.question.repository.QuestionRepository;
+import com.CStudy.domain.workbook.application.WorkbookService;
+import com.CStudy.domain.workbook.dto.request.WorkbookQuestionRequestDto;
 import com.CStudy.domain.workbook.entity.Workbook;
 import com.CStudy.domain.workbook.repository.WorkbookRepository;
 import com.CStudy.global.exception.competition.NotFoundCompetitionId;
@@ -31,19 +34,22 @@ public class CompetitionServiceImpl implements CompetitionService {
     private final QuestionRepository questionRepository;
     private final MemberCompetitionRepository memberCompetitionRepository;
     private final MemberCompetitionService memberCompetitionService;
+    private final WorkbookService workbookService;
 
     public CompetitionServiceImpl(
         CompetitionRepository competitionRepository,
         WorkbookRepository workbookRepository,
         QuestionRepository questionRepository,
         MemberCompetitionRepository memberCompetitionRepository,
-        MemberCompetitionService memberCompetitionService
+        MemberCompetitionService memberCompetitionService,
+        WorkbookService workbookService
     ) {
         this.competitionRepository = competitionRepository;
         this.workbookRepository = workbookRepository;
         this.questionRepository = questionRepository;
         this.memberCompetitionRepository = memberCompetitionRepository;
         this.memberCompetitionService = memberCompetitionService;
+        this.workbookService = workbookService;
     }
 
     @Override
@@ -127,6 +133,30 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public List<CompetitionQuestionDto> getCompetitionQuestion(Long competitionId) {
         return questionRepository.findQuestionWithCompetitionById(competitionId);
+    }
+
+    @Override
+    @Transactional
+    public void addCompetitionQuestion(CompetitionQuestionRequestDto requestDto) {
+        Competition competition = competitionRepository.findById(requestDto.getCompetitionId())
+                .orElseThrow(() -> new NotFoundCompetitionId(requestDto.getCompetitionId()));
+        Long workbookId = competition.getWorkbook().getId();
+        WorkbookQuestionRequestDto questionDto = WorkbookQuestionRequestDto.builder()
+                .questionIds(requestDto.getQuestionIds())
+                .workbookId(workbookId).build();
+        workbookService.addQuestion(questionDto);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCompetitionQuestion(CompetitionQuestionRequestDto requestDto) {
+        Competition competition = competitionRepository.findById(requestDto.getCompetitionId())
+                .orElseThrow(() -> new NotFoundCompetitionId(requestDto.getCompetitionId()));
+        Long workbookId = competition.getWorkbook().getId();
+        WorkbookQuestionRequestDto questionDto = WorkbookQuestionRequestDto.builder()
+                .questionIds(requestDto.getQuestionIds())
+                .workbookId(workbookId).build();
+        workbookService.deleteQuestion(questionDto);
     }
 
 }

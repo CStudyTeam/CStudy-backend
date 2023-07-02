@@ -3,6 +3,7 @@ package com.CStudy.domain.competition.controller;
 import com.CStudy.domain.competition.application.CompetitionScoreService;
 import com.CStudy.domain.competition.application.CompetitionService;
 import com.CStudy.domain.competition.application.MemberCompetitionService;
+import com.CStudy.domain.competition.dto.request.CompetitionQuestionRequestDto;
 import com.CStudy.domain.competition.dto.request.CompetitionScoreRequestDto;
 import com.CStudy.domain.competition.dto.request.CreateCompetitionRequestDto;
 import com.CStudy.domain.competition.dto.response.CompetitionListResponseDto;
@@ -134,6 +135,34 @@ public class CompetitionController {
             @PageableDefault(sort = {"competitionStart"}, direction = Direction.DESC) Pageable pageable
     ) {
         return competitionService.getCompetitionList(true, pageable);
+    }
+
+    @Operation(summary = "대회 문제 추가", description = "대회 문제 추가")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "대회 문제 추가 성공"),
+            @ApiResponse(responseCode = "400", description = "대회 문제 추가 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @PostMapping("competition/question/add")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addQuestion(
+            @Parameter(description = "competitionId: 문제집 id, questionIds.id: 삭제할 문제 번호")
+            @RequestBody CompetitionQuestionRequestDto requestDto
+    ) {
+        competitionService.addCompetitionQuestion(requestDto);
+    }
+
+    @Operation(summary = "대회 문제 삭제", description = "대회 문제 삭제")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "대회 문제 삭제 성공"),
+        @ApiResponse(responseCode = "400", description = "대회 문제 삭제 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @PostMapping("competition/question/delete")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void deleteQuestion(
+        @Parameter(description = "competitionId: 문제집 id, questionIds.id: 삭제할 문제 번호")
+        @RequestBody CompetitionQuestionRequestDto requestDto
+    ) {
+        competitionService.deleteCompetitionQuestion(requestDto);
     }
 
     @Operation(summary = "대회 랭킹", description = "대회 id를 이용해 대회에 참여한 회원들의 랭킹 조회")
