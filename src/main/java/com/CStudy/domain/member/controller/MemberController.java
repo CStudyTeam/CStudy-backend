@@ -1,6 +1,7 @@
 package com.CStudy.domain.member.controller;
 
 
+import com.CStudy.domain.admin.dto.GeoLocationDto;
 import com.CStudy.domain.member.application.FileService;
 import com.CStudy.domain.member.application.MemberService;
 import com.CStudy.domain.member.dto.request.MemberLoginRequest;
@@ -10,6 +11,7 @@ import com.CStudy.domain.member.dto.response.MemberLoginResponse;
 import com.CStudy.domain.member.dto.response.MyPageResponseDto;
 import com.CStudy.domain.refresh.application.RefreshTokenService;
 import com.CStudy.domain.refresh.dto.request.RefreshTokenDto;
+import com.CStudy.global.common.GeoService;
 import com.CStudy.global.exception.ErrorResponse;
 import com.CStudy.global.util.IfLogin;
 import com.CStudy.global.util.LoginUserDto;
@@ -32,6 +34,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.CStudy.domain.admin.dto.GeoLocationDto.getIpAddress;
+
 
 @Tag(name = "Member(회원 API)", description = "회원 관련 API(회원가입, 로그인, 로그아웃, 재할당)")
 @Slf4j
@@ -41,15 +45,18 @@ public class MemberController {
 
     private final MemberService memberService;
     private final RefreshTokenService refreshTokenService;
+    private final GeoService geoService;
     private final FileService fileService;
 
     public MemberController(
             MemberService memberService,
             RefreshTokenService refreshTokenService,
+            GeoService geoService,
             FileService fileService
     ) {
         this.memberService = memberService;
         this.refreshTokenService = refreshTokenService;
+        this.geoService = geoService;
         this.fileService = fileService;
     }
 
@@ -60,13 +67,14 @@ public class MemberController {
     })
     @PostMapping("signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public void signUpWithRole(
+    public void signUpWithRole2(
             @Parameter(name = "MemberSignupRequest", description = "회원 이메일, 비밀번호, 이름")
             @Valid
             @RequestBody MemberSignupRequest request
     ) {
         log.info(String.format("request:>>{%s}", request));
-        memberService.signUp(request);
+        GeoLocationDto location = geoService.findLocation(getIpAddress());
+        memberService.signUp(request, location);
     }
 
 

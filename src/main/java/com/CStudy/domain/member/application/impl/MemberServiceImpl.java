@@ -1,7 +1,7 @@
 package com.CStudy.domain.member.application.impl;
 
+import com.CStudy.domain.admin.dto.GeoLocationDto;
 import com.CStudy.domain.aop.TimeAnnotation;
-import com.CStudy.domain.member.application.FileService;
 import com.CStudy.domain.member.application.MemberService;
 import com.CStudy.domain.member.dto.request.MemberLoginRequest;
 import com.CStudy.domain.member.dto.request.MemberPasswordChangeRequest;
@@ -57,7 +57,8 @@ public class MemberServiceImpl implements MemberService {
     /**
      * Returns the MemberSignupResponse With request
      *
-     * @param request 회원가입 Signup
+     * @param request  회원가입 Signup
+     * @param location
      * @return 회원가입 성공을 하면 이메일, 이름을 리턴을 합니다.
      * @throws EmailDuplication 중복된 이메일 회원가입 요청
      */
@@ -65,8 +66,32 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @TimeAnnotation
     public MemberSignupResponse signUp(
+            MemberSignupRequest request,
+            GeoLocationDto location
+    ) {
+        duplicationWithEmail(request);
+
+        Member member = Member.builder()
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .name(request.getName())
+                .roles(new HashSet<>())
+                .ip(location.getHostAddress()) // IP
+                .countryIsoCode(location.getCountryIsoCode()) //ISO_CODE
+                .build();
+
+        signupWithRole(member);
+
+        return MemberSignupResponse.of(memberRepository.save(member));
+    }
+
+    @Override
+    @Transactional
+    @TimeAnnotation
+    public MemberSignupResponse signUp(
             MemberSignupRequest request
     ) {
+
         duplicationWithEmail(request);
 
         Member member = Member.builder()
