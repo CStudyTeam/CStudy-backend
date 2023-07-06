@@ -40,6 +40,12 @@ public class Member {
     @OneToOne(mappedBy = "member")
     private File file;
 
+    //TODO : IP 정보 , CountryIsoCode
+    private String ip;
+
+    private String countryIsoCode;
+
+
     @OneToMany(
             mappedBy = "member",
             fetch = FetchType.LAZY,
@@ -87,10 +93,31 @@ public class Member {
     }
 
     @Builder
-    public Member(String email, String password, String name, Set<Role> roles) {
+    public Member(
+            Long id,
+            String email,
+            String password,
+            String name,
+            Long rankingPoint,
+            File file,
+            String ip,
+            String countryIsoCode,
+            Set<MemberQuestion> questions,
+            List<MemberCompetition> memberCompetitions,
+            List<Request> requests,
+            Set<Role> roles
+    ) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
+        this.rankingPoint = rankingPoint;
+        this.file = file;
+        this.ip = ip;
+        this.countryIsoCode = countryIsoCode;
+        this.questions = questions;
+        this.memberCompetitions = memberCompetitions;
+        this.requests = requests;
         this.roles = roles;
     }
 
