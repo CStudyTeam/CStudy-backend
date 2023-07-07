@@ -2,6 +2,7 @@ package com.CStudy.domain.competition.application.impl;
 
 import com.CStudy.domain.aop.OptimisticAnnotation;
 import com.CStudy.domain.competition.application.MemberCompetitionService;
+import com.CStudy.domain.competition.dto.response.MyCompetitionRankingDto;
 import com.CStudy.domain.competition.entity.Competition;
 import com.CStudy.domain.competition.entity.MemberCompetition;
 import com.CStudy.domain.competition.repository.CompetitionRepository;
@@ -10,6 +11,7 @@ import com.CStudy.domain.member.entity.Member;
 import com.CStudy.domain.member.repository.MemberRepository;
 import com.CStudy.global.exception.competition.DuplicateMemberWithCompetition;
 import com.CStudy.global.exception.competition.NotFoundCompetitionId;
+import com.CStudy.global.exception.competition.NotFoundMemberCompetition;
 import com.CStudy.global.exception.competition.ParticipantsWereInvitedParticipateException;
 import com.CStudy.global.exception.member.NotFoundMemberId;
 import com.CStudy.global.util.LoginUserDto;
@@ -56,6 +58,22 @@ public class MemberCompetitionServiceImpl implements MemberCompetitionService {
         List<MemberCompetition> memberCompetitions =
                 memberCompetitionRepository.findAllWithMemberAndCompetition(competitionId);
         return memberCompetitions.size();
+    }
+
+    @Override
+    public MyCompetitionRankingDto myRanking(Long memberId, Long competitionId) {
+
+        List<Long> finishMember = memberCompetitionRepository
+                .findFinishMember(competitionId);
+        Integer myRank = null;
+        for (int i = 0; i < finishMember.size(); i++) {
+            if(finishMember.get(i) == memberId){
+                myRank = i+1;
+                break;
+            }
+        }
+
+        return new MyCompetitionRankingDto(myRank);
     }
 
     private void decreaseParticipantsCountIfPossible(Competition competition) {
