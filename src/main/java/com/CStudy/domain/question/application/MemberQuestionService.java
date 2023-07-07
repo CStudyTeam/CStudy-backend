@@ -8,7 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 public interface MemberQuestionService {
     void findMemberAndMemberQuestionSuccess(Long memberId, Long questionId, ChoiceAnswerRequestDto choiceAnswerRequestDto);
     void findMemberAndMemberQuestionFail(Long memberId, Long questionId, ChoiceAnswerRequestDto choiceAnswerRequestDto);
-    void findByQuestionAboutMemberIdAndQuestionId(Long memberId, Long questionId);
+    void findByQuestionAboutMemberIdAndQuestionIdSuccess(Long memberId, Long questionId);
+    void findByQuestionAboutMemberIdAndQuestionIdFail(Long memberId, Long questionId);
 
     QuestionAnswerDto isCorrectAnswer(Long memberId, Long questionId, ChoiceAnswerRequestDto requestDto);
 }

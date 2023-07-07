@@ -134,7 +134,7 @@ public class WorkbookController {
             @ApiResponse(responseCode = "204", description = "문제 삭제 성공"),
             @ApiResponse(responseCode = "400", description = "문제 삭제 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @DeleteMapping("/workbook/question/delete")
+    @PostMapping("/workbook/question/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteQuestion(
             @Parameter(description = "workbookId: 문제집 id, questionIds.id: 삭제할 문제 번호")
