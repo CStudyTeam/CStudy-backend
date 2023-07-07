@@ -116,7 +116,6 @@ public class QuestionController {
             @IfLogin LoginUserDto loginUserDto
 
     ) {
-        memberQuestionService.findByQuestionAboutMemberIdAndQuestionId(loginUserDto.getMemberId(),questionId);
         questionService.choiceQuestion(loginUserDto, questionId, choiceNumber);
         return memberQuestionService.isCorrectAnswer(loginUserDto.getMemberId(), questionId, choiceNumber);
     }

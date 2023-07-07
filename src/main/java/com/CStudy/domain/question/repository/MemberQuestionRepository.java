@@ -36,6 +36,13 @@ public interface MemberQuestionRepository extends JpaRepository<MemberQuestion, 
     long countByMemberIdAndQuestionIdAndSuccessZero(@Param("memberId") Long memberId,
                                                     @Param("questionId") Long questionId);
 
+    @Query("SELECT COUNT(MQ) FROM MemberQuestion MQ " +
+            "WHERE MQ.member.id = :memberId " +
+            "AND MQ.question.id = :questionId " +
+            "AND MQ.fail = 0")
+    long countByMemberIdAndQuestionIdAndFailZero(@Param("memberId") Long memberId,
+                                                    @Param("questionId") Long questionId);
+
 
 
     @Query("SELECT MQ FROM MemberQuestion MQ " +

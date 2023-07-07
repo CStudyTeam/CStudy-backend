@@ -40,17 +40,21 @@ public class MemberQuestionServiceImpl implements MemberQuestionService {
      *
      * @param memberId     회원 아이디
      * @param questionId   단일 문제에 대한 아이디
-     * @param choiceNumber 문제 선택
+     * @param choiceAnswerRequestDto 문제 선택
      */
     @Override
     @Transactional
     public void findMemberAndMemberQuestionSuccess(Long memberId, Long questionId, ChoiceAnswerRequestDto choiceAnswerRequestDto) {
+
+        findByQuestionAboutMemberIdAndQuestionIdSuccess(memberId,questionId);
+        findByQuestionAboutMemberIdAndQuestionIdFail(memberId,questionId);
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberId(memberId));
 
         Question question = questionRepository.findById(questionId)
                 .orElseThrow();
+
 
         if (memberQuestionRepository.existsByMemberAndQuestionAndSuccess(memberId, questionId, choiceAnswerRequestDto.getChoiceNumber())) {
             throw new existByMemberQuestionDataException(memberId, questionId, choiceAnswerRequestDto.getChoiceNumber());
@@ -72,11 +76,15 @@ public class MemberQuestionServiceImpl implements MemberQuestionService {
      *
      * @param memberId     회원 아이디
      * @param questionId   단일 문제에 대한 아이디
-     * @param choiceNumber 선택 문제
+     * @param choiceAnswerRequestDto 선택 문제
      */
     @Override
     @Transactional
     public void findMemberAndMemberQuestionFail(Long memberId, Long questionId, ChoiceAnswerRequestDto choiceAnswerRequestDto) {
+
+        findByQuestionAboutMemberIdAndQuestionIdSuccess(memberId,questionId);
+        findByQuestionAboutMemberIdAndQuestionIdFail(memberId,questionId);
+
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberId(memberId));
 
@@ -97,6 +105,7 @@ public class MemberQuestionServiceImpl implements MemberQuestionService {
                 .build());
     }
 
+
     /**
      * If the memberQuestion table contains information
      * that is an existing incorrect answer, delete the incorrect answer and add the correct answer.
@@ -106,7 +115,7 @@ public class MemberQuestionServiceImpl implements MemberQuestionService {
      */
     @Override
     @Transactional
-    public void findByQuestionAboutMemberIdAndQuestionId(Long memberId, Long questionId) {
+    public void findByQuestionAboutMemberIdAndQuestionIdSuccess(Long memberId, Long questionId) {
         long count = memberQuestionRepository.countByMemberIdAndQuestionIdAndSuccessZero(memberId, questionId);
         if (count != 0) {
             Optional<MemberQuestion> questionOptional = memberQuestionRepository.findByQuestionAboutMemberIdAndQuestionId(memberId, questionId);
@@ -115,12 +124,27 @@ public class MemberQuestionServiceImpl implements MemberQuestionService {
         }
     }
 
+    /**
+     * If the memberQuestion table contains information
+     * that is an existing correct answer, delete the correct answer and add the correct answer.
+     *
+     * @param memberId   회원 아이디
+     * @param questionId 단일 문제에 대한 아이디
+     */
     @Override
-    @Transactional(readOnly = true)
-    public QuestionAnswerDto isCorrectAnswer(Long memberId, Long questionId,
-        ChoiceAnswerRequestDto requestDto) {
-        boolean answer = memberQuestionRepository.existsByMemberAndQuestionAndSuccess(memberId, questionId, requestDto.getChoiceNumber());
+    @Transactional
+    public void findByQuestionAboutMemberIdAndQuestionIdFail(Long memberId, Long questionId) {
+        long count = memberQuestionRepository.countByMemberIdAndQuestionIdAndFailZero(memberId, questionId);
+        if (count != 0) {
+            Optional<MemberQuestion> questionOptional = memberQuestionRepository.findByQuestionAboutMemberIdAndQuestionId(memberId, questionId);
+            questionOptional.ifPresent(question -> memberQuestionRepository.deleteById(question.getId()));
+            questionOptional.orElseThrow(() -> new RuntimeException("MemberQuestion not found"));
+        }
+    }
 
+    @Override
+    public QuestionAnswerDto isCorrectAnswer(Long memberId, Long questionId, ChoiceAnswerRequestDto requestDto) {
+        boolean answer = memberQuestionRepository.existsByMemberAndQuestionAndSuccess(memberId, questionId, requestDto.getChoiceNumber());
         return QuestionAnswerDto.builder()
                 .answer(answer)
                 .build();
