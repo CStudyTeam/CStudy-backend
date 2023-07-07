@@ -11,6 +11,8 @@ import com.CStudy.domain.competition.dto.response.CompetitionQuestionDto;
 import com.CStudy.domain.competition.dto.response.CompetitionRankingResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionScoreResponseDto;
+import com.CStudy.domain.competition.dto.response.MyCompetitionRankingDto;
+import com.CStudy.domain.member.dto.request.MemberIdRequest;
 import com.CStudy.global.exception.ErrorResponse;
 import com.CStudy.global.util.IfLogin;
 import com.CStudy.global.util.LoginUserDto;
@@ -175,13 +177,29 @@ public class CompetitionController {
     public Page<CompetitionRankingResponseDto> getRanking(
             @Parameter(description = "page: 페이지 번호, size: 한 페이지 문제 수.")
             @PageableDefault @SortDefaults({
-                @SortDefault(sort = "score", direction = Direction.DESC),
-                @SortDefault(sort = "endTime",direction = Direction.ASC)
+                    @SortDefault(sort = "score", direction = Direction.DESC),
+                    @SortDefault(sort = "endTime",direction = Direction.ASC)
             }) Pageable pageable,
             @Parameter(description = "대회 id")
             @PathVariable Long id
     ) {
         return competitionService.getCompetitionRanking(id, pageable);
+    }
+
+    @Operation(summary = "대회 내 랭킹", description = "대회에서 내 랭킹 조회")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "랭킹 조회 성공"),
+        @ApiResponse(responseCode = "400", description = "랭킹 조회 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("competition/myranking/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public MyCompetitionRankingDto getMyRanking(
+            @Parameter(description = "대회 id")
+            @PathVariable Long id,
+            @Parameter(description = "member id")
+            @RequestBody MemberIdRequest request
+    ) {
+        return memberCompetitionService.myRanking(request.getMemberId(), id);
     }
 
     @Operation(summary = "대회 답안 제출", description = "문제를 다 풀고 답안 제출")
