@@ -1,6 +1,6 @@
 package com.CStudy.domain.ranking.controller;
 
-import com.CStudy.domain.ranking.application.impl.RankingService;
+import com.CStudy.domain.ranking.application.impl.RankingServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -20,12 +20,12 @@ import java.util.List;
 @RequestMapping("api")
 public class RankingController {
 
-    private final RankingService rankingService;
+    private final RankingServiceImpl rankingServiceImpl;
 
     public RankingController(
-            RankingService rankingService
+            RankingServiceImpl rankingServiceImpl
     ) {
-        this.rankingService = rankingService;
+        this.rankingServiceImpl = rankingServiceImpl;
     }
 
 
@@ -38,6 +38,6 @@ public class RankingController {
     @GetMapping("members/ranks")
     @ResponseStatus(HttpStatus.OK)
     public List<ZSetOperations.TypedTuple<String>> findMemberAllAboutRankingBoard() {
-        return rankingService.getRanking();
+        return rankingServiceImpl.getRanking();
     }
 }

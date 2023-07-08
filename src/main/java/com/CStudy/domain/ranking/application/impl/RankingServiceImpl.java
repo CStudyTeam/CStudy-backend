@@ -17,12 +17,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class RankingService implements com.CStudy.domain.ranking.application.RankingService {
+public class RankingServiceImpl implements com.CStudy.domain.ranking.application.RankingService {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final MemberRepository memberRepository;
 
-    public RankingService(RedisTemplate<String, String> redisTemplate, MemberRepository memberRepository) {
+    public RankingServiceImpl(RedisTemplate<String, String> redisTemplate, MemberRepository memberRepository) {
         this.redisTemplate = redisTemplate;
         this.memberRepository = memberRepository;
     }
@@ -43,11 +43,7 @@ public class RankingService implements com.CStudy.domain.ranking.application.Ran
 
         memberList.forEach(member -> {
             double rankingPoint = member.getRankingPoint();
-            long solveTime = memberSolveTimeMap.get(member.getId());
-
-            double combinedDouble = rankingPoint + (solveTime / 1000.0);
-
-            stringStringZSetOperations.add("ranking", member.getName(), combinedDouble);
+            stringStringZSetOperations.add("ranking", member.getName(), rankingPoint);
         });
 
         return new ArrayList<>(Objects.requireNonNull(stringStringZSetOperations.reverseRangeWithScores("ranking", 0, 10), "Ranking Board Data null"));
