@@ -197,9 +197,9 @@ public class CompetitionController {
             @Parameter(description = "대회 id")
             @PathVariable Long id,
             @Parameter(description = "member id")
-            @RequestBody MemberIdRequest request
+            @IfLogin LoginUserDto loginUserDto
     ) {
-        return memberCompetitionService.myRanking(request.getMemberId(), id);
+        return memberCompetitionService.myRanking(loginUserDto.getMemberId(), id);
     }
 
     @Operation(summary = "대회 답안 제출", description = "문제를 다 풀고 답안 제출")
