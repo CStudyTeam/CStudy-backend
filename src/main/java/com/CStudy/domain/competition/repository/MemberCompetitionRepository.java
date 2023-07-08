@@ -2,6 +2,7 @@ package com.CStudy.domain.competition.repository;
 
 import com.CStudy.domain.competition.entity.Competition;
 import com.CStudy.domain.competition.entity.MemberCompetition;
+import com.CStudy.domain.member.entity.Member;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,4 +39,13 @@ public interface MemberCompetitionRepository extends JpaRepository<MemberCompeti
                                                     @Param("competitionId") Long competitionId);
     @EntityGraph(attributePaths = {"member"})
     Page<MemberCompetition> findByCompetition(Competition competition, Pageable pageable);
+
+    @Query("SELECT M.id FROM MemberCompetition MC " +
+            "LEFT JOIN Member M ON M = MC.member " +
+            "LEFT JOIN Competition C ON C = MC.competition " +
+            "WHERE MC.score != NULL " +
+            "AND C.id = :competitionId " +
+            "ORDER BY MC.score DESC, MC.endTime ASC"
+    )
+    List<Long> findFinishMember(@Param("competitionId") Long competitionId);
 }

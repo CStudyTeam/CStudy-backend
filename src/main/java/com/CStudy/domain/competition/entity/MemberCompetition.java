@@ -31,7 +31,7 @@ public class MemberCompetition {
     @Version
     private Long version;
 
-    private int score;
+    private Integer score;
 
     private LocalDateTime endTime;
 
