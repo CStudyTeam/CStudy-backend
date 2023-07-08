@@ -19,5 +19,5 @@ public interface QuestionService {
 
     void choiceQuestion(LoginUserDto loginUserDto, Long questionId, ChoiceAnswerRequestDto choiceNumber);
 
-    Page<QuestionPageWithCategoryAndTitle>questionPageWithCategory(QuestionSearchCondition searchCondition, int page, int size);
+    Page<QuestionPageWithCategoryAndTitle>questionPageWithCategory(QuestionSearchCondition searchCondition, int page, int size, LoginUserDto loginUserDto);
 }

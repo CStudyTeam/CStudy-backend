@@ -19,8 +19,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -134,9 +132,10 @@ public class QuestionController {
             @Parameter(name = "page", description = "페이징 default 0")
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @Parameter(name = "size", description = "페이징 default 10")
-            @RequestParam(value = "size", defaultValue = "10", required = false) int size
+            @RequestParam(value = "size", defaultValue = "10", required = false) int size,
+            @IfLogin LoginUserDto loginUserDto
     ) {
-        return questionService.questionPageWithCategory(searchCondition, page, size);
+        return questionService.questionPageWithCategory(searchCondition, page, size, loginUserDto);
     }
 
     @Operation(summary = "내가 푼 문제 조회", description = "내가 푼 문제 조회")
@@ -154,6 +153,6 @@ public class QuestionController {
         QuestionSearchCondition condition = QuestionSearchCondition.builder()
                 .memberId(loginUserDto.getMemberId())
                 .build();
-        return questionService.questionPageWithCategory(condition, page, size);
+        return questionService.questionPageWithCategory(condition, page, size, loginUserDto);
     }
 }

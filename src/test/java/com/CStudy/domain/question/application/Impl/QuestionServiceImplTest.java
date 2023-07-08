@@ -18,7 +18,6 @@ import com.CStudy.domain.question.repository.MemberQuestionRepository;
 import com.CStudy.domain.question.repository.QuestionRepository;
 import com.CStudy.global.exception.member.NotFoundMemberEmail;
 import com.CStudy.global.util.LoginUserDto;
-import org.eclipse.jdt.internal.compiler.lookup.SourceTypeCollisionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -31,10 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.LIST;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
@@ -305,16 +303,18 @@ class QuestionServiceImplTest {
 
         @Test
         @DisplayName("페이징 문제 및 카테고리")
-        public void findPagingQuestionAndCategoryWithValid() throws Exception{
+        public void findPagingQuestionAndCategoryWithValid() throws Exception {
             //given
-
+            LoginUserDto loginUserDto = LoginUserDto.builder()
+                    .memberId(1L)
+                    .build();
             //when
             QuestionSearchCondition questionSearchCondition = QuestionSearchCondition.builder()
-                            .build();
+                    .build();
             //Then
             Page<QuestionPageWithCategoryAndTitle> questionPageWithCategoryAndTitles = questionService.questionPageWithCategory(
-                    questionSearchCondition, 0, 10
-            );
+                    questionSearchCondition, 0, 10,
+                    loginUserDto);
 
             System.out.println("questionPageWithCategoryAndTitles = " + questionPageWithCategoryAndTitles);
 
@@ -327,15 +327,18 @@ class QuestionServiceImplTest {
 
         @Test
         @DisplayName("페이징 문제 및 카테고리 - 문제 제목")
-        public void findPagingQuestionAndCategoryWithValidCondition() throws Exception{
+        public void findPagingQuestionAndCategoryWithValidCondition() throws Exception {
             //given
+            LoginUserDto loginUserDto = LoginUserDto.builder()
+                    .memberId(1L)
+                    .build();
             QuestionSearchCondition questionSearchCondition = QuestionSearchCondition.builder()
                     .questionTitle("문제 제목")
                     .build();
             //when
             Page<QuestionPageWithCategoryAndTitle> questionPageWithCategoryAndTitles = questionService.questionPageWithCategory(
-                    questionSearchCondition, 0, 10
-            );
+                    questionSearchCondition, 0, 10,
+                    loginUserDto);
 
             //Then
 
