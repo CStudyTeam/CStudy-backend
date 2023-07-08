@@ -5,6 +5,7 @@ import com.CStudy.domain.question.dto.request.ChoiceAnswerRequestDto;
 import com.CStudy.domain.question.entity.MemberQuestion;
 import com.CStudy.domain.request.entity.Request;
 import com.CStudy.domain.role.entity.Role;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,8 +82,8 @@ public class Member {
         rankingPoint += 3L + (1 - (choiceAnswerRequestDto.getTime() / 1000.0));
     }
 
-    public void minusRankingPoint() {
-        rankingPoint -= 2L;
+    public void minusRankingPoint(double choiceAnswerRequestDto) {
+            rankingPoint -= 2L;
     }
 
     @Builder

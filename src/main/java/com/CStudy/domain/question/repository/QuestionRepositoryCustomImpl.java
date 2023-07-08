@@ -5,12 +5,12 @@ import com.CStudy.domain.competition.dto.response.CompetitionQuestionDto;
 import com.CStudy.domain.question.dto.request.QuestionSearchCondition;
 import com.CStudy.domain.question.dto.response.QQuestionPageWithCategoryAndTitle;
 import com.CStudy.domain.question.dto.response.QuestionPageWithCategoryAndTitle;
-import com.CStudy.domain.question.entity.QQuestion;
 import com.CStudy.domain.question.entity.Question;
-import com.querydsl.core.types.Predicate;
+import com.CStudy.global.util.LoginUserDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
@@ -40,18 +40,14 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
     }
 
     @Override
-    public Page<QuestionPageWithCategoryAndTitle> findQuestionPageWithCategory(Pageable pageable, QuestionSearchCondition questionSearchCondition) {
+    public Page<QuestionPageWithCategoryAndTitle> findQuestionPageWithCategory(Pageable pageable, QuestionSearchCondition questionSearchCondition, LoginUserDto loginUserDto) {
 
         List<QuestionPageWithCategoryAndTitle> content = queryFactory.select(
                         new QQuestionPageWithCategoryAndTitle(
                                 question.id.as("questionId"),
                                 question.title.as("questionTitle"),
                                 category.categoryTitle.as("categoryTitle"),
-                                Expressions.cases()
-                                        .when(memberQuestion.success.ne(0)).then(1)
-                                        .when(memberQuestion.fail.ne(0)).then(2)
-                                        .otherwise(Expressions.constant(0))
-                                        .as("status")
+                                divisionStatusAboutMemberId(loginUserDto)
                         )).from(question).distinct()
                 .leftJoin(question.category, category)
                 .leftJoin(question.questions, memberQuestion)
@@ -77,6 +73,18 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
                         memberIdEq(questionSearchCondition.getMemberId())
                 );
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+    }
+
+    private static NumberExpression<Integer> divisionStatusAboutMemberId(LoginUserDto loginUserDto) {
+        return Expressions.cases()
+                .when(memberQuestion.member.id.eq(loginUserDto.getMemberId())).then(
+                        Expressions.cases()
+                                .when(memberQuestion.success.ne(0)).then(1)
+                                .when(memberQuestion.fail.ne(0)).then(2)
+                                .otherwise(Expressions.constant(0))
+                )
+                .otherwise(Expressions.constant(0))
+                .as("status");
     }
 
 

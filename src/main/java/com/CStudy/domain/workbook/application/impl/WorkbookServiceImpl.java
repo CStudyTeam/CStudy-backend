@@ -167,7 +167,7 @@ public class WorkbookServiceImpl implements WorkbookService {
                     .orElseThrow(() -> new NotFoundQuestionWithChoicesAndCategoryById(qId.getId()));
             WorkbookQuestion workbookQuestion = workbookQuestionRepository.findByWorkbookAndQuestion(
                     workbook, question)
-                    .orElseThrow(() -> new NotFoundWorkbookQuestion());
+                    .orElseThrow(NotFoundWorkbookQuestion::new);
 
             workbook.deleteQuestion(workbookQuestion);
             workbookQuestionRepository.delete(workbookQuestion);

@@ -46,7 +46,7 @@ public class RankingServiceImpl implements com.CStudy.domain.ranking.application
             stringStringZSetOperations.add("ranking", member.getName(), rankingPoint);
         });
 
-        return new ArrayList<>(Objects.requireNonNull(stringStringZSetOperations.reverseRangeWithScores("ranking", 0, 10), "Ranking Board Data null"));
+        return new ArrayList<>(Objects.requireNonNull(stringStringZSetOperations.reverseRangeWithScores("ranking", 0, 9), "Ranking Board Data null"));
     }
 
     private long calculateSolveTime(Member member) {
