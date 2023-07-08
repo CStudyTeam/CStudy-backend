@@ -1,7 +1,7 @@
 package com.CStudy.domain.competition.application;
 
 import com.CStudy.domain.competition.application.impl.OptimisticFacade;
-import com.CStudy.domain.competition.dto.request.createCompetitionRequestDto;
+import com.CStudy.domain.competition.dto.request.CreateCompetitionRequestDto;
 import com.CStudy.domain.competition.entity.Competition;
 import com.CStudy.domain.competition.repository.CompetitionRepository;
 import com.CStudy.domain.member.application.MemberService;
@@ -59,7 +59,7 @@ class OptimisticFacadeTest {
                 .build();
         memberService.signUp(memberSignupRequest);
 
-        createCompetitionRequestDto requestDto = createCompetitionRequestDto.builder()
+        CreateCompetitionRequestDto requestDto = CreateCompetitionRequestDto.builder()
                 .competitionTitle("CS 대회")
                 .participants(100)
                 .competitionEnd(LocalDateTime.now().plusHours(1))

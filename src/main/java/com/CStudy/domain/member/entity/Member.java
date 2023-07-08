@@ -1,21 +1,19 @@
 package com.CStudy.domain.member.entity;
 
 import com.CStudy.domain.competition.entity.MemberCompetition;
+import com.CStudy.domain.question.dto.request.ChoiceAnswerRequestDto;
 import com.CStudy.domain.question.entity.MemberQuestion;
 import com.CStudy.domain.request.entity.Request;
 import com.CStudy.domain.role.entity.Role;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import lombok.AccessLevel;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -35,7 +33,7 @@ public class Member {
     @Column(name = "member_name")
     private String name;
 
-    private Long rankingPoint= 0L;
+    private double rankingPoint = 0L;
 
     @OneToOne(mappedBy = "member")
     private File file;
@@ -52,7 +50,7 @@ public class Member {
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL
     )
-    List<MemberCompetition>memberCompetitions = new ArrayList<>();
+    List<MemberCompetition> memberCompetitions = new ArrayList<>();
 
 
     @OneToMany(
@@ -74,16 +72,17 @@ public class Member {
     public void changePassword(String password) {
         this.password = password;
     }
+
     public void changeRole(Role role) {
         roles.add(role);
     }
 
-    public void addRankingPoint() {
-        rankingPoint +=3L;
+    public void addRankingPoint(ChoiceAnswerRequestDto choiceAnswerRequestDto) {
+        rankingPoint += 3L + (1 - (choiceAnswerRequestDto.getTime() / 1000.0));
     }
 
     public void minusRankingPoint() {
-            rankingPoint -= 2L;
+        rankingPoint -= 2L;
     }
 
     @Builder
@@ -94,7 +93,7 @@ public class Member {
         this.roles = roles;
     }
 
-    public void addRequest(Request request){
+    public void addRequest(Request request) {
         this.requests.add(request);
     }
 }

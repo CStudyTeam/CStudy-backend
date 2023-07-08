@@ -5,7 +5,9 @@ import com.CStudy.domain.competition.dto.response.CompetitionQuestionDto;
 import com.CStudy.domain.question.dto.request.QuestionSearchCondition;
 import com.CStudy.domain.question.dto.response.QQuestionPageWithCategoryAndTitle;
 import com.CStudy.domain.question.dto.response.QuestionPageWithCategoryAndTitle;
+import com.CStudy.domain.question.entity.QQuestion;
 import com.CStudy.domain.question.entity.Question;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -46,9 +48,10 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
                                 question.title.as("questionTitle"),
                                 category.categoryTitle.as("categoryTitle"),
                                 Expressions.cases()
-                                        .when(memberQuestion.success.ne(0)).then(memberQuestion.success)
-                                        .otherwise(0)
-                                        .as("success")
+                                        .when(memberQuestion.success.ne(0)).then(1)
+                                        .when(memberQuestion.fail.ne(0)).then(2)
+                                        .otherwise(Expressions.constant(0))
+                                        .as("status")
                         )).from(question).distinct()
                 .leftJoin(question.category, category)
                 .leftJoin(question.questions, memberQuestion)
@@ -56,7 +59,8 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
                 .where(
                         questionTitleEq(questionSearchCondition.getQuestionTitle()),
                         categoryTitleEq(questionSearchCondition.getCategoryTitle()),
-                        memberIdEq(questionSearchCondition.getMemberId())
+                        memberIdEq(questionSearchCondition.getMemberId()),
+                        statusEq(questionSearchCondition.getStatus())
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -75,6 +79,7 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
+
     @Override
     public List<CompetitionQuestionDto> findQuestionWithCompetitionById(Long id) {
         List<CompetitionQuestionDto> content = queryFactory
@@ -85,16 +90,16 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
                 .leftJoin(question.choices, choice)
                 .where(competition.id.eq(id))
                 .transform(
-                    groupBy(question.id).list(
-                        Projections.constructor(CompetitionQuestionDto.class,
-                            question.id,
-                            question.description,
-                            list(
-                            Projections.constructor(ChoiceQuestionResponseDto.class,
-                                choice.number, choice.content
-                            )
-                        ))
-                    )
+                        groupBy(question.id).list(
+                                Projections.constructor(CompetitionQuestionDto.class,
+                                        question.id,
+                                        question.description,
+                                        list(
+                                                Projections.constructor(ChoiceQuestionResponseDto.class,
+                                                        choice.number, choice.content
+                                                )
+                                        ))
+                        )
                 );
         return content;
     }
@@ -111,4 +116,17 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
     private BooleanExpression memberIdEq(Long memberId) {
         return memberId != null ? member.id.eq(memberId) : null;
     }
+
+    private BooleanExpression statusEq(Integer status) {
+        if (status != null) {
+            if (status.equals(1)) {
+                return memberQuestion.success.ne(0);
+            } else if (status.equals(2)) {
+                return memberQuestion.fail.ne(0);
+            }
+        }
+        return null; // Return null if status is null or doesn't match 1, 2, or 999
+    }
+
+
 }

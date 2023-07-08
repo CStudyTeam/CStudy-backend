@@ -8,13 +8,13 @@ public class QuestionPageWithCategoryAndTitle {
     private Long questionId;
     private String questionTitle;
     private String categoryTitle;
-    private int questionSuccess;
+    private int status;
 
     @QueryProjection
-    public QuestionPageWithCategoryAndTitle(Long questionId, String questionTitle, String categoryTitle, int questionSuccess) {
+    public QuestionPageWithCategoryAndTitle(Long questionId, String questionTitle, String categoryTitle, int status) {
         this.questionId = questionId;
         this.questionTitle = questionTitle;
         this.categoryTitle = categoryTitle;
-        this.questionSuccess = questionSuccess;
+        this.status = status;
     }
 }
