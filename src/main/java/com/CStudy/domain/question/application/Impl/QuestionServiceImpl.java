@@ -155,8 +155,9 @@ public class QuestionServiceImpl implements QuestionService {
      * Paging the problem.
      *
      * @param searchCondition Select 조건
-     * @param page 페이징 페이지
-     * @param size 페이징 사이즈
+     * @param page            페이징 페이지
+     * @param size            페이징 사이즈
+     * @param loginUserDto
      * @return questionRepository
      */
     @Override
@@ -164,10 +165,11 @@ public class QuestionServiceImpl implements QuestionService {
     public Page<QuestionPageWithCategoryAndTitle> questionPageWithCategory(
             QuestionSearchCondition searchCondition,
             int page,
-            int size
+            int size,
+            LoginUserDto loginUserDto
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        return questionRepository.findQuestionPageWithCategory(pageable, searchCondition);
+        return questionRepository.findQuestionPageWithCategory(pageable, searchCondition, loginUserDto);
     }
 
     private Question createQuestion(

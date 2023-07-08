@@ -95,7 +95,7 @@ public class MemberQuestionServiceImpl implements MemberQuestionService {
             throw new existByMemberQuestionDataException(memberId, questionId, choiceAnswerRequestDto.getChoiceNumber());
         }
 
-        member.minusRankingPoint();
+        member.minusRankingPoint(member.getRankingPoint());
 
         memberQuestionRepository.save(MemberQuestion.builder()
                 .member(member)
