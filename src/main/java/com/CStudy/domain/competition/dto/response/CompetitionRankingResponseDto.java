@@ -16,7 +16,7 @@ public class CompetitionRankingResponseDto {
 
     private String name;
     private Long memberId;
-    private int score;
+    private Integer score;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endTime;
