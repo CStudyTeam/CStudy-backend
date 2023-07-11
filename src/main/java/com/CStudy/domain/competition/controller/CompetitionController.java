@@ -80,6 +80,7 @@ public class CompetitionController {
             @Parameter(description = "대회 id")
             @PathVariable(name = "competitionId") Long competitionId
     ) {
+        //competitionService.checkCompetitionFinished(competitionId);
         memberCompetitionService.joinCompetition(loginUserDto, competitionId);
     }
 
@@ -106,9 +107,11 @@ public class CompetitionController {
     @ResponseStatus(HttpStatus.OK)
     public List<CompetitionQuestionDto> getCompetitionQuestion(
             @Parameter(description = "대회 id")
-            @PathVariable Long competitionId
+            @PathVariable Long competitionId,
+            @Parameter(description = "member id")
+            @IfLogin LoginUserDto loginUserDto
     ) {
-        return competitionService.getCompetitionQuestion(competitionId);
+        return competitionService.getCompetitionQuestion(competitionId, loginUserDto.getMemberId());
     }
 
     @Operation(summary = "참여 가능 대회 리스트", description = "참여 가능 대회 리스트")
@@ -202,33 +205,4 @@ public class CompetitionController {
         return memberCompetitionService.myRanking(loginUserDto.getMemberId(), id);
     }
 
-    @Operation(summary = "대회 답안 제출", description = "문제를 다 풀고 답안 제출")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "제출 성공")
-    })
-    @PostMapping("competition/submit")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void submit(
-            @Parameter(description = "competitionId: 대회 id, endTime: 제출한 시간, questions.questionId: 문제 id, questions.choiceNumber: 고른 선택지 번호")
-            @RequestBody CompetitionScoreRequestDto requestDto,
-            @Parameter(hidden = true)
-            @IfLogin LoginUserDto loginUserDto
-    ) {
-        competitionScoreService.scoring(requestDto, loginUserDto);
-    }
-
-    @Operation(summary = "대회 답안 조회", description = "문제를 다 풀고 답안 조회")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "조회 성공")
-    })
-    @GetMapping("competition/result/{competitionId}")
-    @ResponseStatus(HttpStatus.OK)
-    public CompetitionScoreResponseDto getScore(
-            @Parameter(description = "competitionId: 대회 id")
-            @PathVariable("competitionId") Long id,
-            @Parameter(hidden = true)
-            @IfLogin LoginUserDto loginUserDto
-    ) {
-        return competitionScoreService.getAnswer(loginUserDto.getMemberId(), id);
-    }
 }

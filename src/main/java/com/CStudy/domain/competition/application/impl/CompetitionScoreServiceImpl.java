@@ -58,10 +58,13 @@ public class CompetitionScoreServiceImpl implements CompetitionScoreService {
                     .question(question)
                     .choiceNumber(questionDto.getChoiceNumber())
                     .build();
-            boolean correct = isCorrectAnswer(question, questionDto.getChoiceNumber());
-            if(correct){
-                competitionScore.setSuccess(true);
-                score++;
+
+            if(questionDto.getChoiceNumber() != null){
+                boolean correct = isCorrectAnswer(question, questionDto.getChoiceNumber());
+                if (correct) {
+                    competitionScore.setSuccess(true);
+                    score++;
+                }
             }
 
             competitionScoreRepository.save(competitionScore);
@@ -76,28 +79,31 @@ public class CompetitionScoreServiceImpl implements CompetitionScoreService {
     public CompetitionScoreResponseDto getAnswer(Long memberId, Long competitionId) {
         List<CompetitionScore> memberScores = competitionScoreRepository
                 .findByCompetitionIdAndMemberId(memberId, competitionId);
+
         if(memberScores.isEmpty()){
-            throw new NotFoundMemberCompetition();
+            new NotFoundMemberCompetition();
         }
+
         List<ScoreDetail> answer = new ArrayList<>();
 
         int score = 0;
         for (CompetitionScore competitionScore: memberScores) {
             answer.add(ScoreDetail.builder()
-                .questionId(competitionScore.getQuestion().getId())
-                .choiceNumber(competitionScore.getChoiceNumber())
-                .correct(competitionScore.isSuccess())
-                .build());
+                    .questionId(competitionScore.getQuestion().getId())
+                    .choiceNumber(competitionScore.getChoiceNumber())
+                    .correct(competitionScore.isSuccess())
+                    .build()
+            );
 
             if(competitionScore.isSuccess()){
                 score++;
             }
         }
         return CompetitionScoreResponseDto.builder()
-                .score(score)
-                .total(memberScores.size())
-                .details(answer)
-                .build();
+                    .score(score)
+                    .total(memberScores.size())
+                    .details(answer)
+                    .build();
     }
 
     @Override
