@@ -77,12 +77,12 @@ public class CompetitionScoreServiceImpl implements CompetitionScoreService {
     @Override
     @Transactional(readOnly = true)
     public CompetitionScoreResponseDto getAnswer(Long memberId, Long competitionId) {
+        if(!memberCompetitionRepository.existsByMemberIdAndCompetitionId(memberId, competitionId)){
+            throw new NotFoundMemberCompetition();
+        }
+
         List<CompetitionScore> memberScores = competitionScoreRepository
                 .findByCompetitionIdAndMemberId(memberId, competitionId);
-
-        if(memberScores.isEmpty()){
-            new NotFoundMemberCompetition();
-        }
 
         List<ScoreDetail> answer = new ArrayList<>();
 

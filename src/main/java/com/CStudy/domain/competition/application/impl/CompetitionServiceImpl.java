@@ -58,6 +58,11 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Transactional
     public Long createCompetition(CreateCompetitionRequestDto createCompetitionRequestDto) {
 
+        if(createCompetitionRequestDto.getCompetitionStart()
+                .isAfter(createCompetitionRequestDto.getCompetitionEnd())){
+            throw new CompetitionStartException();
+        }
+
         Workbook workbook = Workbook.builder()
                 .title(createCompetitionRequestDto.getCompetitionTitle())
                 .description(createCompetitionRequestDto.getCompetitionTitle())
@@ -150,8 +155,6 @@ public class CompetitionServiceImpl implements CompetitionService {
         Competition competition = competitionRepository.findById(requestDto.getCompetitionId())
                 .orElseThrow(() -> new NotFoundCompetitionId(requestDto.getCompetitionId()));
 
-        checkTimeBefore(competition.getCompetitionStart());
-
         Long workbookId = competition.getWorkbook().getId();
         WorkbookQuestionRequestDto questionDto = WorkbookQuestionRequestDto.builder()
                 .questionIds(requestDto.getQuestionIds())
@@ -164,8 +167,6 @@ public class CompetitionServiceImpl implements CompetitionService {
     public void deleteCompetitionQuestion(CompetitionQuestionRequestDto requestDto) {
         Competition competition = competitionRepository.findById(requestDto.getCompetitionId())
                 .orElseThrow(() -> new NotFoundCompetitionId(requestDto.getCompetitionId()));
-
-        checkTimeBefore(competition.getCompetitionStart());
 
         Long workbookId = competition.getWorkbook().getId();
         WorkbookQuestionRequestDto questionDto = WorkbookQuestionRequestDto.builder()
