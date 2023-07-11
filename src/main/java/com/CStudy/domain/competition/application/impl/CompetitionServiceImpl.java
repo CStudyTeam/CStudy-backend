@@ -139,7 +139,7 @@ public class CompetitionServiceImpl implements CompetitionService {
             Competition competition = competitionRepository.findById(competitionId)
                     .orElseThrow(() -> new NotFoundCompetitionId(competitionId));
 
-            checkAfterStart(competition.getCompetitionStart());
+            checkTimeAfter(competition.getCompetitionStart());
         }
         return questionRepository.findQuestionWithCompetitionById(competitionId);
     }
@@ -150,7 +150,7 @@ public class CompetitionServiceImpl implements CompetitionService {
         Competition competition = competitionRepository.findById(requestDto.getCompetitionId())
                 .orElseThrow(() -> new NotFoundCompetitionId(requestDto.getCompetitionId()));
 
-        checkBeforeStart(competition.getCompetitionStart());
+        checkTimeBefore(competition.getCompetitionStart());
 
         Long workbookId = competition.getWorkbook().getId();
         WorkbookQuestionRequestDto questionDto = WorkbookQuestionRequestDto.builder()
@@ -165,7 +165,7 @@ public class CompetitionServiceImpl implements CompetitionService {
         Competition competition = competitionRepository.findById(requestDto.getCompetitionId())
                 .orElseThrow(() -> new NotFoundCompetitionId(requestDto.getCompetitionId()));
 
-        checkBeforeStart(competition.getCompetitionStart());
+        checkTimeBefore(competition.getCompetitionStart());
 
         Long workbookId = competition.getWorkbook().getId();
         WorkbookQuestionRequestDto questionDto = WorkbookQuestionRequestDto.builder()
@@ -174,15 +174,24 @@ public class CompetitionServiceImpl implements CompetitionService {
         workbookService.deleteQuestion(questionDto);
     }
 
-    private void checkBeforeStart(LocalDateTime time){
+    @Override
+    public void checkCompetitionTime(Long competitionId) {
+        Competition competition = competitionRepository.findById(competitionId)
+                .orElseThrow(() -> new CompetitionStartException());
+        checkTimeAfter(competition.getCompetitionStart());
+        checkTimeBefore(competition.getCompetitionEnd());
+    }
+
+    private void checkTimeBefore(LocalDateTime time){
         if(LocalDateTime.now().isAfter(time)){
             throw new CompetitionStartException();
         }
     }
 
-    private void checkAfterStart(LocalDateTime time){
+    private void checkTimeAfter(LocalDateTime time){
         if(LocalDateTime.now().isBefore(time)){
             throw new CompetitionStartException();
         }
     }
+
 }

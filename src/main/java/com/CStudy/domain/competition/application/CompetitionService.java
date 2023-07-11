@@ -24,4 +24,6 @@ public interface CompetitionService {
 
     void addCompetitionQuestion(CompetitionQuestionRequestDto requestDto);
     void deleteCompetitionQuestion(CompetitionQuestionRequestDto requestDto);
+
+    void checkCompetitionTime(Long competitionId);
 }

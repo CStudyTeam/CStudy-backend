@@ -80,7 +80,7 @@ public class CompetitionController {
             @Parameter(description = "대회 id")
             @PathVariable(name = "competitionId") Long competitionId
     ) {
-        //competitionService.checkCompetitionFinished(competitionId);
+        competitionService.checkCompetitionTime(competitionId);
         memberCompetitionService.joinCompetition(loginUserDto, competitionId);
     }
 
