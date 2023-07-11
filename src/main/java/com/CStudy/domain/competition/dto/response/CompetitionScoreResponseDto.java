@@ -23,7 +23,7 @@ public class CompetitionScoreResponseDto {
     @AllArgsConstructor
     public static class ScoreDetail {
         Long questionId;
-        int choiceNumber;
+        Integer choiceNumber;
         boolean correct;
     }
 }

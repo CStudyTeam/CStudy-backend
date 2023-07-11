@@ -24,8 +24,8 @@ public class CompetitionScoreRequestDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CompetitionAnswerRequestDto {
-        private int questionNumber;
+        private Integer questionNumber;
         private Long questionId;
-        private int choiceNumber;
+        private Integer choiceNumber;
     }
 }
