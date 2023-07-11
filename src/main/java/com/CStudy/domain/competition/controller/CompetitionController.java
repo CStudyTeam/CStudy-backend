@@ -111,7 +111,7 @@ public class CompetitionController {
             @Parameter(description = "member id")
             @IfLogin LoginUserDto loginUserDto
     ) {
-        return competitionService.getCompetitionQuestion(competitionId, loginUserDto.getMemberId());
+        return competitionService.getCompetitionQuestion(competitionId, loginUserDto);
     }
 
     @Operation(summary = "참여 가능 대회 리스트", description = "참여 가능 대회 리스트")

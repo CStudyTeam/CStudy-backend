@@ -17,7 +17,9 @@ import com.CStudy.domain.workbook.application.WorkbookService;
 import com.CStudy.domain.workbook.dto.request.WorkbookQuestionRequestDto;
 import com.CStudy.domain.workbook.entity.Workbook;
 import com.CStudy.domain.workbook.repository.WorkbookRepository;
+import com.CStudy.global.exception.competition.CompetitionStartException;
 import com.CStudy.global.exception.competition.NotFoundCompetitionId;
+import com.CStudy.global.util.LoginUserDto;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -131,7 +133,14 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public List<CompetitionQuestionDto> getCompetitionQuestion(Long competitionId) {
+    public List<CompetitionQuestionDto> getCompetitionQuestion(Long competitionId, LoginUserDto loginUserDto) {
+
+        if(!loginUserDto.getRoles().contains("ROLE_ADMIN")) {
+            Competition competition = competitionRepository.findById(competitionId)
+                    .orElseThrow(() -> new NotFoundCompetitionId(competitionId));
+
+            checkAfterStart(competition.getCompetitionStart());
+        }
         return questionRepository.findQuestionWithCompetitionById(competitionId);
     }
 
@@ -140,6 +149,9 @@ public class CompetitionServiceImpl implements CompetitionService {
     public void addCompetitionQuestion(CompetitionQuestionRequestDto requestDto) {
         Competition competition = competitionRepository.findById(requestDto.getCompetitionId())
                 .orElseThrow(() -> new NotFoundCompetitionId(requestDto.getCompetitionId()));
+
+        checkBeforeStart(competition.getCompetitionStart());
+
         Long workbookId = competition.getWorkbook().getId();
         WorkbookQuestionRequestDto questionDto = WorkbookQuestionRequestDto.builder()
                 .questionIds(requestDto.getQuestionIds())
@@ -152,6 +164,9 @@ public class CompetitionServiceImpl implements CompetitionService {
     public void deleteCompetitionQuestion(CompetitionQuestionRequestDto requestDto) {
         Competition competition = competitionRepository.findById(requestDto.getCompetitionId())
                 .orElseThrow(() -> new NotFoundCompetitionId(requestDto.getCompetitionId()));
+
+        checkBeforeStart(competition.getCompetitionStart());
+
         Long workbookId = competition.getWorkbook().getId();
         WorkbookQuestionRequestDto questionDto = WorkbookQuestionRequestDto.builder()
                 .questionIds(requestDto.getQuestionIds())
@@ -159,4 +174,15 @@ public class CompetitionServiceImpl implements CompetitionService {
         workbookService.deleteQuestion(questionDto);
     }
 
+    private void checkBeforeStart(LocalDateTime time){
+        if(LocalDateTime.now().isAfter(time)){
+            throw new CompetitionStartException();
+        }
+    }
+
+    private void checkAfterStart(LocalDateTime time){
+        if(LocalDateTime.now().isBefore(time)){
+            throw new CompetitionStartException();
+        }
+    }
 }

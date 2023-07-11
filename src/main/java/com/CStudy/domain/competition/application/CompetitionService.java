@@ -6,6 +6,7 @@ import com.CStudy.domain.competition.dto.response.CompetitionListResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionQuestionDto;
 import com.CStudy.domain.competition.dto.response.CompetitionRankingResponseDto;
 import com.CStudy.domain.competition.dto.response.CompetitionResponseDto;
+import com.CStudy.global.util.LoginUserDto;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,7 @@ public interface CompetitionService {
 
     Page<CompetitionRankingResponseDto> getCompetitionRanking(Long id, Pageable pageable);
 
-    List<CompetitionQuestionDto> getCompetitionQuestion(Long competitionId);
+    List<CompetitionQuestionDto> getCompetitionQuestion(Long competitionId, LoginUserDto loginUserDto);
 
     void addCompetitionQuestion(CompetitionQuestionRequestDto requestDto);
     void deleteCompetitionQuestion(CompetitionQuestionRequestDto requestDto);
