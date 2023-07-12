@@ -148,7 +148,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public void changePassword(MemberPasswordChangeRequest request, Long id) {
         Member member = memberRepository.findById(id).orElseThrow(() -> new NotFoundMemberId(id));
 
