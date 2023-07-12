@@ -98,7 +98,7 @@ class WorkbookServiceImplTest {
         }
         Pageable pageable = PageRequest.of(0, 5, Sort.by("createdAt").descending());
         Page<WorkbookResponseDto> workbookList =
-                workbookService.getWorkbookList(pageable, null, null);
+                workbookService.getWorkbookList(pageable, null, null, null);
         for (int i = 10; i > 5; i--) {
             assertEquals(workbookList.getContent().get(10-i).getTitle(), "문제집 제목"+i);
         }
@@ -121,12 +121,12 @@ class WorkbookServiceImplTest {
         }
         Pageable pageable = PageRequest.of(0, 5, Sort.by("createdAt").descending());
         Page<WorkbookResponseDto> workbookList =
-                workbookService.getWorkbookList(pageable, "1", null);
+                workbookService.getWorkbookList(pageable, "1", null, null);
         assertEquals(workbookList.getTotalElements(), 4);
         assertEquals(workbookList.getContent().get(0).getTitle(), "문제집 제목10");
 
         Page<WorkbookResponseDto> workbookList1 =
-                workbookService.getWorkbookList(pageable, "1", "설명");
+                workbookService.getWorkbookList(pageable, "1", "설명", null);
         assertEquals(workbookList1.getTotalElements(), 2);
         assertEquals(workbookList1.getContent().get(0).getDescription(), "문제집 설명10");
 

@@ -50,9 +50,10 @@ public class WorkbookServiceImpl implements WorkbookService {
     public Page<WorkbookResponseDto> getWorkbookList(
             Pageable pageable,
             String title,
-            String description
+            String description,
+            String titleDesc
     ) {
-        return workbookRepository.findWorkbookList(pageable, title, description);
+        return workbookRepository.findWorkbookList(pageable, title, description, titleDesc);
     }
 
     /**

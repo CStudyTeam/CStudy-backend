@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface WorkbookRepositoryCustom {
 
-    Page<WorkbookResponseDto> findWorkbookList(Pageable pageable, String title, String description);
+    Page<WorkbookResponseDto> findWorkbookList(Pageable pageable, String title, String description, String titleDesc);
 
     Page<WorkbookQuestionResponseDto> findWorkbookQuestionList(Pageable pageable, Long id);
 }
