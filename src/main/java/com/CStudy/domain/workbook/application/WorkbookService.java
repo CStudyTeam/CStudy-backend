@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 public interface WorkbookService {
 
 
-    Page<WorkbookResponseDto> getWorkbookList(Pageable pageable, String title, String description);
+    Page<WorkbookResponseDto> getWorkbookList(Pageable pageable, String title, String description, String titleDesc);
 
     WorkbookResponseDto getWorkbook(Long id);
 

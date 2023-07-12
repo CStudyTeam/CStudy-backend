@@ -52,9 +52,11 @@ public class WorkbookController {
             @Parameter(name = "title", description = "문제집 검색할 때 문제집 제목")
             @RequestParam(value = "title", defaultValue = "") String title,
             @Parameter(name = "description", description = "문제집 검색할 때 문제집 내용")
-            @RequestParam(value = "description", defaultValue = "") String description
+            @RequestParam(value = "description", defaultValue = "") String description,
+            @Parameter(name = "description", description = "제목+내용")
+            @RequestParam(value = "title_desc", defaultValue = "") String titleDesc
     ){
-        return workbookService.getWorkbookList(pageable, title, description);
+        return workbookService.getWorkbookList(pageable, title, description, titleDesc);
     }
 
     @Operation(summary = "문제집 정보 요청", description = "문제집 id를 이용해 문제집 정보를 요청합니다.")

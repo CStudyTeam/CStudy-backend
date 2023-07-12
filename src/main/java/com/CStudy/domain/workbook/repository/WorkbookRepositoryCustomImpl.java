@@ -26,7 +26,7 @@ public class WorkbookRepositoryCustomImpl implements WorkbookRepositoryCustom{
     }
 
     @Override
-    public Page<WorkbookResponseDto> findWorkbookList(Pageable pageable, String title, String description) {
+    public Page<WorkbookResponseDto> findWorkbookList(Pageable pageable, String title, String description, String titleDesc) {
         LocalDateTime now = LocalDateTime.now();
         List<WorkbookResponseDto> content = queryFactory.select(
                 Projections.fields(WorkbookResponseDto.class,
@@ -36,10 +36,11 @@ public class WorkbookRepositoryCustomImpl implements WorkbookRepositoryCustom{
                         workbook.createdAt
                 ))
                 .from(workbook)
-                .leftJoin(workbook.competition, competition).on(competition.eq(competition))
+                .leftJoin(workbook.competition, competition)
                 .where(
                     titleContains(title),
                     descriptionContains(description),
+                    titleAndDescContains(titleDesc),
                     competition.competitionEnd.between(LocalDateTime.MIN, now).or(competition.isNull())
                 )
                 .offset(pageable.getOffset())
@@ -50,6 +51,7 @@ public class WorkbookRepositoryCustomImpl implements WorkbookRepositoryCustom{
                 .where(
                     titleContains(title),
                     descriptionContains(description),
+                    titleAndDescContains(titleDesc),
                     workbook.competitionEndTime.between(LocalDateTime.MIN, now)
                 )
                 .fetchCount();
@@ -89,6 +91,11 @@ public class WorkbookRepositoryCustomImpl implements WorkbookRepositoryCustom{
 
     private BooleanExpression descriptionContains(String description) {
         return StringUtils.hasText(description) ? workbook.description.contains(description) : null;
+    }
+
+    private BooleanExpression titleAndDescContains(String content) {
+        return StringUtils.hasText(content) && StringUtils.hasText(content) ?
+                workbook.title.contains(content).or(workbook.description.contains(content)) : null;
     }
 
     private BooleanExpression competitionEndBetween() {
