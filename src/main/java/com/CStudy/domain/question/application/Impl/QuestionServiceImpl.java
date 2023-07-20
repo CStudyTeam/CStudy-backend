@@ -15,18 +15,24 @@ import com.CStudy.domain.question.entity.Category;
 import com.CStudy.domain.question.entity.Question;
 import com.CStudy.domain.question.repository.CategoryRepository;
 import com.CStudy.domain.question.repository.QuestionRepository;
+import com.CStudy.global.exception.Question.NotFoundQuestionId;
 import com.CStudy.global.exception.Question.NotFoundQuestionWithChoicesAndCategoryById;
 import com.CStudy.global.exception.category.NotFoundCategoryTile;
 import com.CStudy.global.redis.RedisPublisher;
 import com.CStudy.global.util.LoginUserDto;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,19 +44,15 @@ public class QuestionServiceImpl implements QuestionService {
     private final ChoiceRepository choiceRepository;
     private final MemberQuestionService memberQuestionService;
     private final RedisPublisher redisPublisher;
+    private final JdbcTemplate jdbcTemplate;
 
-    public QuestionServiceImpl(
-            QuestionRepository questionRepository,
-            CategoryRepository categoryRepository,
-            ChoiceRepository choiceRepository,
-            MemberQuestionService memberQuestionService,
-            RedisPublisher redisPublisher
-    ) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, CategoryRepository categoryRepository, ChoiceRepository choiceRepository, MemberQuestionService memberQuestionService, RedisPublisher redisPublisher, JdbcTemplate jdbcTemplate) {
         this.questionRepository = questionRepository;
         this.categoryRepository = categoryRepository;
         this.choiceRepository = choiceRepository;
         this.memberQuestionService = memberQuestionService;
         this.redisPublisher = redisPublisher;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     private static final String COLLECT_ANSWER = "정답";
@@ -98,11 +100,32 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     @Transactional
     public void recursiveCreateQuestionChoice(List<CreateQuestionAndCategoryRequestDto> requestDtos) {
-        for (CreateQuestionAndCategoryRequestDto requestDto : requestDtos) {
-            createQuestionChoice(requestDto);
-        }
+        String sql = "INSERT INTO question (category_id, question_description, question_explain, question_title) " +
+                "VALUES (?, ?, ?, ?)";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(@NotNull PreparedStatement preparedStatement, int i) throws SQLException {
+                CreateQuestionAndCategoryRequestDto question = requestDtos.get(i);
+                // 서브쿼리로 카테고리 아이디 가져오기
+                Long categoryId = getCategoryIdByTitle(question.getCategoryRequestDto().getCategory());
+
+                preparedStatement.setLong(1, categoryId);
+                preparedStatement.setString(2, question.getCreateQuestionRequestDto().getQuestionDesc());
+                preparedStatement.setString(3, question.getCreateQuestionRequestDto().getQuestionExplain());
+                preparedStatement.setString(4, question.getCreateQuestionRequestDto().getQuestionTitle());
+            }
+            @Override
+            public int getBatchSize() {
+                return requestDtos.size();
+            }
+        });
     }
 
+    private Long getCategoryIdByTitle(String categoryTitle) {
+        String sql = "SELECT category_id FROM category WHERE category_title = ?";
+        return jdbcTemplate.queryForObject(sql, Long.class, categoryTitle);
+    }
     @Override
     @Transactional
     public QuestionResponseDto findQuestionWithChoiceAndCategory(Long questionId) {
@@ -125,28 +148,28 @@ public class QuestionServiceImpl implements QuestionService {
     @Transactional
     public void choiceQuestion(LoginUserDto loginUserDto, Long questionId, ChoiceAnswerRequestDto choiceNumber) {
 
-            Question question = questionRepository.findById(questionId)
-                    .orElseThrow();
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(()->new NotFoundQuestionId(questionId));
 
-            List<Choice> choices = question.getChoices();
-            choices.stream()
-                    .filter(Choice::isAnswer)
-                    .forEach(choice -> {
-                        if (choice.getNumber() == choiceNumber.getChoiceNumber()) {
-                            memberQuestionService.findMemberAndMemberQuestionSuccess(
-                                    loginUserDto.getMemberId(),
-                                    questionId,
-                                    choiceNumber
-                            );
-                        } else {
-                            memberQuestionService.findMemberAndMemberQuestionFail(
-                                    loginUserDto.getMemberId(),
-                                    questionId,
-                                    choiceNumber
-                            );
-                        }
-                    });
-            redisPublisher.publish(ChannelTopic.of("ranking-invalidation"), "ranking");
+        List<Choice> choices = question.getChoices();
+        choices.stream()
+                .filter(Choice::isAnswer)
+                .forEach(choice -> {
+                    if (choice.getNumber() == choiceNumber.getChoiceNumber()) {
+                        memberQuestionService.findMemberAndMemberQuestionSuccess(
+                                loginUserDto.getMemberId(),
+                                questionId,
+                                choiceNumber
+                        );
+                    } else {
+                        memberQuestionService.findMemberAndMemberQuestionFail(
+                                loginUserDto.getMemberId(),
+                                questionId,
+                                choiceNumber
+                        );
+                    }
+                });
+        redisPublisher.publish(ChannelTopic.of("ranking-invalidation"), "ranking");
     }
 
 
