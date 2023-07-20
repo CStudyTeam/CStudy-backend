@@ -15,6 +15,9 @@ import java.util.Set;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "question", indexes = {
+        @Index(name = "idx_question_title", columnList = "question_title")
+})
 public class Question {
 
     @Id

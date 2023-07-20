@@ -12,6 +12,9 @@ import java.util.Set;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "Category", indexes = {
+        @Index(name = "idx_category_title", columnList = "category_title")
+})
 public class Category {
 
     @Id

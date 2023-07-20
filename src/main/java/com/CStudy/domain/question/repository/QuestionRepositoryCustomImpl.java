@@ -56,7 +56,8 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
                         questionTitleEq(questionSearchCondition.getQuestionTitle()),
                         categoryTitleEq(questionSearchCondition.getCategoryTitle()),
                         memberIdEq(questionSearchCondition.getMemberId()),
-                        statusEq(questionSearchCondition.getStatus())
+                        statusEq(questionSearchCondition.getStatus()),
+                        question.category.id.eq(category.id)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -70,7 +71,8 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
                 .where(
                         questionTitleEq(questionSearchCondition.getQuestionTitle()),
                         categoryTitleEq(questionSearchCondition.getCategoryTitle()),
-                        memberIdEq(questionSearchCondition.getMemberId())
+                        memberIdEq(questionSearchCondition.getMemberId()),
+                        question.category.id.eq(category.id)
                 );
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
@@ -133,7 +135,7 @@ public class QuestionRepositoryCustomImpl implements QuestionRepositoryCustom {
                 return memberQuestion.fail.ne(0);
             }
         }
-        return null; // Return null if status is null or doesn't match 1, 2, or 999
+        return null;
     }
 
 
