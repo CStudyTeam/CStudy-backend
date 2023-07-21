@@ -163,13 +163,25 @@ src
   </tr>
 </table>
 
+
+
+
+
   
 <br>
 <br>
 
+# 🧊 ERD Diagram
+![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/b538e33b-a12a-44ef-9f73-fbf0dfe36c1c)
+
+  
+<br>
+<br>
+
+### 🥃 Wireframe
 <details>
 
-<summary> ## 🥃 Wireframe</summary>
+<summary> [ 더 보기 ] </summary>
 
 https://www.figma.com/file/67asFaSpQCu4s2CKAJqxac/Untitled?type=design&node-id=0-1&mode=design&t=DdRtY5ictOvnNkSn-0
 ![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/cf4eae6b-43b5-409d-9125-178e33b89473)
@@ -179,14 +191,12 @@ https://www.figma.com/file/67asFaSpQCu4s2CKAJqxac/Untitled?type=design&node-id=0
 <br>
 <br>
 
-# 🏛️ Architecture
+### 🏛️ Architecture
+<details>
+
+<summary> [ 더 보기 ] </summary>
+
 ![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/88f188ca-3b95-4296-a671-bd14d4fc1e4b)
 
-
-  
-<br>
-<br>
-
-# 🧊 ERD Diagram
-![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/b538e33b-a12a-44ef-9f73-fbf0dfe36c1c)
+</details>
 
