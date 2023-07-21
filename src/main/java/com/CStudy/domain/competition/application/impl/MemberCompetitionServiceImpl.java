@@ -32,15 +32,14 @@ public class MemberCompetitionServiceImpl implements MemberCompetitionService {
 
     @Override
     @Transactional
-    @OptimisticAnnotation
     public void joinCompetition(LoginUserDto loginUserDto, Long competitionId) {
 
         preventionDuplicateParticipation(loginUserDto, competitionId);
 
-        Member member = memberRepository.findById(loginUserDto.getMemberId())
+        Member member = memberRepository.findByIdForUpdateOptimistic(loginUserDto.getMemberId())
                 .orElseThrow(() -> new NotFoundMemberId(loginUserDto.getMemberId()));
 
-        Competition competition = competitionRepository.findById(competitionId)
+        Competition competition = competitionRepository.findByIdForUpdateOptimistic(competitionId)
                 .orElseThrow(() -> new NotFoundCompetitionId(competitionId));
 
         decreaseParticipantsCountIfPossible(competition);

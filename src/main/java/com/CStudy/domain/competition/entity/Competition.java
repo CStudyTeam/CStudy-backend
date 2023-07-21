@@ -29,6 +29,8 @@ public class Competition {
 
     private LocalDateTime competitionEnd;
 
+    @Version
+    private Long version;
 
     @OneToMany(
             mappedBy = "competition",

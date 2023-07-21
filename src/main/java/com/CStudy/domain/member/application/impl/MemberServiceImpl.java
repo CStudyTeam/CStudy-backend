@@ -1,14 +1,16 @@
 package com.CStudy.domain.member.application.impl;
 
 import com.CStudy.domain.aop.TimeAnnotation;
-import com.CStudy.domain.member.application.FileService;
+import com.CStudy.domain.member.application.DuplicateServiceFinder;
 import com.CStudy.domain.member.application.MemberService;
 import com.CStudy.domain.member.dto.request.MemberLoginRequest;
 import com.CStudy.domain.member.dto.request.MemberPasswordChangeRequest;
 import com.CStudy.domain.member.dto.request.MemberSignupRequest;
+import com.CStudy.domain.member.dto.response.DuplicateResponseDto;
 import com.CStudy.domain.member.dto.response.MemberLoginResponse;
 import com.CStudy.domain.member.dto.response.MemberSignupResponse;
 import com.CStudy.domain.member.dto.response.MyPageResponseDto;
+import com.CStudy.domain.member.dto.typeEnum.DuplicateResult;
 import com.CStudy.domain.member.entity.Member;
 import com.CStudy.domain.member.repository.MemberRepository;
 import com.CStudy.domain.refresh.application.RefreshTokenService;
@@ -39,19 +41,22 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
     private final RefreshTokenService refreshTokenService;
+    private final DuplicateServiceFinder duplicateServiceFinder;
 
     public MemberServiceImpl(
             MemberRepository memberRepository,
             RoleRepository roleRepository,
             PasswordEncoder passwordEncoder,
             JwtTokenizer jwtTokenizer,
-            RefreshTokenService refreshTokenService
+            RefreshTokenService refreshTokenService,
+            DuplicateServiceFinder duplicateServiceFinder
     ) {
         this.memberRepository = memberRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
         this.refreshTokenService = refreshTokenService;
+        this.duplicateServiceFinder = duplicateServiceFinder;
     }
 
     /**
@@ -67,8 +72,8 @@ public class MemberServiceImpl implements MemberService {
     public MemberSignupResponse signUp(
             MemberSignupRequest request
     ) {
-        duplicationWithEmail(request);
-
+//        duplicationWithEmail(request);
+        checkEmailAndNameDuplication(request);
         Member member = Member.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -79,6 +84,29 @@ public class MemberServiceImpl implements MemberService {
         signupWithRole(member);
 
         return MemberSignupResponse.of(memberRepository.save(member));
+    }
+
+    private void checkEmailAndNameDuplication(MemberSignupRequest request) {
+        divisionDuplicationAboutNickEmail(request);
+        divisionDuplicationAboutName(request);
+    }
+
+    private void divisionDuplicationAboutName(MemberSignupRequest request) {
+        DuplicateResponseDto name = duplicateServiceFinder.getVerifyResponseDto("name", request.getName());
+        Optional.of(name)
+                .filter(duplicateResponseDto -> duplicateResponseDto.getVerify().equals(DuplicateResult.FALSE.getDivisionResult()))
+                .ifPresent(duplicateResponseDto -> {
+                    throw new RuntimeException("중복 이름");
+                });
+    }
+
+    private void divisionDuplicationAboutNickEmail(MemberSignupRequest request) {
+        DuplicateResponseDto email = duplicateServiceFinder.getVerifyResponseDto("email", request.getEmail());
+        Optional.of(email)
+                .filter(duplicateResponseDto -> duplicateResponseDto.getVerify().equals(DuplicateResult.FALSE.getDivisionResult()))
+                .ifPresent(duplicateResponseDto -> {
+                    throw new RuntimeException("중복 이메일");
+                });
     }
 
     /**

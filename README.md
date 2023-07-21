@@ -175,5 +175,5 @@ src
 <br>
 
 # 🧊 ERD Diagram
-![gArfmbiSNNafRu3we (1)](https://github.com/CStudyTeam/CStudy-backend/assets/48233343/a063a784-dcc8-4548-ba69-3c7acdaa1597)
+![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/b538e33b-a12a-44ef-9f73-fbf0dfe36c1c)
 
