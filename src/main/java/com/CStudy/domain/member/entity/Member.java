@@ -39,6 +39,9 @@ public class Member {
     @OneToOne(mappedBy = "member")
     private File file;
 
+    @Version
+    private Long version;
+
     @OneToMany(
             mappedBy = "member",
             fetch = FetchType.LAZY,
