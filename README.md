@@ -7,7 +7,7 @@
 
 
 
-# 🌞 팀원소개
+## 🌞 팀원소개
 <table>
   <tr>
     <td>
@@ -103,7 +103,7 @@ src
 
 <br>
 
-# 🐌Git Commit Convention
+## 🐌Git Commit Convention
 <table>
   <tr>
     <td>
@@ -165,13 +165,17 @@ src
 
 
 
-
-
   
 <br>
 <br>
 
-# 🐻 프로젝트 설명
+## 🐻 프로젝트 설명
+<details>
+
+<summary> 👀 주요 기능 </summary>
+
+</details>
+
 <details>
 
 <summary> 🥃 Wireframe </summary>
@@ -198,5 +202,14 @@ https://www.figma.com/file/67asFaSpQCu4s2CKAJqxac/Untitled?type=design&node-id=0
 
 </details>
 
+<details>
 
+<summary> 🥕 Back-end 기술적 의사결정 </summary>
 
+</details>
+
+<details>
+
+<summary> 🔧 트러블 슈팅 </summary>
+
+</details>
