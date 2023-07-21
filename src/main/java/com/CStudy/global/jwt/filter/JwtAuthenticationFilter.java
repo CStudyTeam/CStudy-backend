@@ -80,8 +80,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private void handleException(HttpServletResponse response, JwtExceptionCode exceptionCode) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized
         response.setContentType("application/json");
-        response.getWriter().write("{\"error\": \"" + exceptionCode.getCode() + "\"}");
+        response.getWriter().write("{\"statusCode\": 401, \"error\": \"" + exceptionCode.getCode() + "\"}");
     }
+
     private String getToken(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
         if (StringUtils.hasText(authorization) && authorization.startsWith("Bearer")){
