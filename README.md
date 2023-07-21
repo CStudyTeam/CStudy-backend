@@ -172,10 +172,13 @@ src
   </tr>
 </table>
 
-
-
-  
 <br>
+
+
+## 🎨 ERD Diagram
+
+![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/b538e33b-a12a-44ef-9f73-fbf0dfe36c1c)
+  
 <br>
 
 ## 🐻 프로젝트 설명
@@ -192,14 +195,6 @@ src
 [📝 Figma 바로가기 ](https://www.figma.com/file/67asFaSpQCu4s2CKAJqxac/Untitled?type=design&node-id=0-1&mode=design&t=DdRtY5ictOvnNkSn-0)
 
 ![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/cf4eae6b-43b5-409d-9125-178e33b89473)
-
-</details>
-
-<details>
-
-<summary> 🧊 ERD Diagram </summary>
-
-![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/b538e33b-a12a-44ef-9f73-fbf0dfe36c1c)
 
 </details>
 
