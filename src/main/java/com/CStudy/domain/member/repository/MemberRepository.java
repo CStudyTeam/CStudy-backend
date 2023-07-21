@@ -34,4 +34,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select m from Member m where m.id = :memberId")
     Optional<Member> findByIdForUpdateOptimistic(@Param("memberId") Long memberId);
 
+    Optional<Member> findByName(String value);
 }
