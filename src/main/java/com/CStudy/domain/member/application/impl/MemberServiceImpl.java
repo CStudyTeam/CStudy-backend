@@ -72,7 +72,6 @@ public class MemberServiceImpl implements MemberService {
     public MemberSignupResponse signUp(
             MemberSignupRequest request
     ) {
-//        duplicationWithEmail(request);
         checkEmailAndNameDuplication(request);
         Member member = Member.builder()
                 .email(request.getEmail())
