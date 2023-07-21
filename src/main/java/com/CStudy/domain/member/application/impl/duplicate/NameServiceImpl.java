@@ -16,7 +16,6 @@ public class NameServiceImpl implements DuplicateService {
         this.memberRepository = memberRepository;
     }
 
-
     @Override
     public DuplicateResponseDto signupDivisionDuplicateCheck(String type, String value) {
         return DuplicateResponseDto.of(memberRepository.findByName(value)
