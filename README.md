@@ -177,7 +177,9 @@ src
 
 ## 🎨 ERD Diagram
 
-![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/b538e33b-a12a-44ef-9f73-fbf0dfe36c1c)
+<img src="https://github.com/CStudyTeam/CStudy-backend/assets/103854287/b538e33b-a12a-44ef-9f73-fbf0dfe36c1c" style="width: 70%; height: 70%;" />
+
+
   
 <br>
 
