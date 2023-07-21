@@ -100,32 +100,67 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     @Transactional
     public void recursiveCreateQuestionChoice(List<CreateQuestionAndCategoryRequestDto> requestDtos) {
-        String sql = "INSERT INTO question (category_id, question_description, question_explain, question_title) " +
+        String questionSql = "INSERT INTO question (category_id, question_description, question_explain, question_title) " +
                 "VALUES (?, ?, ?, ?)";
 
-        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+        String choiceSql = "INSERT INTO choice (answer, content, choice_number, question_id) " +
+                "VALUES (?, ?, ?, ?)";
+
+        jdbcTemplate.batchUpdate(questionSql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(@NotNull PreparedStatement preparedStatement, int i) throws SQLException {
-                CreateQuestionAndCategoryRequestDto question = requestDtos.get(i);
-                // 서브쿼리로 카테고리 아이디 가져오기
-                Long categoryId = getCategoryIdByTitle(question.getCategoryRequestDto().getCategory());
+                CreateQuestionAndCategoryRequestDto questionDto = requestDtos.get(i);
+
+                Long categoryId = getCategoryIdByTitle(questionDto.getCategoryRequestDto().getCategory());
 
                 preparedStatement.setLong(1, categoryId);
-                preparedStatement.setString(2, question.getCreateQuestionRequestDto().getQuestionDesc());
-                preparedStatement.setString(3, question.getCreateQuestionRequestDto().getQuestionExplain());
-                preparedStatement.setString(4, question.getCreateQuestionRequestDto().getQuestionTitle());
+                preparedStatement.setString(2, questionDto.getCreateQuestionRequestDto().getQuestionDesc());
+                preparedStatement.setString(3, questionDto.getCreateQuestionRequestDto().getQuestionExplain());
+                preparedStatement.setString(4, questionDto.getCreateQuestionRequestDto().getQuestionTitle());
             }
+
             @Override
             public int getBatchSize() {
                 return requestDtos.size();
             }
         });
-    }
 
+
+        for (CreateQuestionAndCategoryRequestDto questionDto : requestDtos) {
+            Long questionId = getQuestionIdByTitle(questionDto.getCreateQuestionRequestDto().getQuestionTitle());
+
+            List<CreateChoicesAboutQuestionDto> choiceDtos = questionDto.getCreateChoicesAboutQuestionDto();
+
+            jdbcTemplate.batchUpdate(choiceSql, new BatchPreparedStatementSetter() {
+                @Override
+                public void setValues(@NotNull PreparedStatement preparedStatement, int i) throws SQLException {
+                    CreateChoicesAboutQuestionDto choiceDto = choiceDtos.get(i);
+                    boolean answer = isCollectAnswer(choiceDto.getAnswer());
+
+                    preparedStatement.setBoolean(1, answer);
+                    preparedStatement.setString(2, choiceDto.getContent());
+                    preparedStatement.setInt(3, choiceDto.getNumber());
+                    preparedStatement.setLong(4, questionId);
+                }
+
+                @Override
+                public int getBatchSize() {
+                    return choiceDtos.size();
+                }
+            });
+        }
+    }
     private Long getCategoryIdByTitle(String categoryTitle) {
         String sql = "SELECT category_id FROM category WHERE category_title = ?";
         return jdbcTemplate.queryForObject(sql, Long.class, categoryTitle);
     }
+
+    private Long getQuestionIdByTitle(String questionTitle) {
+        String sql = "SELECT question_id FROM question WHERE question_title = ?";
+        return jdbcTemplate.queryForObject(sql, Long.class, questionTitle);
+    }
+
+
     @Override
     @Transactional
     public QuestionResponseDto findQuestionWithChoiceAndCategory(Long questionId) {
