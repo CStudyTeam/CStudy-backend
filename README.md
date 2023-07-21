@@ -1,4 +1,11 @@
 # 📖 취업 CS 걱정하지마, CS;tudy
+
+##✨ 프로젝트 소개
+
+- 취업에 있어 필요한 CS 지식을 학습할 수 있는 웹 어플리케이션 플랫폼 입니다. 카테고리 별 문제를 통해 필요한 지식을 빠르게 학습할 수 있으며 틀린 문제를 모아서 부족한 부분을 빠르게 인지할 수 있습니다.  또한 경쟁을 통하여 지루한 CS 학습에 재미를 부여하며 선의의 경쟁을 통해 동료와 함께 성장이 가능합니다.
+
+- [⭐️ 팀 노션](https://sunny-radiator-7f3.notion.site/CStudy-5da03f7b12d5477eae1e35caacd04615?pvs=4)
+
 <p align="center">
   
 ![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/794e4e83-26ae-4504-bc0f-a36f15d7566c)</p>
