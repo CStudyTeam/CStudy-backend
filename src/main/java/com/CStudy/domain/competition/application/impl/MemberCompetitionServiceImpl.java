@@ -1,6 +1,5 @@
 package com.CStudy.domain.competition.application.impl;
 
-import com.CStudy.domain.aop.OptimisticAnnotation;
 import com.CStudy.domain.competition.application.MemberCompetitionService;
 import com.CStudy.domain.competition.dto.response.MyCompetitionRankingDto;
 import com.CStudy.domain.competition.entity.Competition;
