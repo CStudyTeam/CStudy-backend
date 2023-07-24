@@ -1,31 +1,37 @@
-version: '3'
+version: "3.8"
 services:
-  db:
+  study-redis:
+    container_name: study-redis
     build:
-      context: ./docker-test-db
       dockerfile: Dockerfile
+      context: ./redis
+    image: immunogen/study-redis
     ports:
-      - 3306:3306
-    volumes:
-      - ./docker-test-db/store:/var/lib/mysql
-    networks:
-      - network
-  server:
+      - "6379:6379"
+  study-database:
+    container_name: study-database
     build:
-      context: ./docker-test-server
       dockerfile: Dockerfile
-    restart: always
-    ports:
-      - 8080:8080
-    depends_on:
-      - db
+      context: ./database
+    image: immunogen/study-database
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/metadb?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_DRIVER: com.mysql.cj.jdbc.Driver
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 1234
-    networks:
-      - network
-
-networks:
-  network:
+      - MYSQL_DATABASE=CStudy
+      - MYSQL_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+    volumes:
+      - ./database/config:/etc/mysql/conf.d
+    ports:
+      - "3306:3306"
+  study-app:
+    container_name: study-app
+    build: .
+    depends_on: # DB, REDIS 컨테이너가 실행된 다음 WEB을 실행시킨다.
+      - study-database
+      - study-redis
+    image: immunogen/study-app
+    environment:
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+    ports:
+      - "80:8080"
+    restart: always
