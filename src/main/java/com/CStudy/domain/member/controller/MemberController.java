@@ -113,45 +113,45 @@ public class MemberController {
     }
 
 
-    @Operation(summary = "S3 파일 업로드", description = "AWS S3 버켓에 IAM 파일 업로드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "파일 업로드 성공"),
-            @ApiResponse(responseCode = "500", description = "HttpStatus.INTERNAL_SERVER_ERROR")
-    })
-    @GetMapping("/upload")
-    public ResponseEntity<Object> upload(
-            @Parameter(name = "multipartFileList", description = "Multi part file")
-            @RequestParam("files") MultipartFile[] multipartFileList,
-            @Parameter(name = "loginUserDto", description = "로그인 했던 회원의 회원 정보")
-            @IfLogin LoginUserDto loginUserDto
-    ) {
-        try {
-            List<String> imagePathList = fileService.uploadFiles(multipartFileList, loginUserDto);
-            return new ResponseEntity<>(imagePathList, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Failed to upload files.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @Operation(summary = "S3 버켓에서 사진 가져오기", description = "버켓을 기준으로 업로드 회원 사진 가져오기")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원 사진 가져오기 성공"),
-            @ApiResponse(responseCode = "500", description = "회원 사진 가져오기 실패")
-    })
-    @GetMapping("/image")
-    public ResponseEntity<ByteArrayResource> getImage(
-            @Parameter(name = "loginUserDto", description = "로그인 했던 회원의 회원 정보")
-            @IfLogin LoginUserDto loginUserDto
-    ) {
-        byte[] imageBytes = fileService.getImageBytes(loginUserDto);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_JPEG);
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(new ByteArrayResource(imageBytes));
-    }
+//    @Operation(summary = "S3 파일 업로드", description = "AWS S3 버켓에 IAM 파일 업로드")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "파일 업로드 성공"),
+//            @ApiResponse(responseCode = "500", description = "HttpStatus.INTERNAL_SERVER_ERROR")
+//    })
+//    @GetMapping("/upload")
+//    public ResponseEntity<Object> upload(
+//            @Parameter(name = "multipartFileList", description = "Multi part file")
+//            @RequestParam("files") MultipartFile[] multipartFileList,
+//            @Parameter(name = "loginUserDto", description = "로그인 했던 회원의 회원 정보")
+//            @IfLogin LoginUserDto loginUserDto
+//    ) {
+//        try {
+//            List<String> imagePathList = fileService.uploadFiles(multipartFileList, loginUserDto);
+//            return new ResponseEntity<>(imagePathList, HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>("Failed to upload files.", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+//
+//    @Operation(summary = "S3 버켓에서 사진 가져오기", description = "버켓을 기준으로 업로드 회원 사진 가져오기")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "회원 사진 가져오기 성공"),
+//            @ApiResponse(responseCode = "500", description = "회원 사진 가져오기 실패")
+//    })
+//    @GetMapping("/image")
+//    public ResponseEntity<ByteArrayResource> getImage(
+//            @Parameter(name = "loginUserDto", description = "로그인 했던 회원의 회원 정보")
+//            @IfLogin LoginUserDto loginUserDto
+//    ) {
+//        byte[] imageBytes = fileService.getImageBytes(loginUserDto);
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.IMAGE_JPEG);
+//
+//        return ResponseEntity.ok()
+//                .headers(headers)
+//                .body(new ByteArrayResource(imageBytes));
+//    }
 
     @Operation(summary = "마이페이지", description = "마이페이지")
     @ApiResponses(value = {
