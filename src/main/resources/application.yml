@@ -3,7 +3,7 @@ spring:
     activate:
       on-profile: local
   redis:
-    host: study-redis
+    host: localhost
     port: 6379
   session:
     timeout: 600
@@ -13,37 +13,33 @@ spring:
       namespace: spring:session
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://study-database:3306/CStudy
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: jdbc:mysql://localhost:3306/CStudy
+    username: root
+    password: 1234
   jpa:
     hibernate:
-      ddl-auto: none
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
+      ddl-auto: create
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id: ${GoogleId}
-            client-secret: ${GoogleSecret}
+            client-id: ${clientId}
+            client-secret: ${clientSecret}
             scope:
               - email
               - profile
 
 
 jwt:
-  secretKey: ${JwtSecretKey}
-  refreshKey: ${JwtRefreshKey}
+  secretKey: ${secretKey}
+  refreshKey: ${refreshKey}
 
 cloud:
   aws:
     credentials:
-      accessKey: ${accessAws}
-      secretKey: ${secretAws}
+      accessKey: ${s3AccessKey}
+      secretKey: ${s3SecretKey}
     s3:
       bucket: j4j-test-bucket
     region:

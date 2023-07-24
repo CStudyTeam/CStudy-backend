@@ -1,6 +1,7 @@
 package com.CStudy.domain.member.controller;
 
 
+import com.CStudy.domain.member.application.FileService;
 import com.CStudy.domain.member.application.MemberService;
 import com.CStudy.domain.member.dto.request.MemberLoginRequest;
 import com.CStudy.domain.member.dto.request.MemberPasswordChangeRequest;
@@ -20,10 +21,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @Tag(name = "Member(회원 API)", description = "회원 관련 API(회원가입, 로그인, 로그아웃, 재할당)")
@@ -34,13 +41,16 @@ public class MemberController {
 
     private final MemberService memberService;
     private final RefreshTokenService refreshTokenService;
+    private final FileService fileService;
 
     public MemberController(
             MemberService memberService,
-            RefreshTokenService refreshTokenService
+            RefreshTokenService refreshTokenService,
+            FileService fileService
     ) {
         this.memberService = memberService;
         this.refreshTokenService = refreshTokenService;
+        this.fileService = fileService;
     }
 
     @Operation(summary = "회원가입", description = "Email, Password, Name을 이용하여 회원가입을 합니다.")
@@ -103,45 +113,45 @@ public class MemberController {
     }
 
 
-//    @Operation(summary = "S3 파일 업로드", description = "AWS S3 버켓에 IAM 파일 업로드")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "파일 업로드 성공"),
-//            @ApiResponse(responseCode = "500", description = "HttpStatus.INTERNAL_SERVER_ERROR")
-//    })
-//    @GetMapping("/upload")
-//    public ResponseEntity<Object> upload(
-//            @Parameter(name = "multipartFileList", description = "Multi part file")
-//            @RequestParam("files") MultipartFile[] multipartFileList,
-//            @Parameter(name = "loginUserDto", description = "로그인 했던 회원의 회원 정보")
-//            @IfLogin LoginUserDto loginUserDto
-//    ) {
-//        try {
-//            List<String> imagePathList = fileService.uploadFiles(multipartFileList, loginUserDto);
-//            return new ResponseEntity<>(imagePathList, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>("Failed to upload files.", HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
-//
-//    @Operation(summary = "S3 버켓에서 사진 가져오기", description = "버켓을 기준으로 업로드 회원 사진 가져오기")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "회원 사진 가져오기 성공"),
-//            @ApiResponse(responseCode = "500", description = "회원 사진 가져오기 실패")
-//    })
-//    @GetMapping("/image")
-//    public ResponseEntity<ByteArrayResource> getImage(
-//            @Parameter(name = "loginUserDto", description = "로그인 했던 회원의 회원 정보")
-//            @IfLogin LoginUserDto loginUserDto
-//    ) {
-//        byte[] imageBytes = fileService.getImageBytes(loginUserDto);
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.IMAGE_JPEG);
-//
-//        return ResponseEntity.ok()
-//                .headers(headers)
-//                .body(new ByteArrayResource(imageBytes));
-//    }
+    @Operation(summary = "S3 파일 업로드", description = "AWS S3 버켓에 IAM 파일 업로드")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "파일 업로드 성공"),
+            @ApiResponse(responseCode = "500", description = "HttpStatus.INTERNAL_SERVER_ERROR")
+    })
+    @GetMapping("/upload")
+    public ResponseEntity<Object> upload(
+            @Parameter(name = "multipartFileList", description = "Multi part file")
+            @RequestParam("files") MultipartFile[] multipartFileList,
+            @Parameter(name = "loginUserDto", description = "로그인 했던 회원의 회원 정보")
+            @IfLogin LoginUserDto loginUserDto
+    ) {
+        try {
+            List<String> imagePathList = fileService.uploadFiles(multipartFileList, loginUserDto);
+            return new ResponseEntity<>(imagePathList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to upload files.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(summary = "S3 버켓에서 사진 가져오기", description = "버켓을 기준으로 업로드 회원 사진 가져오기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 사진 가져오기 성공"),
+            @ApiResponse(responseCode = "500", description = "회원 사진 가져오기 실패")
+    })
+    @GetMapping("/image")
+    public ResponseEntity<ByteArrayResource> getImage(
+            @Parameter(name = "loginUserDto", description = "로그인 했던 회원의 회원 정보")
+            @IfLogin LoginUserDto loginUserDto
+    ) {
+        byte[] imageBytes = fileService.getImageBytes(loginUserDto);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(new ByteArrayResource(imageBytes));
+    }
 
     @Operation(summary = "마이페이지", description = "마이페이지")
     @ApiResponses(value = {
