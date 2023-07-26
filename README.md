@@ -188,7 +188,16 @@ src
 
 ## 🥕 Back-end 기술적 의사결정
 
-### JWT Refresh Token은 어디에 저장
+### JWT Refresh Token
+
+- 로그인, 로그아웃을 위해 RefreshToken 사용
+- Token의 탈취의 보안적인 측면을 고려하여 AccessToken : 15 min , RefreshToken: 7 Day
+- 저장의 위치 : Coockie vs LocalStorage
+  - 현재 저장의 위치는 LocalStorage에 저장을 하였습니다. 왜냐하면 LocalStorage에 저장하면 구현의 난이도가 쉬워지기 때문에 초기 프로젝트에서 LocalStorage를 선택을 하였습니다.
+  - 하지만 보안적인 측면을 생각하면 Coockie에 저장하는 방식이 적합합니다. 왜냐하면 Rest Api의 특성은 상태의 관리를 클라이언트에서 처리를 합니다. LocalStorage에 저장하면 RDB, Redis에 저장을 하여 상태관리를 Server에서 위치를 합니다.
+  - XSS, CSRF 보안적인 측면
+    - XSS 공격 : Script를 통하여 Token의 탈취의 가능성이 있습니다. Coockie에 Token을 저장하면 HttpOnly를 통하여 스크립트를 통하여 Token의 문제를 방지할 수 있습니다.
+    - CSRF 공격 : SameSite를 통하여 
 
 ### Swagger
 
