@@ -1,28 +1,35 @@
 package com.CStudy.domain.request.application.impl;
 
+import com.CStudy.domain.aop.AuthCheckAnnotation;
 import com.CStudy.domain.member.entity.Member;
 import com.CStudy.domain.member.repository.MemberRepository;
 import com.CStudy.domain.request.application.RequestService;
 import com.CStudy.domain.request.dto.request.CreateRequestRequestDto;
 import com.CStudy.domain.request.dto.request.FlagRequestDto;
+import com.CStudy.domain.request.dto.request.UpdateRequestRequestDto;
 import com.CStudy.domain.request.dto.response.RequestResponseDto;
 import com.CStudy.domain.request.entity.Request;
 import com.CStudy.domain.request.repository.RequestRepository;
 import com.CStudy.global.exception.member.NotFoundMemberId;
 import com.CStudy.global.exception.request.NotFoundRequest;
+import com.CStudy.global.util.LoginUserDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
+@Slf4j
 public class RequestServiceImpl implements RequestService {
 
     private final RequestRepository requestRepository;
     private final MemberRepository memberRepository;
 
     public RequestServiceImpl(RequestRepository requestRepository,
-        MemberRepository memberRepository) {
+                              MemberRepository memberRepository) {
         this.requestRepository = requestRepository;
         this.memberRepository = memberRepository;
     }
@@ -35,8 +42,8 @@ public class RequestServiceImpl implements RequestService {
     @Override
     @Transactional
     public Long createRequest(
-                CreateRequestRequestDto requestDto,
-                Long memberId
+            CreateRequestRequestDto requestDto,
+            Long memberId
     ) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberId(memberId));
@@ -102,16 +109,35 @@ public class RequestServiceImpl implements RequestService {
     /**
      * Update flag for request problem. Only ADMIN can change flag
      *
-     * @param id id of request entity
+     * @param flagDto id of request entity
      */
     @Override
     @Transactional
     public void updateFlag(FlagRequestDto flagDto) {
-
+        Optional.of(flagDto)
+                .filter(dto -> dto.getId() != 1)
+                .ifPresent(dto -> {
+                    throw new RuntimeException("권한이 일치하지 않습니다.");
+                });
         Request request = requestRepository.findById(flagDto.getId())
                 .orElseThrow(() -> new NotFoundRequest(flagDto.getId()));
-
         request.updateFlag(flagDto.isFlag());
+    }
+
+    @Override
+    @AuthCheckAnnotation
+    @Transactional
+    public void deleteTodoById(Long id, LoginUserDto loginUserDto) {
+        requestRepository.deleteById(id);
+    }
+
+    @Override
+    @AuthCheckAnnotation
+    @Transactional
+    public void updateRequest(UpdateRequestRequestDto updateRequestRequestDto, LoginUserDto loginUserDto) {
+        requestRepository.findById(updateRequestRequestDto.getId())
+                .orElseThrow(() -> new NotFoundRequest(updateRequestRequestDto.getId()))
+                .updateRequest(updateRequestRequestDto);
     }
 
 
