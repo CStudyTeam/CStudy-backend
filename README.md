@@ -10,7 +10,7 @@
 ``` Introduce ```
 - 취업에 있어 필요한 CS 지식을 학습할 수 있는 웹 어플리케이션 플랫폼 입니다. 카테고리 별 문제를 통해 필요한 지식을 빠르게 학습할 수 있으며 틀린 문제를 모아서 부족한 부분을 빠르게 인지할 수 있습니다.  또한 경쟁을 통하여 지루한 CS 학습에 재미를 부여하며 선의의 경쟁을 통해 동료와 함께 성장이 가능합니다.
 
-- [⭐️ 팀 노션](https://sunny-radiator-7f3.notion.site/CStudy-5da03f7b12d5477eae1e35caacd04615?pvs=4) | [📝 배포 사이트 ](https://dbsyacmkozvg1.cloudfront.net/)
+- [⭐️ 팀 노션](https://sunny-radiator-7f3.notion.site/CStudy-5da03f7b12d5477eae1e35caacd04615?pvs=4) | ~~ [📝 배포 사이트 ](https://dbsyacmkozvg1.cloudfront.net/) ~~
 
 <br>
 
@@ -212,7 +212,9 @@ src
 - 기존의 ```@CacheEvict```로 캐싱의 정합성을 맞추기 보다 Redis Pub/Sub으로 분산 환경에서 비동기 캐시 정합성을 맞추게 변경을 하였습니다.
 
 ### 동일한 점수의 회원의 랭킹 처리
-
+- 동일한 점수를 가진 회원 A,B가 있다면 등수를 처리하는데 문제가 있습니다.
+- 해당 회원의 등수를 처리하기 위해 Redis Structure를 Double로 변경
+- 기존의 데이터의 구조는  { UserName , Score }에서  { UserName , Score.Time }으로 처리를 하였습니다.
   
 <br>
 
