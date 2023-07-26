@@ -3,9 +3,11 @@ package com.CStudy.domain.request.controller;
 import com.CStudy.domain.request.application.RequestService;
 import com.CStudy.domain.request.dto.request.CreateRequestRequestDto;
 import com.CStudy.domain.request.dto.request.FlagRequestDto;
+import com.CStudy.domain.request.dto.request.UpdateRequestRequestDto;
 import com.CStudy.domain.request.dto.response.RequestResponseDto;
 import com.CStudy.global.exception.ErrorResponse;
 import com.CStudy.global.util.IfLogin;
+import com.CStudy.global.util.LoginInfoDto;
 import com.CStudy.global.util.LoginUserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,13 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Request(게시판 API)", description = "게시판 관련 API(게시판 조회, 생성)")
 @RestController
@@ -35,7 +31,7 @@ public class RequestController {
     private final RequestService requestService;
 
     public RequestController(RequestService requestService) {
-      this.requestService = requestService;
+        this.requestService = requestService;
     }
 
     @Operation(summary = "게시판 문제 요청글 생성", description = "게시판 문제 요청글 생성. ")
@@ -115,4 +111,20 @@ public class RequestController {
         return requestService.getRequestList(pageable);
     }
 
+    @PutMapping("/request")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateRequest(
+            @RequestBody UpdateRequestRequestDto updateRequestRequestDto
+            , @IfLogin LoginUserDto loginUserDto
+    ) {
+        requestService.updateRequest(updateRequestRequestDto, loginUserDto);
+    }
+
+    @DeleteMapping("/request/{id}")
+    public void deleteRequestById(
+            @PathVariable Long id,
+            @IfLogin LoginUserDto loginUserDto
+    ) {
+        requestService.deleteTodoById(id, loginUserDto);
+    }
 }

@@ -121,9 +121,9 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new NotFoundMemberEmail(request.getEmail()));
 
-        if(!passwordEncoder.matches(request.getPassword(), member.getPassword())){
-            throw new InvalidMatchPasswordException(request.getPassword());
-        }
+        Optional.of(request.getPassword())
+                .filter(password -> passwordEncoder.matches(password, member.getPassword()))
+                .orElseThrow(() -> new InvalidMatchPasswordException(request.getPassword()));
 
         return createToken(member);
     }
@@ -170,7 +170,6 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public MyPageResponseDto getMyPage(Long id) {
         Member member = memberRepository.findById(id).orElseThrow(() -> new NotFoundMemberId(id));
-
         return MyPageResponseDto.of(member);
     }
 

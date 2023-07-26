@@ -52,9 +52,7 @@ public class QuestionController {
     @PostMapping("question")
     @ResponseStatus(HttpStatus.CREATED)
     public void createQuestionWithCategory(
-
             @Parameter(name = "CreateQuestionAndCategoryRequestDto", description = "createQuestionRequestDto, categoryRequestDto, createChoicesAboutQuestionDto")
-
             @RequestBody CreateQuestionAndCategoryRequestDto requestDto
     ) {
         questionService.createQuestionChoice(requestDto);
