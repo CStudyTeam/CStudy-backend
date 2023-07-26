@@ -15,21 +15,10 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private final JwtTokenizer jwtTokenizer;
-    private final MemberRepository memberRepository;
-
-    public WebConfig(
-            JwtTokenizer jwtTokenizer,
-            MemberRepository memberRepository
-    ) {
-        this.jwtTokenizer = jwtTokenizer;
-        this.memberRepository = memberRepository;
-    }
-
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173")
+                .allowedOrigins("http://localhost:3000")
                 .allowedMethods("GET", "POST", "PATCH", "PUT", "OPTIONS", "DELETE");
     }
 
