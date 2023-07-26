@@ -1,11 +1,22 @@
 # 📖 취업 CS 걱정하지마, CS;tudy
+
 <p align="center">
-  <img src="https://github.com/CStudyTeam/CStudy-backend/assets/103854287/8681bd61-0459-4d6c-8f92-74bf6168ced7" style="width: 50%; height: 40%;" />
-</p>
+  
+![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/794e4e83-26ae-4504-bc0f-a36f15d7566c)</p>
+
+<br>
+
+## ✨ 프로젝트 소개
+``` Introduce ```
+- 취업에 있어 필요한 CS 지식을 학습할 수 있는 웹 어플리케이션 플랫폼 입니다. 카테고리 별 문제를 통해 필요한 지식을 빠르게 학습할 수 있으며 틀린 문제를 모아서 부족한 부분을 빠르게 인지할 수 있습니다.  또한 경쟁을 통하여 지루한 CS 학습에 재미를 부여하며 선의의 경쟁을 통해 동료와 함께 성장이 가능합니다.
+
+- [⭐️ 팀 노션](https://sunny-radiator-7f3.notion.site/CStudy-5da03f7b12d5477eae1e35caacd04615?pvs=4) | [📝 배포 사이트 ](https://dbsyacmkozvg1.cloudfront.net/)
+
 <br>
 
 
-# 🌞 팀원소개
+
+## 🌞 팀원소개
 <table>
   <tr>
     <td>
@@ -101,7 +112,7 @@ src
 
 <br>
 
-# 🐌Git Commit Convention
+## 🐌Git Commit Convention
 <table>
   <tr>
     <td>
@@ -164,16 +175,51 @@ src
 <br>
 
 
-<br>
+## 🎨 ERD Diagram
 
-# 🏛️ Architecture
-![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/88f188ca-3b95-4296-a671-bd14d4fc1e4b)
+<p align="center">
+  
 
+<img src="https://github.com/CStudyTeam/CStudy-backend/assets/103854287/b538e33b-a12a-44ef-9f73-fbf0dfe36c1c" style="width: 85%; height: 70%;" />
 
+</p>
   
 <br>
-<br>
 
-# 🧊 ERD Diagram
-![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/b538e33b-a12a-44ef-9f73-fbf0dfe36c1c)
+## 🐻 프로젝트 설명
+<details>
 
+<summary> 👀 주요 기능 </summary>
+
+</details>
+
+<details>
+
+<summary> 🥃 Wireframe </summary>
+
+[📝 Figma 바로가기 ](https://www.figma.com/file/67asFaSpQCu4s2CKAJqxac/Untitled?type=design&node-id=0-1&mode=design&t=DdRtY5ictOvnNkSn-0)
+
+![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/cf4eae6b-43b5-409d-9125-178e33b89473)
+
+</details>
+
+
+<details>
+
+<summary> 🏛️ CI/CD (배포 자동화) </summary>
+
+![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/88f188ca-3b95-4296-a671-bd14d4fc1e4b)
+
+</details>
+
+<details>
+
+<summary> 🥕 Back-end 기술적 의사결정 </summary>
+
+</details>
+
+<details>
+
+<summary> 🔧 트러블 슈팅 </summary>
+
+</details>

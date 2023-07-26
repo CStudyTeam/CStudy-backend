@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import com.CStudy.domain.request.dto.request.UpdateRequestRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,5 +58,11 @@ public class Request {
 
     public void updateFlag(boolean flag){
         this.flag = flag;
+    }
+
+
+    public void updateRequest(UpdateRequestRequestDto updateRequestRequestDto) {
+        this.title = updateRequestRequestDto.getTitle();
+        this.description = updateRequestRequestDto.getDescription();
     }
 }
