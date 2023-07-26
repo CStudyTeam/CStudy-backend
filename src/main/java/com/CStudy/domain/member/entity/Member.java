@@ -1,6 +1,7 @@
 package com.CStudy.domain.member.entity;
 
 import com.CStudy.domain.competition.entity.MemberCompetition;
+import com.CStudy.domain.notice.entitiy.Notice;
 import com.CStudy.domain.question.dto.request.ChoiceAnswerRequestDto;
 import com.CStudy.domain.question.entity.MemberQuestion;
 import com.CStudy.domain.request.entity.Request;
@@ -57,6 +58,9 @@ public class Member {
     List<MemberCompetition> memberCompetitions = new ArrayList<>();
 
 
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<Notice> notices = new ArrayList<>();
+
     @OneToMany(
             mappedBy = "member",
             fetch = FetchType.LAZY,
@@ -86,7 +90,7 @@ public class Member {
     }
 
     public void minusRankingPoint(double choiceAnswerRequestDto) {
-            rankingPoint -= 2L;
+        rankingPoint -= 2L;
     }
 
     @Builder
