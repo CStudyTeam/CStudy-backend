@@ -179,8 +179,8 @@ src
 
 <p align="center">
   
+![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/35e21686-098a-4d00-b046-0b24e55f3c2f)
 
-<img src="https://github.com/CStudyTeam/CStudy-backend/assets/103854287/b538e33b-a12a-44ef-9f73-fbf0dfe36c1c" style="width: 85%; height: 70%;" />
 
 </p>
   
