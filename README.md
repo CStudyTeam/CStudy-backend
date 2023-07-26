@@ -183,15 +183,23 @@ src
 
 
 </p>
+
+
   
 <br>
 
 ## 🐻 프로젝트 설명
-<details>
 
-<summary> 👀 주요 기능 </summary>
 
-</details>
+##🥕 Back-end 기술적 의사결정
+
+### JWT Refresh Token은 어디에 저장
+
+### Swagger
+
+### 랭킹 점수는 실시간
+
+### 동일한 점수의 회원의 랭킹 처리
 
 <details>
 
@@ -212,11 +220,8 @@ src
 
 </details>
 
-<details>
 
-<summary> 🥕 Back-end 기술적 의사결정 </summary>
 
-</details>
 
 <details>
 
