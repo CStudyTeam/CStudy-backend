@@ -1,4 +1,4 @@
-package com.CStudy.global.exception.Question;
+package com.CStudy.global.exception.question;
 
 import com.CStudy.global.exception.QuestionAbstractException;
 
