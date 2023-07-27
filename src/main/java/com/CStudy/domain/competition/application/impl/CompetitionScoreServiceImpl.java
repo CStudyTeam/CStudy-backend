@@ -13,7 +13,7 @@ import com.CStudy.domain.competition.repository.CompetitionScoreRepository;
 import com.CStudy.domain.competition.repository.MemberCompetitionRepository;
 import com.CStudy.domain.question.entity.Question;
 import com.CStudy.domain.question.repository.QuestionRepository;
-import com.CStudy.global.exception.Question.NotFoundQuestionId;
+import com.CStudy.global.exception.question.NotFoundQuestionId;
 import com.CStudy.global.exception.choice.NotFoundChoiceWithQuestionAndNumber;
 import com.CStudy.global.exception.competition.NotFoundMemberCompetition;
 import com.CStudy.global.util.LoginUserDto;
@@ -110,12 +110,12 @@ public class CompetitionScoreServiceImpl implements CompetitionScoreService {
     @Transactional(readOnly = true)
     public int getScore(Long memberId, Long competitionId) {
         MemberCompetition memberCompetition = memberCompetitionRepository.findByMemberIdAndCompetitionId(memberId, competitionId)
-                .orElseThrow(() -> new NotFoundMemberCompetition());
+                .orElseThrow(NotFoundMemberCompetition::new);
         return memberCompetition.getScore();
     }
 
     @Transactional(readOnly = true)
-    private boolean isCorrectAnswer(Question question, int number) {
+    public boolean isCorrectAnswer(Question question, int number) {
         Choice choice = choiceRepository.findByQuestionAndNumber(question, number)
                 .orElseThrow(() -> new NotFoundChoiceWithQuestionAndNumber(question.getId(), number));
         return choice.isAnswer();
