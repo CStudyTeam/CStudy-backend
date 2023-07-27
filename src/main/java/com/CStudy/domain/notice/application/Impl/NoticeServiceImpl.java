@@ -8,9 +8,12 @@ import com.CStudy.domain.notice.dto.request.NoticeUpdateRequestDto;
 import com.CStudy.domain.notice.entitiy.Notice;
 import com.CStudy.domain.notice.repository.NoticeRepository;
 import com.CStudy.global.exception.member.NotFoundMemberId;
+import com.CStudy.global.exception.notice.NotMatchAdminIpException;
 import com.CStudy.global.util.LoginUserDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 
 @Service
@@ -49,12 +52,13 @@ public class NoticeServiceImpl implements NoticeService {
     @Transactional
     public void deleteNotice(Long noticeId, LoginUserDto loginUserDto) {
         Long adminId = 1L;
+
         Member member = memberRepository.findById(loginUserDto.getMemberId())
                 .orElseThrow(() -> new NotFoundMemberId(loginUserDto.getMemberId()));
 
-        if (!member.getId().equals(adminId)) {
-            throw new RuntimeException("dsfsafsf");
-        }
+        Optional.of(member.getId())
+                .filter(id -> id.equals(adminId))
+                .orElseThrow(() -> new NotMatchAdminIpException(adminId));
 
         noticeRepository.deleteById(noticeId);
     }
