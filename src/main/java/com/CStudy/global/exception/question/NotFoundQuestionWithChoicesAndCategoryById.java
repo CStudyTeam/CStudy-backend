@@ -1,6 +1,7 @@
-package com.CStudy.global.exception.Question;
+package com.CStudy.global.exception.question;
 
 import com.CStudy.global.exception.QuestionAbstractException;
+import com.CStudy.global.exception.enums.ErrorCode;
 
 public class NotFoundQuestionWithChoicesAndCategoryById extends QuestionAbstractException {
     public NotFoundQuestionWithChoicesAndCategoryById(Long message) {
@@ -13,7 +14,7 @@ public class NotFoundQuestionWithChoicesAndCategoryById extends QuestionAbstract
 
     @Override
     public int getStatusCode() {
-        return 3002;
+        return ErrorCode.NotFoundQuestionWithChoicesAndCategoryById.getErrorCode();
     }
 
 }

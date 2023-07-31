@@ -1,6 +1,7 @@
 package com.CStudy.global.exception.member;
 
 import com.CStudy.global.exception.MemberAbstractException;
+import com.CStudy.global.exception.enums.ErrorCode;
 
 public class NotFoundMemberId extends MemberAbstractException {
     public NotFoundMemberId(Long message) {
@@ -13,6 +14,6 @@ public class NotFoundMemberId extends MemberAbstractException {
 
     @Override
     public int getStatusCode() {
-        return 1000;
+        return ErrorCode.NotFoundMemberId.getErrorCode();
     }
 }

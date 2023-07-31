@@ -121,6 +121,7 @@ public class RequestController {
     }
 
     @DeleteMapping("/request/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRequestById(
             @PathVariable Long id,
             @IfLogin LoginUserDto loginUserDto

@@ -85,7 +85,7 @@ public class QuestionController {
     })
     @GetMapping("question/{questionId}")
     @ResponseStatus(HttpStatus.OK)
-    public QuestionResponseDto haha(
+    public QuestionResponseDto findQuestionPathId(
 
             @Parameter(name = "questionId", description = "문제 번호")
 

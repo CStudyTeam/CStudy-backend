@@ -1,6 +1,7 @@
-package com.CStudy.global.exception.Question;
+package com.CStudy.global.exception.question;
 
 import com.CStudy.global.exception.QuestionAbstractException;
+import com.CStudy.global.exception.enums.ErrorCode;
 
 public class NotFoundQuestionId extends QuestionAbstractException {
 
@@ -14,7 +15,7 @@ public class NotFoundQuestionId extends QuestionAbstractException {
 
     @Override
     public int getStatusCode() {
-        return 3001;
+        return ErrorCode.NotFoundQuestionId.getErrorCode();
     }
 
 

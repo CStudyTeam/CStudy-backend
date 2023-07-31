@@ -1,6 +1,7 @@
 package com.CStudy.global.exception.competition;
 
 import com.CStudy.global.exception.CompetitionAbstractException;
+import com.CStudy.global.exception.enums.ErrorCode;
 
 public class DuplicateMemberWithCompetition extends CompetitionAbstractException {
 
@@ -14,7 +15,7 @@ public class DuplicateMemberWithCompetition extends CompetitionAbstractException
 
     @Override
     public int getStatusCode() {
-        return 5004;
+        return ErrorCode.DuplicateMemberWithCompetition.getErrorCode();
     }
 
 }

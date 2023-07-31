@@ -2,6 +2,7 @@ package com.CStudy.global.exception.member;
 
 
 import com.CStudy.global.exception.MemberAbstractException;
+import com.CStudy.global.exception.enums.ErrorCode;
 
 public class NotFoundMemberEmail extends MemberAbstractException {
 
@@ -16,6 +17,6 @@ public class NotFoundMemberEmail extends MemberAbstractException {
 
     @Override
     public int getStatusCode() {
-        return 1003;
+        return ErrorCode.NotFoundMemberEmail.getErrorCode();
     }
 }
