@@ -13,7 +13,7 @@ import com.CStudy.domain.workbook.entity.Workbook;
 import com.CStudy.domain.workbook.entity.WorkbookQuestion;
 import com.CStudy.domain.workbook.repository.WorkbookQuestionRepository;
 import com.CStudy.domain.workbook.repository.WorkbookRepository;
-import com.CStudy.global.exception.Question.NotFoundQuestionWithChoicesAndCategoryById;
+import com.CStudy.global.exception.question.NotFoundQuestionWithChoicesAndCategoryById;
 import com.CStudy.global.exception.workbook.NotFoundWorkbook;
 import com.CStudy.global.exception.workbook.NotFoundWorkbookQuestion;
 import org.springframework.data.domain.Page;
@@ -116,7 +116,7 @@ public class WorkbookServiceImpl implements WorkbookService {
 
         for (QuestionIdRequestDto qId: requestDto.getQuestionIds()) {
             Question question = questionRepository.findById(qId.getId())
-                    .orElseThrow(() -> new com.CStudy.global.exception.Question.NotFoundQuestionWithChoicesAndCategoryById(qId.getId()));
+                    .orElseThrow(() -> new com.CStudy.global.exception.question.NotFoundQuestionWithChoicesAndCategoryById(qId.getId()));
             if(workbookQuestionRepository.existsByWorkbookAndQuestion(workbook, question)){
                 continue;
             }

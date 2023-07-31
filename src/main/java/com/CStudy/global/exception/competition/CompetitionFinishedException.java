@@ -1,6 +1,7 @@
 package com.CStudy.global.exception.competition;
 
 import com.CStudy.global.exception.CompetitionAbstractException;
+import com.CStudy.global.exception.enums.ErrorCode;
 
 public class CompetitionFinishedException extends CompetitionAbstractException {
 
@@ -15,6 +16,6 @@ public class CompetitionFinishedException extends CompetitionAbstractException {
 
     @Override
     public int getStatusCode() {
-        return 5006;
+        return ErrorCode.CompetitionFinishedException.getErrorCode();
     }
 }

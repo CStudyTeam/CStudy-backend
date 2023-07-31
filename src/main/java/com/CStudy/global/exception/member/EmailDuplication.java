@@ -2,6 +2,7 @@ package com.CStudy.global.exception.member;
 
 
 import com.CStudy.global.exception.MemberAbstractException;
+import com.CStudy.global.exception.enums.ErrorCode;
 
 public class EmailDuplication extends MemberAbstractException {
 
@@ -15,6 +16,6 @@ public class EmailDuplication extends MemberAbstractException {
 
     @Override
     public int getStatusCode() {
-        return 1001;
+        return ErrorCode.EmailDuplication.getErrorCode();
     }
 }

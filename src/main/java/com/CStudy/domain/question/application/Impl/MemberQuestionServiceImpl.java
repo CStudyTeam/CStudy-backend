@@ -9,8 +9,8 @@ import com.CStudy.domain.question.entity.MemberQuestion;
 import com.CStudy.domain.question.entity.Question;
 import com.CStudy.domain.question.repository.MemberQuestionRepository;
 import com.CStudy.domain.question.repository.QuestionRepository;
-import com.CStudy.global.exception.Question.existByMemberQuestionDataException;
 import com.CStudy.global.exception.member.NotFoundMemberId;
+import com.CStudy.global.exception.question.existByMemberQuestionDataException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,16 +38,16 @@ public class MemberQuestionServiceImpl implements MemberQuestionService {
      * Select a problem. If you choose the correct answer,
      * add the correct answer to the memberQuestion table.
      *
-     * @param memberId     회원 아이디
-     * @param questionId   단일 문제에 대한 아이디
+     * @param memberId               회원 아이디
+     * @param questionId             단일 문제에 대한 아이디
      * @param choiceAnswerRequestDto 문제 선택
      */
     @Override
     @Transactional
     public void findMemberAndMemberQuestionSuccess(Long memberId, Long questionId, ChoiceAnswerRequestDto choiceAnswerRequestDto) {
 
-        findByQuestionAboutMemberIdAndQuestionIdSuccess(memberId,questionId);
-        findByQuestionAboutMemberIdAndQuestionIdFail(memberId,questionId);
+        findByQuestionAboutMemberIdAndQuestionIdSuccess(memberId, questionId);
+        findByQuestionAboutMemberIdAndQuestionIdFail(memberId, questionId);
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberId(memberId));
@@ -74,16 +74,16 @@ public class MemberQuestionServiceImpl implements MemberQuestionService {
      * Select a problem. If you choose the correct answer,
      * add the wrong answer to the memberQuestion table.
      *
-     * @param memberId     회원 아이디
-     * @param questionId   단일 문제에 대한 아이디
+     * @param memberId               회원 아이디
+     * @param questionId             단일 문제에 대한 아이디
      * @param choiceAnswerRequestDto 선택 문제
      */
     @Override
     @Transactional
     public void findMemberAndMemberQuestionFail(Long memberId, Long questionId, ChoiceAnswerRequestDto choiceAnswerRequestDto) {
 
-        findByQuestionAboutMemberIdAndQuestionIdSuccess(memberId,questionId);
-        findByQuestionAboutMemberIdAndQuestionIdFail(memberId,questionId);
+        findByQuestionAboutMemberIdAndQuestionIdSuccess(memberId, questionId);
+        findByQuestionAboutMemberIdAndQuestionIdFail(memberId, questionId);
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundMemberId(memberId));
