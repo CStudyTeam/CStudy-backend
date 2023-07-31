@@ -8,6 +8,7 @@ import com.CStudy.domain.notice.dto.request.NoticeUpdateRequestDto;
 import com.CStudy.domain.notice.entitiy.Notice;
 import com.CStudy.domain.notice.repository.NoticeRepository;
 import com.CStudy.global.exception.member.NotFoundMemberId;
+import com.CStudy.global.exception.notice.NotFoundNoticeId;
 import com.CStudy.global.exception.notice.NotMatchAdminIpException;
 import com.CStudy.global.util.LoginUserDto;
 import org.springframework.stereotype.Service;
@@ -43,9 +44,9 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     @Transactional
-    public void updateNotice(NoticeUpdateRequestDto noticeUpdateRequestDto, LoginUserDto loginUserDto) {
-        noticeRepository.findByTitle(noticeUpdateRequestDto.getTitle())
-                .orElseThrow().updateNotice(noticeUpdateRequestDto);
+    public void updateNotice(Long noticeId, NoticeUpdateRequestDto noticeUpdateRequestDto, LoginUserDto loginUserDto) {
+        noticeRepository.findById(noticeId)
+                .orElseThrow(()->new NotFoundNoticeId(noticeId)).updateNotice(noticeUpdateRequestDto);
     }
 
     @Override

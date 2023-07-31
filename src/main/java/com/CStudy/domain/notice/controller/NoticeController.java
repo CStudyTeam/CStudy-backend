@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/notice")
@@ -21,15 +23,19 @@ public class NoticeController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void saveNotice(@IfLogin LoginUserDto loginUserDto, @RequestBody NoticeSaveRequestDto noticeSaveRequestDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public void saveNotice(@IfLogin LoginUserDto loginUserDto, @Valid @RequestBody NoticeSaveRequestDto noticeSaveRequestDto) {
         noticeService.saveNotice(noticeSaveRequestDto, loginUserDto);
     }
 
-    @PutMapping
+    @PutMapping("/{noticeId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateNotice(@RequestBody NoticeUpdateRequestDto noticeUpdateRequestDto, @IfLogin LoginUserDto loginUserDto) {
-        noticeService.updateNotice(noticeUpdateRequestDto, loginUserDto);
+    public void updateNotice(
+            @PathVariable Long noticeId,
+            @RequestBody NoticeUpdateRequestDto noticeUpdateRequestDto,
+            @IfLogin LoginUserDto loginUserDto
+    ) {
+        noticeService.updateNotice(noticeId,noticeUpdateRequestDto, loginUserDto);
     }
 
     @DeleteMapping("/{noticeId}")

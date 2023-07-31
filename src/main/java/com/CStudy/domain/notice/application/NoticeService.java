@@ -6,6 +6,6 @@ import com.CStudy.global.util.LoginUserDto;
 
 public interface NoticeService {
     void saveNotice(NoticeSaveRequestDto noticeSaveRequestDto, LoginUserDto loginUserDto);
-    void updateNotice(NoticeUpdateRequestDto noticeUpdateRequestDto, LoginUserDto loginUserDto);
+    void updateNotice(Long noticeId, NoticeUpdateRequestDto noticeUpdateRequestDto, LoginUserDto loginUserDto);
     void deleteNotice(Long noticeId, LoginUserDto loginUserDto);
 }
