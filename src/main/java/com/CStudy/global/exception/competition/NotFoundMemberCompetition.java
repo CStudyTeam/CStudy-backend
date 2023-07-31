@@ -1,6 +1,7 @@
 package com.CStudy.global.exception.competition;
 
 import com.CStudy.global.exception.CompetitionAbstractException;
+import com.CStudy.global.exception.enums.ErrorCode;
 
 public class NotFoundMemberCompetition extends CompetitionAbstractException {
 
@@ -14,6 +15,6 @@ public class NotFoundMemberCompetition extends CompetitionAbstractException {
 
     @Override
     public int getStatusCode() {
-        return 5002;
+        return ErrorCode.NotFoundMemberCompetition.getErrorCode();
     }
 }

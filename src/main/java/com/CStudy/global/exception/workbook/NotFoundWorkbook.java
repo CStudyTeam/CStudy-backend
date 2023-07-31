@@ -1,6 +1,7 @@
 package com.CStudy.global.exception.workbook;
 
 import com.CStudy.global.exception.WorkbookAbstractException;
+import com.CStudy.global.exception.enums.ErrorCode;
 
 public class NotFoundWorkbook extends WorkbookAbstractException {
 
@@ -14,7 +15,7 @@ public class NotFoundWorkbook extends WorkbookAbstractException {
 
     @Override
     public int getStatusCode() {
-        return 4001;
+        return ErrorCode.NotFoundWorkbook.getErrorCode();
     }
 
 }

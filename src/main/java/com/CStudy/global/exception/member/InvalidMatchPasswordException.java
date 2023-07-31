@@ -1,6 +1,7 @@
 package com.CStudy.global.exception.member;
 
 import com.CStudy.global.exception.MemberAbstractException;
+import com.CStudy.global.exception.enums.ErrorCode;
 
 public class InvalidMatchPasswordException extends MemberAbstractException {
     public InvalidMatchPasswordException(String message) {
@@ -13,7 +14,7 @@ public class InvalidMatchPasswordException extends MemberAbstractException {
 
     @Override
     public int getStatusCode() {
-        return 1002;
+        return ErrorCode.InvalidMatchPasswordException.getErrorCode();
     }
 
 }

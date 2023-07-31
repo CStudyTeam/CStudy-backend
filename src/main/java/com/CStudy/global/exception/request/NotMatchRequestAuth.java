@@ -1,6 +1,7 @@
 package com.CStudy.global.exception.request;
 
 import com.CStudy.global.exception.RequestAbstractException;
+import com.CStudy.global.exception.enums.ErrorCode;
 
 public class NotMatchRequestAuth extends RequestAbstractException {
 
@@ -14,6 +15,6 @@ public class NotMatchRequestAuth extends RequestAbstractException {
 
     @Override
     public int getStatusCode() {
-        return 6002;
+        return ErrorCode.NotMatchRequestAuth.getErrorCode();
     }
 }

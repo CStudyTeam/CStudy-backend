@@ -1,6 +1,7 @@
 package com.CStudy.global.exception.question;
 
 import com.CStudy.global.exception.QuestionAbstractException;
+import com.CStudy.global.exception.enums.ErrorCode;
 
 public class existByMemberQuestionDataException extends QuestionAbstractException {
 
@@ -14,7 +15,7 @@ public class existByMemberQuestionDataException extends QuestionAbstractExceptio
 
     @Override
     public int getStatusCode() {
-        return 3000;
+        return ErrorCode.existByMemberQuestionDataException.getErrorCode();
     }
 
 }
