@@ -25,8 +25,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @SpringBootTest
+@ActiveProfiles("local")
 @AutoConfigureMockMvc
 class QuestionControllerTest {
 
@@ -505,7 +508,7 @@ class QuestionControllerTest {
     @DisplayName("내가 푼 문제 조회")
     void findMyQuestionWithValid() throws Exception {
         //given
-        QuestionSearchCondition questionSearchCondition =QuestionSearchCondition.builder().build();
+        QuestionSearchCondition questionSearchCondition = QuestionSearchCondition.builder().build();
 
         LoginUserDto loginUserDto = LoginUserDto.builder()
                 .memberId(1L)
@@ -517,11 +520,11 @@ class QuestionControllerTest {
         mockQuestionList.add(new QuestionPageWithCategoryAndTitle(1L, "질문1", "네트워크", 3));
         mockQuestionList.add(new QuestionPageWithCategoryAndTitle(1L, "질문2", "네트워크", 4));
 
-        Pageable pageable = PageRequest.of(0, 10); // Page 0, with 10 elements per page
+        Pageable pageable = PageRequest.of(0, 10);
 
         Page<QuestionPageWithCategoryAndTitle> mockPageResult = new PageImpl<>(mockQuestionList, pageable, mockQuestionList.size());
 
-        given(questionService.questionPageWithCategory(questionSearchCondition,0,10,loginUserDto)).willReturn(mockPageResult);
+        given(questionService.questionPageWithCategory(questionSearchCondition, 0, 10, loginUserDto)).willReturn(mockPageResult);
 
         // when
         mockMvc.perform(
@@ -531,6 +534,24 @@ class QuestionControllerTest {
                                 .content("")
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print());
+        //then
+        //verify()
+    }
+
+    @Test
+    @DisplayName("게시글 삭제")
+    void deleteRequestId() throws Exception {
+        //given
+        Long id = 1L;
+        // when
+        mockMvc.perform(
+                        MockMvcRequestBuilders.delete("/api/request/{id}", id)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer " + token)
+                                .content("")
+                )
+                .andExpect(MockMvcResultMatchers.status().isNoContent())
                 .andDo(print());
         //then
         //verify()
