@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class CompetitionListResponseDto {
 
     private Long id;
@@ -30,5 +29,13 @@ public class CompetitionListResponseDto {
                 .endTime(competition.getCompetitionEnd())
                 .participants(competition.getParticipants())
                 .build();
+    }
+
+    public CompetitionListResponseDto(Long id, String title, LocalDateTime startTime, LocalDateTime endTime, int participants) {
+        this.id = id;
+        this.title = title;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.participants = participants;
     }
 }
