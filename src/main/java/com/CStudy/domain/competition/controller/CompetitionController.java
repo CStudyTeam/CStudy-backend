@@ -34,6 +34,8 @@ import org.springframework.data.web.SortDefault.SortDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Tag(name = "Competition(경기 API)", description = "경기 생성 및 Get")
 @Slf4j
 @RestController
@@ -151,7 +153,7 @@ public class CompetitionController {
     @ResponseStatus(HttpStatus.CREATED)
     public void addQuestion(
             @Parameter(description = "competitionId: 문제집 id, questionIds.id: 삭제할 문제 번호")
-            @RequestBody CompetitionQuestionRequestDto requestDto
+            @Valid @RequestBody CompetitionQuestionRequestDto requestDto
     ) {
         competitionService.addCompetitionQuestion(requestDto);
     }

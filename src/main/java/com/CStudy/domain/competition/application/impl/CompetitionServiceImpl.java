@@ -178,7 +178,7 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public void checkCompetitionTime(Long competitionId) {
         Competition competition = competitionRepository.findById(competitionId)
-                .orElseThrow(() -> new CompetitionStartException());
+                .orElseThrow(CompetitionStartException::new);
         checkTimeAfter(competition.getCompetitionStart());
         checkTimeBefore(competition.getCompetitionEnd());
     }
