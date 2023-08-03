@@ -24,6 +24,7 @@ import com.CStudy.global.exception.member.NotFoundMemberId;
 import com.CStudy.global.jwt.util.JwtTokenizer;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -51,6 +52,9 @@ public class MemberServiceImpl implements MemberService {
     private final JavaMailSender javaMailSender;
     private final RefreshTokenService refreshTokenService;
     private final DuplicateServiceFinder duplicateServiceFinder;
+
+    @Value("${spring.mail.username}")
+    private  String EMAIL;
 
     public MemberServiceImpl(
             MemberRepository memberRepository,
@@ -199,6 +203,7 @@ public class MemberServiceImpl implements MemberService {
         member.changePassword(newPassword);
     }
 
+    //todo : 반환 타입을 Future로 설정 / 학습
     @Async
     @Override
     @Transactional
@@ -207,7 +212,7 @@ public class MemberServiceImpl implements MemberService {
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
         String key = createKey();
 
-        helper.setFrom("pos04167@naver.com");
+        helper.setFrom(EMAIL);
         helper.setTo(recipientEmail);
         helper.setSubject("회원가입 코드 메일");
         helper.setText(emailHtml(key), true);
