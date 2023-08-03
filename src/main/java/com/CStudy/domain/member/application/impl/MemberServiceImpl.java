@@ -23,13 +23,21 @@ import com.CStudy.global.exception.member.NotFoundMemberEmail;
 import com.CStudy.global.exception.member.NotFoundMemberId;
 import com.CStudy.global.jwt.util.JwtTokenizer;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -40,6 +48,7 @@ public class MemberServiceImpl implements MemberService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
+    private final JavaMailSender javaMailSender;
     private final RefreshTokenService refreshTokenService;
     private final DuplicateServiceFinder duplicateServiceFinder;
 
@@ -48,6 +57,7 @@ public class MemberServiceImpl implements MemberService {
             RoleRepository roleRepository,
             PasswordEncoder passwordEncoder,
             JwtTokenizer jwtTokenizer,
+            JavaMailSender javaMailSender,
             RefreshTokenService refreshTokenService,
             DuplicateServiceFinder duplicateServiceFinder
     ) {
@@ -55,6 +65,7 @@ public class MemberServiceImpl implements MemberService {
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
+        this.javaMailSender = javaMailSender;
         this.refreshTokenService = refreshTokenService;
         this.duplicateServiceFinder = duplicateServiceFinder;
     }
@@ -73,16 +84,20 @@ public class MemberServiceImpl implements MemberService {
             MemberSignupRequest request
     ) {
         checkEmailAndNameDuplication(request);
-        Member member = Member.builder()
+
+        signupWithRole(Member.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .name(request.getName())
                 .roles(new HashSet<>())
-                .build();
+                .build());
 
-        signupWithRole(member);
-
-        return MemberSignupResponse.of(memberRepository.save(member));
+        return MemberSignupResponse.of(memberRepository.save(Member.builder()
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .name(request.getName())
+                .roles(new HashSet<>())
+                .build()));
     }
 
     private void checkEmailAndNameDuplication(MemberSignupRequest request) {
@@ -132,7 +147,7 @@ public class MemberServiceImpl implements MemberService {
      * oauthSignUp
      *
      * @param email 회원 이름
-     * @param name 회원 이름
+     * @param name  회원 이름
      */
     @Override
     @Transactional
@@ -160,10 +175,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberLoginResponse oauthLogin(String email) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundMemberEmail(email));
-
-        return createToken(member);
+        return createToken(memberRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundMemberEmail(email)));
     }
 
     @Override
@@ -178,12 +191,47 @@ public class MemberServiceImpl implements MemberService {
     public void changePassword(MemberPasswordChangeRequest request, Long id) {
         Member member = memberRepository.findById(id).orElseThrow(() -> new NotFoundMemberId(id));
 
-        if(!passwordEncoder.matches(request.getOldPassword(), member.getPassword())){
+        if (!passwordEncoder.matches(request.getOldPassword(), member.getPassword())) {
             throw new InvalidMatchPasswordException(request.getOldPassword());
         }
 
         String newPassword = passwordEncoder.encode(request.getNewPassword());
         member.changePassword(newPassword);
+    }
+
+    @Async
+    @Override
+    @Transactional
+    public String sendEmail(String recipientEmail) throws MailException, MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        String key = createKey();
+
+        helper.setFrom("pos04167@naver.com");
+        helper.setTo(recipientEmail);
+        helper.setSubject("회원가입 코드 메일");
+        helper.setText(emailHtml(key), true);
+
+        javaMailSender.send(message);
+        return key;
+    }
+
+    @NotNull
+    private static String emailHtml(String key) {
+        String msgg = "<div style='margin:100px;'>";
+        msgg += "<h1>안녕하세요 CS;tudy입니다!!!</h1>";
+        msgg += "<br>";
+        msgg += "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
+        msgg += "<br>";
+        msgg += "<p>감사합니다!<p>";
+        msgg += "<br>";
+        msgg += "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        msgg += "<h3 style='color:blue;'>회원가입 코드입니다.</h3>";
+        msgg += "<div style='font-size:130%'>";
+        msgg += "CODE : <strong>";
+        msgg += key + "</strong><div><br/> ";
+        msgg += "</div>";
+        return msgg;
     }
 
 
@@ -198,7 +246,7 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    private MemberLoginResponse createToken(Member member){
+    private MemberLoginResponse createToken(Member member) {
 
         List<String> roles = member.getRoles().stream()
                 .map(Role::getName)
@@ -218,5 +266,28 @@ public class MemberServiceImpl implements MemberService {
 
         refreshTokenService.addRefreshToken(refreshToken);
         return MemberLoginResponse.of(member, accessToken, refreshToken);
+    }
+
+    private String createKey() {
+        StringBuilder key = new StringBuilder();
+        Random rnd = new Random();
+
+        for (int i = 0; i < 8; i++) {
+            int index = rnd.nextInt(3);
+
+            switch (index) {
+                case 0:
+                    key.append((char) ((int) (rnd.nextInt(26)) + 97));
+                    break;
+                case 1:
+                    key.append((char) ((int) (rnd.nextInt(26)) + 65));
+                    break;
+                case 2:
+                    key.append((rnd.nextInt(10)));
+                    break;
+            }
+        }
+
+        return key.toString();
     }
 }

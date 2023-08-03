@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.mail.MessagingException;
+
 @Slf4j
 @ControllerAdvice
 public class ExceptionControllerAdvice {
@@ -27,6 +29,20 @@ public class ExceptionControllerAdvice {
         for (FieldError fieldError : e.getFieldErrors()) {
             response.addValidation(fieldError.getField(), fieldError.getDefaultMessage());
         }
+
+        return response;
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MessagingException.class)
+    public ErrorResponse invalidRequestHandler(MessagingException e) {
+        ErrorResponse response = ErrorResponse.builder()
+                .code("400")
+                .message(e.getMessage())
+                .build();
+
+        response.addValidation("회원가입 Email", e.getMessage());
 
         return response;
     }
