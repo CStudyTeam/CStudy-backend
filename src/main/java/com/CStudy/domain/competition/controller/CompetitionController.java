@@ -4,15 +4,8 @@ import com.CStudy.domain.competition.application.CompetitionScoreService;
 import com.CStudy.domain.competition.application.CompetitionService;
 import com.CStudy.domain.competition.application.MemberCompetitionService;
 import com.CStudy.domain.competition.dto.request.CompetitionQuestionRequestDto;
-import com.CStudy.domain.competition.dto.request.CompetitionScoreRequestDto;
 import com.CStudy.domain.competition.dto.request.CreateCompetitionRequestDto;
-import com.CStudy.domain.competition.dto.response.CompetitionListResponseDto;
-import com.CStudy.domain.competition.dto.response.CompetitionQuestionDto;
-import com.CStudy.domain.competition.dto.response.CompetitionRankingResponseDto;
-import com.CStudy.domain.competition.dto.response.CompetitionResponseDto;
-import com.CStudy.domain.competition.dto.response.CompetitionScoreResponseDto;
-import com.CStudy.domain.competition.dto.response.MyCompetitionRankingDto;
-import com.CStudy.domain.member.dto.request.MemberIdRequest;
+import com.CStudy.domain.competition.dto.response.*;
 import com.CStudy.global.exception.ErrorResponse;
 import com.CStudy.global.util.IfLogin;
 import com.CStudy.global.util.LoginUserDto;
@@ -23,7 +16,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Tag(name = "Competition(경기 API)", description = "경기 생성 및 Get")
 @Slf4j
@@ -102,8 +95,8 @@ public class CompetitionController {
 
     @Operation(summary = "대회 문제 조회", description = "대회 id를 이용해 대회 문제 조회")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "대회 문제 조회 성공"),
-        @ApiResponse(responseCode = "400", description = "대회 문제 조회 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "200", description = "대회 문제 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "대회 문제 조회 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("competition/question/{competitionId}")
     @ResponseStatus(HttpStatus.OK)
@@ -160,14 +153,14 @@ public class CompetitionController {
 
     @Operation(summary = "대회 문제 삭제", description = "대회 문제 삭제")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "대회 문제 삭제 성공"),
-        @ApiResponse(responseCode = "400", description = "대회 문제 삭제 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "201", description = "대회 문제 삭제 성공"),
+            @ApiResponse(responseCode = "400", description = "대회 문제 삭제 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("competition/question/delete")
     @ResponseStatus(HttpStatus.CREATED)
     public void deleteQuestion(
-        @Parameter(description = "competitionId: 문제집 id, questionIds.id: 삭제할 문제 번호")
-        @RequestBody CompetitionQuestionRequestDto requestDto
+            @Parameter(description = "competitionId: 문제집 id, questionIds.id: 삭제할 문제 번호")
+            @RequestBody CompetitionQuestionRequestDto requestDto
     ) {
         competitionService.deleteCompetitionQuestion(requestDto);
     }
@@ -183,7 +176,7 @@ public class CompetitionController {
             @Parameter(description = "page: 페이지 번호, size: 한 페이지 문제 수.")
             @PageableDefault @SortDefaults({
                     @SortDefault(sort = "score", direction = Direction.DESC),
-                    @SortDefault(sort = "endTime",direction = Direction.ASC)
+                    @SortDefault(sort = "endTime", direction = Direction.ASC)
             }) Pageable pageable,
             @Parameter(description = "대회 id")
             @PathVariable Long id
@@ -193,8 +186,8 @@ public class CompetitionController {
 
     @Operation(summary = "대회 내 랭킹", description = "대회에서 내 랭킹 조회")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "랭킹 조회 성공"),
-        @ApiResponse(responseCode = "400", description = "랭킹 조회 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "200", description = "랭킹 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "랭킹 조회 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("competition/myranking/{id}")
     @ResponseStatus(HttpStatus.OK)

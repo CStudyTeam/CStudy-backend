@@ -1,9 +1,9 @@
 spring:
   config:
     activate:
-      on-profile: local
+      on-profile: prod
   redis:
-    host: localhost
+    host: ${redis_host}
     port: 6379
   session:
     timeout: 600
@@ -13,9 +13,9 @@ spring:
       namespace: spring:session
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/CStudy?serverTimezone=Asia/Seoul
-    username: root
-    password: 1234
+    url: ${mysql_url}
+    username: ${db_name}
+    password: ${db_password}
     hikari:
       connectionTimeout: 30000
       maximumPoolSize: 20
@@ -24,7 +24,7 @@ spring:
       readOnly: false
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     properties:
       hibernate:
         show_sql: true
@@ -32,7 +32,7 @@ spring:
   mail:
     host: smtp.naver.com
     port: 465
-    username: ${email_user}
+    username: ${email}
     password: ${email_password}
     properties:
       mail:
@@ -46,8 +46,8 @@ spring:
       client:
         registration:
           google:
-            client-id: ${clientId}
-            client-secret: ${clientSecret}
+            client-id: ${client_id}
+            client-secret: ${client_secret}
             scope:
               - email
               - profile
@@ -61,14 +61,14 @@ server:
   port: 8080
 
 jwt:
-  secretKey: ${secretKey}
-  refreshKey: ${refreshKey}
+  secretKey: ${secret_key}
+  refreshKey: ${refresh_key}
 
 cloud:
   aws:
     credentials:
-      accessKey: ${s3AccessKey}
-      secretKey: ${s3SecretKey}
+      accessKey: ${access_key}
+      secretKey: ${secret_key}
     s3:
       bucket: ${bucket}
     region:
@@ -76,7 +76,7 @@ cloud:
     stack:
       auto: false
 
-  #logging:
-  #  slack:
-  #    webhook-uri: ${webhook}
-  #  config: classpath:log4j2.xml
+logging:
+  slack:
+    webhook-uri: ${webhook}
+  config: classpath:log4j2.xml

@@ -3,6 +3,7 @@ package com.CStudy.domain.member.controller;
 
 import com.CStudy.domain.member.application.FileService;
 import com.CStudy.domain.member.application.MemberService;
+import com.CStudy.domain.member.dto.request.EmailRequest;
 import com.CStudy.domain.member.dto.request.MemberLoginRequest;
 import com.CStudy.domain.member.dto.request.MemberPasswordChangeRequest;
 import com.CStudy.domain.member.dto.request.MemberSignupRequest;
@@ -29,6 +30,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -162,7 +164,7 @@ public class MemberController {
     public MyPageResponseDto myPage(
             @Parameter(hidden = true)
             @IfLogin LoginUserDto loginUserDto
-    ){
+    ) {
         return memberService.getMyPage(loginUserDto.getMemberId());
     }
 
@@ -177,7 +179,26 @@ public class MemberController {
             @RequestBody MemberPasswordChangeRequest request,
             @Parameter(hidden = true)
             @IfLogin LoginUserDto loginUserDto
-    ){
+    ) {
         memberService.changePassword(request, loginUserDto.getMemberId());
+    }
+
+
+    @Operation(summary = "회원 가입시 이메인 인증", description = "기존사용하고 있는 이메일을 통해 인증")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "404", description = "사용자 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+
+    @GetMapping("/email")
+    @ResponseStatus(HttpStatus.OK)
+    public String sendEmail(@RequestBody EmailRequest emailRequest) {
+        try {
+            return memberService.sendEmail(emailRequest.getTo());
+        } catch (MessagingException e) {
+            return "이메일 전송 실패";
+        }
     }
 }

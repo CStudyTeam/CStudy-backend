@@ -9,7 +9,9 @@ plugins {
 	id 'org.springframework.boot' version '2.7.12'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+	id 'jacoco'
 }
+
 
 group = 'com'
 version = '0.0.1-SNAPSHOT'
@@ -19,11 +21,14 @@ bootJar{
 	archiveFileName = 'app.jar'
 }
 
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
 }
+
+
 
 repositories {
 	mavenCentral()
@@ -77,6 +82,9 @@ dependencies {
 	implementation("com.slack.api:bolt-jetty:1.18.0")
 	implementation "com.github.maricn:logback-slack-appender:1.4.0"
 
+	//main
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 	//s3
 	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
 
@@ -84,6 +92,7 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	finalizedBy 'jacocoTestReport'
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
@@ -106,4 +115,37 @@ configurations {
 		extendsFrom annotationProcessor
 	}
 	querydsl.extendsFrom compileClasspath
+}
+
+jacocoTestReport {
+	reports {
+		html.enabled true
+		xml.enabled false
+		csv.enabled false
+		afterEvaluate {
+			classDirectories.setFrom(
+					files(classDirectories.files.collect {
+						fileTree(dir: it, excludes: [
+								'**/com/CStudy/domain/competition/dto/request/**', // 추가된 부분
+								'**/com/CStudy/domain/competition/dto/request/**',
+								'**/com/CStudy/global/initializer/**',
+								'**/com/CStudy/global/exception/**',
+								'**/com/CStudy/domain/**/entity/**',
+						])
+					})
+			)
+	}
+		html.destination file("jacoco/jacocoHtml")
+	}
+}
+
+jacocoTestCoverageVerification {
+
+	violationRules {
+		rule {
+			element = 'CLASS'
+
+			excludes = []
+		}
+	}
 }
