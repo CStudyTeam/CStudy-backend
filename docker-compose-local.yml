@@ -16,7 +16,7 @@ services:
     image: immunogen/study-database
     environment:
     - MYSQL_DATABASE=CStudy
-    - MYSQL_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+    - MYSQL_ROOT_PASSWORD=1234
     volumes:
       - ./database/config:/etc/mysql/conf.d
     ports:
