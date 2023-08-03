@@ -236,7 +236,8 @@ src
 
 <summary> 🏛️ CI/CD (배포 자동화) </summary>
 
-![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/88f188ca-3b95-4296-a671-bd14d4fc1e4b)
+![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/d34ed6b2-b91f-4e27-a175-6dc2629e5747)
+
 
 </details>
 
