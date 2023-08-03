@@ -8,6 +8,9 @@ import com.CStudy.domain.member.dto.response.MemberLoginResponse;
 import com.CStudy.domain.member.dto.response.MemberSignupResponse;
 import com.CStudy.domain.member.dto.response.MyPageResponseDto;
 import com.CStudy.domain.member.entity.Member;
+import org.springframework.mail.MailException;
+
+import javax.mail.MessagingException;
 
 public interface MemberService {
     MemberSignupResponse signUp(MemberSignupRequest request);
@@ -21,4 +24,6 @@ public interface MemberService {
     MyPageResponseDto getMyPage(Long id);
 
     void changePassword(MemberPasswordChangeRequest request, Long id);
+
+    String sendEmail(String recipientEmail) throws MailException, MessagingException;
 }
