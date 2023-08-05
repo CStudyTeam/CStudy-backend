@@ -1,4 +1,0 @@
-rootProject.name = 'CStudy'
-
-include 'module-api'
-include 'module-common'
