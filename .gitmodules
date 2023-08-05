@@ -1,6 +1,0 @@
-[submodule "module-api"]
-	path = module-api
-	url = https://github.com/CStudyTeam/CStudy-backend.git
-[submodule "path/to/module-api"]
-	path = path/to/module-api
-	url = https://github.com/CStudyTeam/CStudy-backend.git
