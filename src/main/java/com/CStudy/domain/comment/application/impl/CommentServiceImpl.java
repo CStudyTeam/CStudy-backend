@@ -1,5 +1,6 @@
-package com.CStudy.domain.comment.application;
+package com.CStudy.domain.comment.application.impl;
 
+import com.CStudy.domain.comment.application.CommentService;
 import com.CStudy.domain.comment.dto.request.NoticeCommentRequestDto;
 import com.CStudy.domain.comment.entitiy.Comment;
 import com.CStudy.domain.comment.repository.CommentRepository;
@@ -17,7 +18,7 @@ import javax.persistence.EntityNotFoundException;
 
 @Slf4j
 @Service
-public class CommentServiceImpl implements CommentService{
+public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final NoticeRepository noticeRepository;
