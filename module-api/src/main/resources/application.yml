@@ -32,8 +32,8 @@ spring:
   mail:
     host: smtp.naver.com
     port: 465
-    username: pos04167@naver.com
-    password: ngeon4167!
+    username: ${email_user}
+    password: ${email_password}
     properties:
       mail:
         smtp:
@@ -46,8 +46,8 @@ spring:
       client:
         registration:
           google:
-            client-id: 1031965508463-lfmqeg8qjg7el0sqovh3c02slbv58p22.apps.googleusercontent.com
-            client-secret: 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
+            client-id: ${clientId}
+            client-secret: ${clientSecret}
             scope:
               - email
               - profile
@@ -61,18 +61,22 @@ server:
   port: 8080
 
 jwt:
-  secretKey: "0123456789012345678901234567890123456789"
-  refreshKey: "0123456789012345678901234567890123456789"
+  secretKey: ${secretKey}
+  refreshKey: ${refreshKey}
 
 cloud:
   aws:
     credentials:
-      accessKey: "AKIATRTDCFACRZWYL7EW"
-      secretKey: "8WQisx/Rl0DkIHGoshjW254t2coFFFBmfMTTDIPzqppbhnm"
+      accessKey: ${s3AccessKey}
+      secretKey: ${s3SecretKey}
     s3:
-      bucket: j4j-test-bucket
+      bucket: ${bucket}
     region:
-      static: ap-northeast-2
+      static: ${region}
     stack:
       auto: false
 
+  #logging:
+  #  slack:
+  #    webhook-uri: ${webhook}
+  #  config: classpath:log4j2.xml
