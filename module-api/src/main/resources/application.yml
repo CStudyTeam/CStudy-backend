@@ -32,8 +32,8 @@ spring:
   mail:
     host: smtp.naver.com
     port: 465
-    username: ${email_user}
-    password: ${email_password}
+    username: pos04167@naver.com
+    password: ngeon4167!
     properties:
       mail:
         smtp:
@@ -46,8 +46,8 @@ spring:
       client:
         registration:
           google:
-            client-id: ${clientId}
-            client-secret: ${clientSecret}
+            client-id: 1031965508463-lfmqeg8qjg7el0sqovh3c02slbv58p22.apps.googleusercontent.com
+            client-secret: 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
             scope:
               - email
               - profile
@@ -61,18 +61,18 @@ server:
   port: 8080
 
 jwt:
-  secretKey: ${secretKey}
-  refreshKey: ${refreshKey}
+  secretKey: "0123456789012345678901234567890123456789"
+  refreshKey: "0123456789012345678901234567890123456789"
 
 cloud:
   aws:
     credentials:
-      accessKey: ${s3AccessKey}
-      secretKey: ${s3SecretKey}
+      accessKey: "AKIATRTDCFACRZWYL7EW"
+      secretKey: "8WQisx/Rl0DkIHGoshjW254t2coFFFBmfMTTDIPzqppbhnm"
     s3:
-      bucket: ${bucket}
+      bucket: j4j-test-bucket
     region:
-      static: ${region}
+      static: ap-northeast-2
     stack:
       auto: false
 
