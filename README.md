@@ -17,40 +17,37 @@
 
 
 ## 🌞 팀원소개
-<table>
-  <tr>
-    <td>
-         <img src="https://user-images.githubusercontent.com/103854287/211192470-8aa1b1b8-0547-4da4-b674-3e08778bdf98.png" width="100px" />
-    </td>
-     <td>
-         <img src="https://user-images.githubusercontent.com/103854287/211192470-8aa1b1b8-0547-4da4-b674-3e08778bdf98.png" width="100px" />
-    </td>
-  </tr>
-  <tr>
-    <td><b>김무건</b></td>
-    <td><b>김준하</b></td>
-  </tr>
-</table>
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 김무건 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 김준하 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 이승민 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:---:|  
+|                                                                          - Back-end  <br> -DevOps <br/> - [GitHub](https://github.com/kobeomseok95)                                                                           |                                                                        - 기획자 <br> - Back-end<br> - [GitHub](https://github.com/backtony)                                                                         | - PM <br>- Front-end <br> - [GitHub](https://github.com/kiwan97)
 
 <br>
 
-### 프로젝트 구조도
+## 💎프로젝트 구조도
 ```bash
-src
-├── global 
-│   ├── exception # 도메인별 에러 정의
-│   ├── config
-│   ├── redis
-│   ├── util
-│   ├── initializer
-│   └── jwt 
+CStudy
+├── module-api 
+│        ├── application
+│        ├── config
+│        ├── controller
+│        ├── dto # Dto request, response
+│        ├── exception # Exception Handler
+│        ├── initializer
+│        └── util
 │ 
-└── Domain   
-       └── <도메인>  # 각도메인 ex : order ,ticket
-             └── controller # 도메인 컨트롤러
-             └── domain # 도메인 오브젝트
-             └── repostiory # 도메인 리포지토리
-             └── service # 도메인 서비스, 도메인 이벤트 핸들러
+├── module-common   
+│             └── config
+│             └── domain
+│             └── dto
+│             └── error
+│             └── repository
+│             └── util
+│
+│
+└── infra
+      └── docker
+      └── redis
+   
 ```
 
 <br>
@@ -82,6 +79,7 @@ src
 <p align="center">  
 <img src="https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white"/>
 <img src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white"/>
+<img src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white"/>
 
 </p>
 
@@ -174,21 +172,34 @@ src
 
 <br>
 
-
 ## 🎨 ERD Diagram
 
 <p align="center">
-  
+
 ![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/35e21686-098a-4d00-b046-0b24e55f3c2f)
-
-
 </p>
 
-<br/>
+<BR/>
+
+## 📋 API 문서
+
+<BR/>
+
+## 🧐 Pain Point
+
+<details>
+
+<summary> 본문 확인 (👈 Click) </summary>
+ㄴㅁㅇ
+
+</details>
 
 ## 🥕 Back-end 기술적 의사결정
+<details>
 
-### JWT Refresh Token
+<summary> 본문 확인 (👈 Click) </summary>
+
+### 1. JWT Refresh Token
 
 - 로그인, 로그아웃을 위해 RefreshToken 사용
 - Token의 탈취의 보안적인 측면을 고려하여 AccessToken : 15 min , RefreshToken: 7 Day
@@ -199,31 +210,45 @@ src
     - XSS 공격 : Script를 통하여 Token의 탈취의 가능성이 있습니다. Coockie에 Token을 저장하면 HttpOnly를 통하여 스크립트를 통하여 Token의 문제를 방지할 수 있습니다.
     - CSRF 공격 : SameSite, Csrf Token을 통하여 방지를 할 수 있다. SameSite를 사용하면 쿠키를 해당 사이트와 동일한 사이트로만 전송되도록 제한할 수 있습니다. Chrome은 기본적으로 Lax로 설정이 되어져 있습니다.
 
-### Swagger
-- 팀 간 효율적인 소통을 위해 도입
-- API를 문서화하여 구조와 기능을 쉽게 이해
-- 테스트 가능한 사용자 인터페이스 제공
-- API 호출을 직접 실행해보며 결과를 확인할 수 있어 테스트 및 디버깅 과정이 효율적으로 진행
 
-### 랭킹 점수는 실시간
+### 2. 성공 및 실패 오답노트 MySQL에서 MongoDB 변경
+
+### 3. 전략 패턴을 사용하여 Param에 따른 서비스 호출 및 개별 컴포넌트 분리
+
+### 4. 랭킹 점수는 실시간
 
 - 실시간으로 랭킹의 점수와 랭킹의 불러오는 쿼리의 성능의 부담을 줄이기 위하여 캐싱을 사용을 했습니다.
 - 문제를 성공/실패를 하였을 때 캐싱의 정합성을 맞추기 위해서 많은 Write 작업이 발생을 하여 캐싱 오버헤드가 발생을 한다고 생각합니다.
 - 기존의 ```@CacheEvict```로 캐싱의 정합성을 맞추기 보다 Redis Pub/Sub으로 분산 환경에서 비동기 캐시 정합성을 맞추게 변경을 하였습니다.
 
-### 동일한 점수의 회원의 랭킹 처리
+### 5. 동일한 점수의 회원의 랭킹 처리
 - 동일한 점수를 가진 회원 A,B가 있다면 등수를 처리하는데 문제가 있습니다.
 - 해당 회원의 등수를 처리하기 위해 Redis Structure를 Double로 변경
 - 기존의 데이터의 구조는  { UserName , Score }에서  { UserName , Score.Time }으로 처리를 하였습니다.
-  
-<br>
 
-## 🐻 프로젝트 설명
+
+### 6. 문제 Bulk Insert의 성능 문제점 Batch Insert 10,000건을 기준으로 1440초 - 15.75 성능 개선
+
+### 7. 실행 계획 분석을 통한 인덱스 추가 및 QueryDSL 페이징 쿼리 튜닝 (10,000건을 기준으로 58.20% 개선) 
+
+### 8. 횡단 관심사 분리 (Feat. HandlermethodArgumentResolver, AOP)
+
+### 9. 추상 클래스를 통한 Exception 응집도 증가 및 Custom Error Status
+
+### 10. Swagger
+- 팀 간 효율적인 소통을 위해 도입
+- API를 문서화하여 구조와 기능을 쉽게 이해
+- 테스트 가능한 사용자 인터페이스 제공
+- API 호출을 직접 실행해보며 결과를 확인할 수 있어 테스트 및 디버깅 과정이 효율적으로 진행
+</details>
+
+
+## 🥃 Wireframe
 
 
 <details>
 
-<summary> 🥃 Wireframe </summary>
+<summary> 본문 확인 (👈 Click) </summary>
 
 [📝 Figma 바로가기 ](https://www.figma.com/file/67asFaSpQCu4s2CKAJqxac/Untitled?type=design&node-id=0-1&mode=design&t=DdRtY5ictOvnNkSn-0)
 
@@ -232,9 +257,12 @@ src
 </details>
 
 
+## 🏛️ CI/CD 아키텍처 (배포 자동화)
+
+
 <details>
 
-<summary> 🏛️ CI/CD (배포 자동화) </summary>
+<summary> 본문 확인 (👈 Click) </summary>
 
 ![image](https://github.com/CStudyTeam/CStudy-backend/assets/103854287/d34ed6b2-b91f-4e27-a175-6dc2629e5747)
 
@@ -242,10 +270,11 @@ src
 </details>
 
 
-
-
+## ✍️ 프로젝트 종료 이후 혼자서 진행한 리팩토링
 <details>
 
-<summary> 🔧 트러블 슈팅 </summary>
+<summary> 본문 확인 (👈 Click) </summary>
+
+
 
 </details>
