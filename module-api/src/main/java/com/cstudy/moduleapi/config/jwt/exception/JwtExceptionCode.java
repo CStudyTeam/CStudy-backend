@@ -2,6 +2,7 @@ package com.cstudy.moduleapi.config.jwt.exception;
 
 import lombok.Getter;
 
+@Getter
 public enum JwtExceptionCode {
 
     UNKNOWN_ERROR("UNKNOWN_ERROR", "UNKNOWN_ERROR"),
@@ -11,7 +12,6 @@ public enum JwtExceptionCode {
     UNSUPPORTED_TOKEN("UNSUPPORTED_TOKEN", "지원하지 않는 토큰"),
     NO_AUTHORITY("403", "접근 권한이 없습니다.");
 
-    @Getter
     private final String code;
 
     @Getter
