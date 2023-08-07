@@ -3,15 +3,13 @@ package com.cstudy.moduleapi.application.member.impl;
 import com.cstudy.moduleapi.application.member.DuplicateServiceFinder;
 import com.cstudy.moduleapi.application.member.MemberService;
 import com.cstudy.moduleapi.application.refershToken.RefreshTokenService;
+import com.cstudy.moduleapi.application.reviewNote.ReviewService;
 import com.cstudy.moduleapi.config.jwt.util.JwtTokenizer;
 import com.cstudy.moduleapi.dto.member.*;
 import com.cstudy.modulecommon.domain.member.Member;
 import com.cstudy.modulecommon.domain.role.Role;
 import com.cstudy.modulecommon.domain.role.RoleEnum;
-import com.cstudy.modulecommon.error.member.EmailDuplication;
-import com.cstudy.modulecommon.error.member.InvalidMatchPasswordException;
-import com.cstudy.modulecommon.error.member.NotFoundMemberEmail;
-import com.cstudy.modulecommon.error.member.NotFoundMemberId;
+import com.cstudy.modulecommon.error.member.*;
 import com.cstudy.modulecommon.repository.member.MemberRepository;
 import com.cstudy.modulecommon.repository.role.RoleRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +42,7 @@ public class MemberServiceImpl implements MemberService {
     private final JavaMailSender javaMailSender;
     private final RefreshTokenService refreshTokenService;
     private final DuplicateServiceFinder duplicateServiceFinder;
+    private final ReviewService reviewNoteService;
 
     @Value("${spring.mail.username}")
     private  String EMAIL;
@@ -55,7 +54,8 @@ public class MemberServiceImpl implements MemberService {
             JwtTokenizer jwtTokenizer,
             JavaMailSender javaMailSender,
             RefreshTokenService refreshTokenService,
-            DuplicateServiceFinder duplicateServiceFinder
+            DuplicateServiceFinder duplicateServiceFinder,
+            ReviewService reviewNoteService
     ) {
         this.memberRepository = memberRepository;
         this.roleRepository = roleRepository;
@@ -64,6 +64,7 @@ public class MemberServiceImpl implements MemberService {
         this.javaMailSender = javaMailSender;
         this.refreshTokenService = refreshTokenService;
         this.duplicateServiceFinder = duplicateServiceFinder;
+        this.reviewNoteService = reviewNoteService;
     }
 
     /**
@@ -87,6 +88,8 @@ public class MemberServiceImpl implements MemberService {
                 .roles(new HashSet<>())
                 .build());
 
+        reviewNoteService.createUserWhenSignupSaveMongodb(request.getName());
+
         return MemberSignupResponse.of(memberRepository.save(Member.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -105,7 +108,7 @@ public class MemberServiceImpl implements MemberService {
         Optional.of(name)
                 .filter(duplicateResponseDto -> duplicateResponseDto.getVerify().equals(DuplicateResult.FALSE.getDivisionResult()))
                 .ifPresent(duplicateResponseDto -> {
-                    throw new RuntimeException("중복 이름");
+                    throw new NameDuplication("중복 이름");
                 });
     }
 
@@ -114,7 +117,7 @@ public class MemberServiceImpl implements MemberService {
         Optional.of(email)
                 .filter(duplicateResponseDto -> duplicateResponseDto.getVerify().equals(DuplicateResult.FALSE.getDivisionResult()))
                 .ifPresent(duplicateResponseDto -> {
-                    throw new RuntimeException("중복 이메일");
+                    throw new EmailDuplication("중복 이메일");
                 });
     }
 
