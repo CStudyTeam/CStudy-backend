@@ -182,7 +182,10 @@ CStudy
 
 ## 📋 API 문서
 
-https://documenter.getpostman.com/view/23650109/2s9XxztCdN
+
+[https://documenter.getpostman.com/view/23650109/2s9XxztCdN](https://documenter.getpostman.com/view/23650109/2s9XxztChm)
+
+<BR/>
 
 
 ## 🥕 Back-end 기술적 의사결정
