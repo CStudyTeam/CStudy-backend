@@ -4,7 +4,7 @@ services:
     container_name: study-redis
     build:
       dockerfile: Dockerfile
-      context: ./infra/redis
+      context: ./redis
     image: immunogen/study-redis
     ports:
       - "6379:6379"
@@ -12,7 +12,7 @@ services:
     container_name: study-database
     build:
       dockerfile: Dockerfile
-      context: ./infra/database
+      context: ./database
     image: immunogen/study-database
     environment:
       - MYSQL_DATABASE=CStudy
